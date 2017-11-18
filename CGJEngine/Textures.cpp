@@ -12,8 +12,10 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+extern "C" {
 #include <jpeglib.h>
 #include <png.h>
+}
 
 #include "Textures.h"
 
