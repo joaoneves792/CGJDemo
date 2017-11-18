@@ -6,16 +6,10 @@
 #include <string>
 #include <vector>
 
+#include "Mesh.h"
+
 #ifndef CGJM_OBJMESH_H
 #define CGJM_OBJMESH_H
-
-#define VERTICES__ATTR 0
-#define TEXCOORDS_ATTR 1
-#define NORMALS__ATTR 2
-
-#define VERTICES_VBO 0
-#define TEXCOORDS_VBO 1
-#define NORMALS_VBO 2
 
 typedef struct {
     float vertex[3];
@@ -61,7 +55,7 @@ typedef struct {
 
 } objGroup;
 
-class OBJMesh{
+class OBJMesh : public Mesh{
 private:
    std::vector<objGroup*> groups;
 

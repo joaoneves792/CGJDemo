@@ -4,7 +4,7 @@
 
 #include "SceneGraph.h"
 #include "Shader.h"
-#include "OBJMesh.h"
+#include "Mesh.h"
 #include "ResourceManager.h"
 
 ResourceManager* ResourceManager::ourInstance = nullptr;
@@ -21,7 +21,7 @@ void ResourceManager::deleteInstance() {
     ourInstance = nullptr;
 }
 
-void ResourceManager::__destroyMesh(OBJMesh *mesh) {
+void ResourceManager::__destroyMesh(Mesh *mesh) {
     mesh->unload();
     delete mesh;
 }
@@ -36,7 +36,7 @@ void ResourceManager::__destroyScene(SceneGraph *scene) {
     delete scene;
 }
 
-void ResourceManager::addMesh(std::string name, OBJMesh *mesh) {
+void ResourceManager::addMesh(std::string name, Mesh *mesh) {
     meshes[name] = mesh;
 }
 
@@ -48,7 +48,7 @@ void ResourceManager::addScene(std::string name, SceneGraph *scene) {
     scenes[name] = scene;
 }
 
-OBJMesh* ResourceManager::getMesh(std::string name) {
+Mesh* ResourceManager::getMesh(std::string name) {
     auto it = meshes.find(name);
     if(it == meshes.end()){
         return nullptr;
@@ -75,7 +75,7 @@ SceneGraph* ResourceManager::getScene(std::string name) {
 void ResourceManager::destroyMesh(std::string name) {
     auto it = meshes.find(name);
     if(it != meshes.end()){
-        OBJMesh* m = it->second;
+        Mesh* m = it->second;
         __destroyMesh(m);
         meshes.erase(it);
     }

@@ -230,8 +230,8 @@ void prepareGroup(objGroup* group){
         {
             glBindBuffer(GL_ARRAY_BUFFER, group->vbos[TEXCOORDS_VBO]);
             glBufferData(GL_ARRAY_BUFFER, ti * sizeof(float), texCoords, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(TEXCOORDS_ATTR);
-            glVertexAttribPointer(TEXCOORDS_ATTR, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, 0);
+            glEnableVertexAttribArray(TEXCOORDS__ATTR);
+            glVertexAttribPointer(TEXCOORDS__ATTR, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, 0);
         }
         if (ni > 0)
         {
@@ -274,7 +274,7 @@ void OBJMesh::prepare() {
 void unloadGroup(objGroup* group){
     glBindVertexArray(group->vao);
     glDisableVertexAttribArray(VERTICES__ATTR);
-    glDisableVertexAttribArray(TEXCOORDS_ATTR);
+    glDisableVertexAttribArray(TEXCOORDS__ATTR);
     glDisableVertexAttribArray(NORMALS__ATTR);
     glDeleteBuffers(3, group->vbos);
     glDeleteBuffers(1, &group->eab);

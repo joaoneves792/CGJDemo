@@ -3,7 +3,7 @@
 //
 
 #include "Shader.h"
-#include "OBJMesh.h"
+#include "Mesh.h"
 #include "SceneGraph.h"
 #include "vec.h"
 #include "quat.h"
@@ -22,7 +22,7 @@ SceneNode::SceneNode(std::string name) {
     visible = true;
 }
 
-SceneNode::SceneNode(std::string name, OBJMesh *mesh) {
+SceneNode::SceneNode(std::string name, Mesh *mesh) {
     this->name = name;
     this->mesh = mesh;
     shader = nullptr;
@@ -36,7 +36,7 @@ SceneNode::SceneNode(std::string name, OBJMesh *mesh) {
     visible = true;
 }
 
-SceneNode::SceneNode(std::string name, OBJMesh *mesh, Shader *shader) {
+SceneNode::SceneNode(std::string name, Mesh *mesh, Shader *shader) {
     this->name = name;
     this->mesh = mesh;
     this->shader = shader;
@@ -54,7 +54,7 @@ std::string SceneNode::getName() {
     return name;
 }
 
-void SceneNode::setMesh(OBJMesh *mesh) {
+void SceneNode::setMesh(Mesh *mesh) {
     this->mesh = mesh;
 }
 

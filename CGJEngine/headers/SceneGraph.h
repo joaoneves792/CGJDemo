@@ -13,7 +13,7 @@
 #include "mat.h"
 #include "quat.h"
 #include "Shader.h"
-#include "OBJMesh.h"
+#include "Mesh.h"
 #include "Camera.h"
 
 class SceneGraph;
@@ -21,7 +21,7 @@ class SceneGraph;
 class SceneNode{
 private:
     std::string name;
-    OBJMesh* mesh;
+    Mesh* mesh;
     Shader* shader;
     Vec3 position;
     Quat orientation;
@@ -37,12 +37,12 @@ private:
 
 public:
     SceneNode(std::string name);
-    SceneNode(std::string name, OBJMesh* mesh);
-    SceneNode(std::string name, OBJMesh* mesh, Shader* shader);
+    SceneNode(std::string name, Mesh* mesh);
+    SceneNode(std::string name, Mesh* mesh, Shader* shader);
 
     std::string getName();
 
-    void setMesh(OBJMesh* mesh);
+    void setMesh(Mesh* mesh);
     void setShader(Shader* shader);
 
     void setPosition(float x, float y, float z);

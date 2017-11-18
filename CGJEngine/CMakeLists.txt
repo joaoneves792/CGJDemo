@@ -6,6 +6,8 @@ include_directories(
 	math/headers
 	${GLEW_INCLUDE_DIR}
 	${GLUT_INCLUDE_DIR}
+    ${JPEG_INCLUDE_DIR}
+    ${PNG_INCLUDE_DIR}
 	)
 set(SOURCE_FILES
 	math/Vec2.cpp
@@ -19,12 +21,14 @@ set(SOURCE_FILES
 	Shader.cpp
 	glerror.cpp
 	OBJMesh.cpp
+	H3DMesh.cpp
 	SphereCamera.cpp
 	FreeCamera.cpp
 	Camera.cpp
 	SceneGraph.cpp
 	ResourceManager.cpp
-	InputManager.cpp)
+	InputManager.cpp
+    Textures.cpp)
 
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 #add_executable(scene_viewer ${SOURCE_FILES} ${TEST_FILES})

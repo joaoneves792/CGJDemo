@@ -10,6 +10,8 @@ endif (MSVC)
 find_package(GLEW REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(JPEG REQUIRED)
+find_package(PNG REQUIRED)
 
 if( MSVC )
 	if(CMAKE_SIZEOF_VOID_P EQUAL 4) #HACK TO FIGURE OUT WETHER BUILDING x86 or x64

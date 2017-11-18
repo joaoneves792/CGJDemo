@@ -10,28 +10,28 @@
 #include <string>
 #include "SceneGraph.h"
 #include "Shader.h"
-#include "OBJMesh.h"
+#include "Mesh.h"
 
 class ResourceManager {
 private:
     static ResourceManager* ourInstance;
     std::unordered_map<std::string, Shader*> shaders;
-    std::unordered_map<std::string, OBJMesh*> meshes;
+    std::unordered_map<std::string, Mesh*> meshes;
     std::unordered_map<std::string, SceneGraph*> scenes;
     ResourceManager() = default;
 
     void __destroyShader(Shader* shader);
-    void __destroyMesh(OBJMesh* mesh);
+    void __destroyMesh(Mesh* mesh);
     void __destroyScene(SceneGraph* scene);
 public:
     static ResourceManager* getInstance();
     static void deleteInstance();
     void addShader(std::string name, Shader* shader);
-    void addMesh(std::string name, OBJMesh* mesh);
+    void addMesh(std::string name, Mesh* mesh);
     void addScene(std::string name, SceneGraph* scene);
 
     Shader* getShader(std::string name);
-    OBJMesh* getMesh(std::string name);
+    Mesh* getMesh(std::string name);
     SceneGraph* getScene(std::string name);
 
     void destroyShader(std::string name);
