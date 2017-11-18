@@ -5,7 +5,6 @@ sudo: required
 compiler:
   - gcc
 script: mkdir -p build; cd build; cmake ..; make
-# install: apt install freeglut3-dev libglew-dev libxmu-dev libxi-dev
 matrix:
   include:
     # works on Precise and Trusty
@@ -20,6 +19,8 @@ matrix:
             - libglew-dev
             - libxmu-dev
             - libxi-dev
+            - libjpeg-dev
+            - libpng-dev
             - cmake
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
