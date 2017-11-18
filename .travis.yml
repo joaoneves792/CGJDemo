@@ -1,0 +1,28 @@
+language: cpp
+os: linux
+dist: trusty
+sudo: required
+compiler:
+  - gcc
+script: mkdir -p build; cd build; cmake ..; make
+# install: apt install freeglut3-dev libglew-dev libxmu-dev libxi-dev
+matrix:
+  include:
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - freeglut3-dev
+            - libglew-dev
+            - libxmu-dev
+            - libxi-dev
+            - cmake
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
+before_install:
+    - eval "${MATRIX_EVAL}"
