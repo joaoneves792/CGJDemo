@@ -16,7 +16,9 @@
 #include "Mesh.h"
 #include "OBJMesh.h"
 #include "H3DMesh.h"
+#include "QuadMesh.h"
 #include "SceneGraph.h"
+#include "FrameBuffer.h"
 #include "ResourceManager.h"
 #include "InputManager.h"
 

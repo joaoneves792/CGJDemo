@@ -22,13 +22,14 @@ set(SOURCE_FILES
 	glerror.cpp
 	OBJMesh.cpp
 	H3DMesh.cpp
+	QuadMesh.cpp
 	SphereCamera.cpp
 	FreeCamera.cpp
 	Camera.cpp
 	SceneGraph.cpp
 	ResourceManager.cpp
 	InputManager.cpp
-    Textures.cpp)
+    Textures.cpp FrameBuffer.cpp headers/FrameBuffer.h)
 
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 #add_executable(scene_viewer ${SOURCE_FILES} ${TEST_FILES})

@@ -27,6 +27,7 @@ public:
 	GLint getAttribLocation(const char* name);
 	GLint getUniformLocation(const char* name);
 	void setAttribLocation(const char* name, GLuint position);
+	void setFragOutputLocation(const char* name, GLuint position);
 	void create_program(const char *path_vert_shader, const char *path_frag_shader);
     void setMVPFunction(std::function<void(Mat4, Mat4, Mat4)> callback);
     void uploadMVP(Mat4 M, Mat4 V, Mat4 P);

@@ -18,6 +18,7 @@ void loadShaders(){
     auto shader = new Shader("res/tablev.glsl", "res/tablef.glsl");
     shader->setAttribLocation("inPosition", VERTICES__ATTR);
     shader->setAttribLocation("inNormal", NORMALS__ATTR);
+    shader->setFragOutputLocation("color", 0);
     shader->link();
     shader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P){
         int MVPLocation = shader->getUniformLocation("MVP");
@@ -35,6 +36,7 @@ void loadShaders(){
     h3dShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
     h3dShader->setAttribLocation("inJointIndex", BONEINDICES__ATTR);
     h3dShader->setAttribLocation("inJointWeight", BONEWEIGHTS__ATTR);
+    h3dShader->setFragOutputLocation("color", 0);
     h3dShader->link();
     h3dShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P){
         int MVPLocation = shader->getUniformLocation("MVP");
@@ -45,6 +47,15 @@ void loadShaders(){
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, V.transpose());
     });
     ResourceManager::getInstance()->addShader("h3d", h3dShader);
+
+    auto quadShader = new Shader("res/quadv.glsl", "res/quadf.glsl");
+    quadShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    quadShader->link();
+    quadShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
+        int MVPLocation = quadShader->getUniformLocation("MVP");
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, (P * V * M).transpose());
+    });
+    ResourceManager::getInstance()->addShader("quad", quadShader);
 }
 
 void setupScene(const std::string& sceneName){
@@ -82,6 +93,23 @@ void setupScene(const std::string& sceneName){
     root->addChild(table);
     root->addChild(ashouka);
 
+    Mesh* quad = new QuadMesh();
+    rm->addMesh("quad", quad);
+    SceneNode* quadNode = new SceneNode("quad", quad, rm->getShader("quad"));
+    quadNode->translate(0.0f, 0.0f, 2.0f);
+    quadNode->setPreDraw([=](){
+       Shader* shader = rm->getShader("quad");
+       glUniform1f(shader->getUniformLocation("offset"), glutGet(GLUT_ELAPSED_TIME)/ 1000.0 * 2*3.14159 * .75);
+    });
+
+    //ashouka->addChild(quadNode);
+    //quadNode->translate(0.0f, 0.0f, 2.0f);
+
+
+    //Camera* hudCamera = new FreeCamera(Vec3(0.0f, 0.0f, 0.1f), Quat(0.01f, Vec3(0.0f, 1.0f, 0.0f)));
+   // hudCamera->ortho(-2, 2, 2, -2, 1, -1);
+    SceneGraph* hud = new SceneGraph(camera, quadNode);
+    rm->addScene("hud", hud);
 
     auto scene = new SceneGraph(camera, root);
     rm->addScene(sceneName, scene);

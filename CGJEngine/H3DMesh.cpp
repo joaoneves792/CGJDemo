@@ -51,6 +51,7 @@ H3DMesh::H3DMesh(const std::string &filename) {
 
     loadFromFile(filename);
     prepare();
+    freeMeshData();
 }
 
 
@@ -62,9 +63,9 @@ H3DMesh::~H3DMesh() {
 void H3DMesh::Clear() {
     for(int i=0; i< _groupCount; i++){
         delete[] _groups[i].name;
-        delete[] _groups[i].vertices;
-        delete[] _groups[i].triangles;
     }
+
+    freeMeshData();
 
     for(int i=0; i< _armatureCount; i++){
         delete[] _armatures[i].name;
@@ -81,7 +82,14 @@ void H3DMesh::Clear() {
 }
 
 void H3DMesh::freeMeshData() {
-    //TODO Free up mesh memory
+    for(int i=0; i< _groupCount; i++){
+        if(_groups[i].vertices != nullptr)
+            delete[] _groups[i].vertices;
+        if(_groups[i].triangles != nullptr)
+            delete[] _groups[i].triangles;
+        _groups[i].vertices = nullptr;
+        _groups[i].triangles = nullptr;
+    }
 }
 
 void H3DMesh::unload() {
@@ -385,21 +393,6 @@ void H3DMesh::setMaterialUploadCallback(std::function<void(float *ambient, float
 }
 
 void H3DMesh::setMaterial(h3d_material *material){
-/*    GLint ambient = glGetUniformLocation(_shader, "ambient");
-    GLint diffuse = glGetUniformLocation(_shader, "diffuse");
-    GLint specular = glGetUniformLocation(_shader, "specular");
-    GLint emissive = glGetUniformLocation(_shader, "emissive");
-    GLint shininess = glGetUniformLocation(_shader, "shininess");
-    GLint transparency = glGetUniformLocation(_shader, "transparency");
-
-    glUniform4fv(ambient, 1, material->ambient);
-    glUniform4fv(diffuse, 1, material->diffuse);
-    glUniform4fv(specular, 1, material->specular);
-    glUniform4fv(emissive, 1, material->emissive);
-
-    glUniform1f(shininess, material->shininess);
-    glUniform1f(transparency, 1-(material->transparency));
-*/
     if(_uploadMaterialCallback != nullptr) {
         _uploadMaterialCallback(material->ambient, material->diffuse, material->specular,
                                 material->emissive, material->shininess, material->transparency);

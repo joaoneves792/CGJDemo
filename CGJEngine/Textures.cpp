@@ -7,12 +7,12 @@
  */
 
 #include <GL/glew.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <cstring>
 #include <string>
 #include <iostream>
 extern "C" {
+#include <stdio.h>
+#include <stdlib.h>
 #include <jpeglib.h>
 #include <png.h>
 }

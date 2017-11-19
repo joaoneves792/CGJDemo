@@ -147,6 +147,10 @@ GLint Shader::getUniformLocation(const char* name){
 	return glGetUniformLocation(_shaderProgram, name);
 }
 
+void Shader::setFragOutputLocation(const char *name, GLuint position) {
+    glBindFragDataLocation(_shaderProgram, position, name);
+}
+
 void Shader::use(){
         glUseProgram(_shaderProgram);
 }

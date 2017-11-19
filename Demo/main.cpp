@@ -28,8 +28,20 @@ void display()
 {
 	++FrameCount;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    FrameBuffer* fb = new FrameBuffer(WinX, WinY);
+	fb->bind();
     SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE_NAME);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scene->draw();
+	fb->unbind();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    scene->draw();
+	fb->bindTexture();
+	scene = ResourceManager::getInstance()->getScene("hud");
+	scene->draw();
+
+	delete fb;
 	checkOpenGLError("ERROR: Could not draw scene.");
 	glutSwapBuffers();
 }
@@ -167,6 +179,8 @@ void setupOpenGL()
 	glDepthMask(GL_TRUE);
 	glDepthRange(0.0, 1.0);
 	glClearDepth(1.0);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
