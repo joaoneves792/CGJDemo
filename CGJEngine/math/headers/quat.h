@@ -44,6 +44,7 @@ public:
 
 const Quat lerp(const Quat& q0, const Quat& q1, float k);
 const Quat slerp(const Quat& q0, const Quat& q1, float k);
+const Quat rotationMatrixToQuat(const Mat4& a);
 }
 
 

@@ -30,7 +30,7 @@ void main() {
 	
     vec4 lightColor = vec4(0.9, 0.9, 0.9, -1); // x,y,z -> color rgb; w -> intensity (if < 0 then does not decay)
     vec4 lightCone = vec4(0.3, -1, 0, -1); //x,y,z -> direction; w -> cutoffanglecos (if < 0 then emmits in all directions)
-    vec3 lightPosition_worldspace = vec3(5, 20, 5);
+    vec3 lightPosition_worldspace = vec3(5, 200, 50);
 
 	out_color.rgb = vec3(0,0,0);//Very important! start with black
 

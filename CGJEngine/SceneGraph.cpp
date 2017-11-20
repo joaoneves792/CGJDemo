@@ -20,6 +20,8 @@ SceneNode::SceneNode(std::string name) {
     pre_draw = nullptr;
     post_draw = nullptr;
     visible = true;
+    scene = nullptr;
+    billboard = false;
 }
 
 SceneNode::SceneNode(std::string name, Mesh *mesh) {
@@ -34,6 +36,8 @@ SceneNode::SceneNode(std::string name, Mesh *mesh) {
     pre_draw = nullptr;
     post_draw = nullptr;
     visible = true;
+    scene = nullptr;
+    billboard = false;
 }
 
 SceneNode::SceneNode(std::string name, Mesh *mesh, Shader *shader) {
@@ -48,6 +52,8 @@ SceneNode::SceneNode(std::string name, Mesh *mesh, Shader *shader) {
     pre_draw = nullptr;
     post_draw = nullptr;
     visible = true;
+    scene = nullptr;
+    billboard = false;
 }
 
 std::string SceneNode::getName() {
@@ -94,8 +100,25 @@ void SceneNode::setPostDraw(std::function<void()> callback) {
     post_draw = callback;
 }
 
+void SceneNode::setScene(SceneGraph *sceneGraph) {
+    scene = sceneGraph;
+}
+
+SceneGraph* SceneNode::getScene(){
+    if(scene != nullptr)
+        return scene;
+    //If we dont have a scene then somebody upstream must have it
+    if(parent != nullptr)
+        return parent->getScene();
+    else {
+        std::cerr << "Warning: Scene node " << name << " has no scene and no parent!";
+        return nullptr; //This should not happen!
+    }
+}
+
 void SceneNode::addChild(SceneNode *child) {
     child->parent = this;
+    child->setScene(scene);
     childs.push_back(child);
 }
 
@@ -110,6 +133,8 @@ void SceneNode::destroy() {
 
 void SceneNode::update(int dt) {
     //Empty for now
+    if(scene == nullptr)
+        scene = getScene();
     for(SceneNode* n : childs)
         n->update(dt);
 }
@@ -131,14 +156,36 @@ Mat4 SceneNode::getScale() {
 }
 
 Quat SceneNode::getOrientation() {
+    Quat result = orientation;
+    if (billboard) {
+        //Invert the rotation of The view Matrix (simply the transpose of the rotation part)
+        Mat4 View = scene->getCamera()->getViewMatrix();
+        Mat4 ViewT = Mat4(View[0][0], View[1][0], View[2][0], 0,
+                          View[0][1], View[1][1], View[2][1], 0,
+                          View[0][2], View[1][2], View[2][2], 0,
+                          0, 0, 0, 1);
+        //Convert it into a quat
+        result = CGJM::rotationMatrixToQuat(ViewT);
+    }
     if(parent == nullptr)
-        return orientation;
+        return result;
     else
-        return orientation * parent->getOrientation();
+        return result * parent->getOrientation();
 }
 
 Mat4 SceneNode::getModelMatrix() {
         return getTranslation()*getOrientation().GLMatrix().transpose()*getScale();
+}
+
+Mat4 SceneNode::billboardMatrix(Mat4 View) {
+    return Mat4(View[0][0], View[1][0], View[2][0], 0,
+                View[0][1], View[1][1], View[2][1], 0,
+                View[0][2], View[1][2], View[2][2], 0,
+                0, 0, 0, 1);
+}
+
+void SceneNode::setBillboard(bool billboarded) {
+    billboard = billboarded;
 }
 
 void SceneNode::hidden(bool b) {
@@ -156,9 +203,12 @@ SceneNode* SceneNode::findNode(std::string &name) {
     return nullptr;
 }
 
-void SceneNode::draw(SceneGraph *scene) {
+void SceneNode::draw() {
     if(!visible)
         return;
+
+    if(scene == nullptr)
+        scene = getScene();
 
     if(mesh != nullptr) {
         //Set the shader
@@ -202,22 +252,14 @@ void SceneNode::draw(SceneGraph *scene) {
 
     //Draw the childs
     for(SceneNode* n : childs)
-        n->draw(scene);
+        n->draw();
 }
 
-SceneGraph::SceneGraph() {
-    camera = nullptr;
-    root = nullptr;
-}
 
 SceneGraph::SceneGraph(Camera *cam) {
     camera = cam;
-    root = nullptr;
-}
-
-SceneGraph::SceneGraph(Camera *cam, SceneNode *rootNode) {
-    camera = cam;
-    root = rootNode;
+    root = new SceneNode("root");
+    root->setScene(this);
 }
 
 void SceneGraph::destroy() {
@@ -256,7 +298,7 @@ void SceneGraph::update(int dt) {
 
 void SceneGraph::draw(){
     if(root != nullptr)
-        root->draw(this);
+        root->draw();
 }
 
 SceneNode* SceneGraph::findNode(std::string& name) {

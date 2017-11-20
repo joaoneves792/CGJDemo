@@ -38,7 +38,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     scene->draw();
 	fb->bindTexture();
-	scene = ResourceManager::getInstance()->getScene("hud");
+	scene = ResourceManager::getInstance()->getScene("particles");
 	scene->draw();
 
 	delete fb;
@@ -68,7 +68,7 @@ void reshape(int w, int h)
 	WinY = h;
 	glViewport(0, 0, WinX, WinY);
     SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE_NAME);
-    scene->getCamera()->perspective((float)M_PI/4, (WinX/WinY), 0.1, 100);
+    scene->getCamera()->perspective((float)M_PI/4, (WinX/WinY), 0.1, 200);
 	//scene->getCamera()->ortho(-2, 2, -2, 2, 0, 10);
 }
 

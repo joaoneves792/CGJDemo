@@ -20,9 +20,13 @@ class SceneGraph;
 
 class SceneNode{
 private:
+    SceneGraph* scene;
+
     std::string name;
     Mesh* mesh;
     Shader* shader;
+
+    bool billboard;
     Vec3 position;
     Quat orientation;
     Vec3 size;
@@ -45,6 +49,8 @@ public:
     void setMesh(Mesh* mesh);
     void setShader(Shader* shader);
 
+    void setScene(SceneGraph* sceneGraph);
+
     void setPosition(float x, float y, float z);
     void translate(float x, float y, float z);
 
@@ -60,15 +66,20 @@ public:
     void destroy();
 
     void hidden(bool b);
+    void setBillboard(bool billboarded);
+
 
     void update(int dt);
-    void draw(SceneGraph* scene);
+    void draw();
 
     Mat4 getModelMatrix();
+
 
     SceneNode* findNode(std::string& name);
 
 private:
+    SceneGraph* getScene();
+    Mat4 billboardMatrix(Mat4 View);
     Mat4 getTranslation();
     Quat getOrientation();
     Mat4 getScale();
@@ -79,9 +90,7 @@ private:
     Camera* camera;
     SceneNode* root;
 public:
-    SceneGraph();
     SceneGraph(Camera* cam);
-    SceneGraph(Camera* cam, SceneNode* rootNode);
 
     void destroy();
 

@@ -198,6 +198,37 @@ const Quat CGJM::slerp(const Quat& q0, const Quat& q1, float k){
     return qi;*/
 }
 
+const Quat CGJM::rotationMatrixToQuat(const Mat4 &a) {
+    float trace = a[0][0] + a[1][1] + a[2][2]; // I removed + 1.0f; see discussion with Ethan
+    if( trace > 0 ) {// I changed M_EPSILON to 0
+        float s = 0.5f / sqrtf(trace+ 1.0f);
+        return Quat(0.25f / s,
+                    ( a[2][1] - a[1][2] ) * s,
+                    ( a[0][2] - a[2][0] ) * s,
+                    ( a[1][0] - a[0][1] ) * s);
+    }else {
+        if (a[0][0] > a[1][1] && a[0][0] > a[2][2]) {
+            float s = 2.0f * sqrtf(1.0f + a[0][0] - a[1][1] - a[2][2]);
+            return Quat((a[2][1] - a[1][2]) / s,
+                        0.25f * s,
+                        (a[0][1] + a[1][0]) / s,
+                        (a[0][2] + a[2][0]) / s);
+        }else if (a[1][1] > a[2][2]) {
+            float s = 2.0f * sqrtf(1.0f + a[1][1] - a[0][0] - a[2][2]);
+            return Quat((a[0][2] - a[2][0]) / s,
+                        (a[0][1] + a[1][0]) / s,
+                        0.25f * s,
+                        (a[1][2] + a[2][1]) / s);
+        }else{
+            float s = 2.0f * sqrtf(1.0f + a[2][2] - a[0][0] - a[1][1]);
+            return Quat((a[1][0] - a[0][1]) / s,
+                        (a[0][2] + a[2][0]) / s,
+                        (a[1][2] + a[2][1]) / s,
+                        0.25f * s);
+        }
+    }
+}
+
 std::ostream& operator<<(std::ostream &os, const Quat& v){
     return v.write(os);
 }

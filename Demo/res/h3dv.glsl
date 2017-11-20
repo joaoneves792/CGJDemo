@@ -29,7 +29,7 @@ void main(void){
    	vec3 vertexPosition_cameraspace = (View * Model * position).xyz;
    	eyeDirection_cameraspace = vec3(0,0,0) - vertexPosition_cameraspace;
 
-    vec3 lightPosition_worldspace = vec3(5, 20, 5);
+    vec3 lightPosition_worldspace = vec3(5, 200, 50);
     vec3 lightPosition_cameraspace = (View * vec4(lightPosition_worldspace.xyz, 1.0f)).xyz;
     lightDirection_cameraspace = lightPosition_cameraspace + eyeDirection_cameraspace;
 

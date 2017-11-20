@@ -381,6 +381,8 @@ void H3DMesh::draw() {
         int materialIndex = _groups[i].materialIndex;
         if( materialIndex >= 0 )
             setMaterial(&_materials[materialIndex]);
+        else
+            glBindTexture(GL_TEXTURE_2D, 0);
         glBindVertexArray(_vao[i]);
         glDrawElements(GL_TRIANGLES, _groups[i].numTriangles*3, GL_UNSIGNED_INT, 0);
     }
