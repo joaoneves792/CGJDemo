@@ -9,8 +9,13 @@ include_directories(
 
 
 set(SOURCE_FILES
-	main.cpp
-        scene.cpp scene.h)
+		main.cpp
+		scene.cpp
+		scene.h
+		meshes.cpp
+		meshes.h
+		shaders.cpp
+		shaders.h ResourceNames.h)
 
 add_executable(demo ${SOURCE_FILES})
 target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${JPEG_LIBRARIES} ${PNG_LIBRARIES} CGJEngine)

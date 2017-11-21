@@ -391,13 +391,13 @@ GLuint LoadGLTexture(const char* name){
 
 	texti = (textureImage *)malloc(sizeof(textureImage));
 
-	if(!fn.substr(fn.find_last_of(".")+1).compare("bmp"))
+	if(fn.substr(fn.find_last_of('.')+1) == "bmp")
 		loadBMP(name, texti);
-	else if(!fn.substr(fn.find_last_of(".")+1).compare("jpg") || !fn.substr(fn.find_last_of(".")+1).compare("jpeg") )   
+	else if(fn.substr(fn.find_last_of('.')+1) == "jpg" || fn.substr(fn.find_last_of('.')+1) == "jpeg" )
 		loadJPEG(name, texti);
-	else if(!fn.substr(fn.find_last_of(".")+1).compare("png"))
+	else if(fn.substr(fn.find_last_of('.')+1) == "png")
 		loadPNG(name, texti);
-    else if(!fn.substr(fn.find_last_of(".")+1).compare("etc1"))
+    else if(fn.substr(fn.find_last_of('.')+1) == "etc1")
         loadETC1(name, texti);
 	else
 		return 0;

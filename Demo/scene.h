@@ -8,6 +8,6 @@
 #include <string>
 #include "CGJengine.h"
 
-void setupScene(const std::string& sceneName);
+void setupScene();
 
 #endif //CGJDEMO_SCENE_H

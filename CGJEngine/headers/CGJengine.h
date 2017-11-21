@@ -20,6 +20,7 @@
 #include "SceneGraph.h"
 #include "FrameBuffer.h"
 #include "ResourceManager.h"
+#include "ResourceFactory.h"
 #include "InputManager.h"
 
 

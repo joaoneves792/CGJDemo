@@ -29,7 +29,7 @@ set(SOURCE_FILES
 	SceneGraph.cpp
 	ResourceManager.cpp
 	InputManager.cpp
-    Textures.cpp FrameBuffer.cpp headers/FrameBuffer.h)
+    Textures.cpp FrameBuffer.cpp headers/FrameBuffer.h ResourceFactory.cpp headers/ResourceFactory.h)
 
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 #add_executable(scene_viewer ${SOURCE_FILES} ${TEST_FILES})

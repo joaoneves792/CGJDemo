@@ -7,6 +7,7 @@
 
 #include "CGJengine.h"
 #include "scene.h"
+#include "ResourceNames.h"
 
 #define CAPTION "CGJDemo"
 #define ESCAPE 27
@@ -14,8 +15,6 @@
 int WinX = 1024, WinY = 1024;
 int WindowHandle = 0;
 unsigned int FrameCount = 0;
-
-const std::string SCENE_NAME = "main";
 
 /////////////////////////////////////////////////////////////////////// CALLBACKS
 void cleanup()
@@ -31,14 +30,14 @@ void display()
 
     FrameBuffer* fb = new FrameBuffer(WinX, WinY);
 	fb->bind();
-    SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE_NAME);
+    SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scene->draw();
 	fb->unbind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     scene->draw();
 	fb->bindTexture();
-	scene = ResourceManager::getInstance()->getScene("particles");
+	scene = ResourceManager::getInstance()->getScene(POST);
 	scene->draw();
 
 	delete fb;
@@ -53,7 +52,7 @@ void update(){
     int timeDelta = currentTime-lastTime;
     lastTime = currentTime;
 
-	ResourceManager::getInstance()->getScene(SCENE_NAME)->update(timeDelta);
+	ResourceManager::getInstance()->getScene(SCENE)->update(timeDelta);
 }
 
 void idle()
@@ -67,8 +66,8 @@ void reshape(int w, int h)
 	WinX = w;
 	WinY = h;
 	glViewport(0, 0, WinX, WinY);
-    SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE_NAME);
-    scene->getCamera()->perspective((float)M_PI/4, (WinX/WinY), 0.1, 200);
+    SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
+    scene->getCamera()->perspective((float)M_PI/4, (WinX/WinY), 0.1, 550);
 	//scene->getCamera()->ortho(-2, 2, -2, 2, 0, 10);
 }
 
@@ -103,8 +102,8 @@ void mouse(int x, int y) {
     InputManager::getInstance()->mouseMovement(x, y);
 }
 
-void setupActions(const std::string& sceneName) {
-    SceneGraph *scene = ResourceManager::getInstance()->getScene(sceneName);
+void setupActions() {
+    SceneGraph *scene = ResourceManager::getInstance()->getScene(SCENE);
     InputManager *im = InputManager::getInstance();
 
     im->setActionInterval(10); //Update every 10ms
@@ -223,8 +222,8 @@ void init(int argc, char* argv[])
 	setupGLEW();
 	setupOpenGL();
 
-    setupScene(SCENE_NAME);
-    setupActions(SCENE_NAME);
+    setupScene();
+    setupActions();
 
 	setupCallbacks();
 }
