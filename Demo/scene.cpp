@@ -43,7 +43,7 @@ void setupScene(){
     roadModel->setMaterialUploadCallback(materialUploadCallback);
     auto road = new SceneNode(ROAD);
     root->addChild(road);
-    for(int i=-5; i<5; i++){
+    for(int i=-6; i<6; i++){
         std::stringstream name;
         name << ROAD << i;
         auto roadPart = new SceneNode(name.str(), roadModel, h3dShader);
@@ -92,3 +92,4 @@ void setupScene(){
    // hudCamera->ortho(-2, 2, 2, -2, 1, -1);
 
 }
+

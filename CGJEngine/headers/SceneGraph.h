@@ -38,6 +38,7 @@ private:
 
     std::function<void()> pre_draw;
     std::function<void()> post_draw;
+    std::function<void(int dt)> updateCallback;
 
 public:
     SceneNode(std::string name);
@@ -53,6 +54,7 @@ public:
 
     void setPosition(float x, float y, float z);
     void translate(float x, float y, float z);
+    Vec3 getPosition();
 
     void setOrientation(float x, float y, float z, float angle);
     void setOrientation(Quat quat);
@@ -61,6 +63,7 @@ public:
 
     void setPreDraw(std::function<void()> callback);
     void setPostDraw(std::function<void()> callback);
+    void setUpdateCallback(std::function<void(int dt)> callback);
 
     void addChild(SceneNode* child);
     void destroy();
@@ -75,7 +78,7 @@ public:
     Mat4 getModelMatrix();
 
 
-    SceneNode* findNode(std::string& name);
+    SceneNode* findNode(const std::string& name);
 
 private:
     SceneGraph* getScene();
@@ -100,7 +103,7 @@ public:
     Camera* getCamera();
     SceneNode* getRoot();
 
-    SceneNode* findNode(std::string& name);
+    SceneNode* findNode(const std::string& name);
 
     void update(int dt);
     void draw();

@@ -12,10 +12,15 @@ set(SOURCE_FILES
 		main.cpp
 		scene.cpp
 		scene.h
+		actions.cpp
+		actions.h
 		meshes.cpp
 		meshes.h
 		shaders.cpp
-		shaders.h ResourceNames.h)
+		shaders.h
+		ResourceNames.h
+		Road.cpp
+		Road.h)
 
 add_executable(demo ${SOURCE_FILES})
 target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${JPEG_LIBRARIES} ${PNG_LIBRARIES} CGJEngine)

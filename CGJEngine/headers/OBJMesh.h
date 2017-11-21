@@ -67,7 +67,6 @@ public:
     void prepare();
     void unload();
     void draw();
-
 };
 
 

@@ -52,11 +52,18 @@ void InputManager::update(int value) {
 void InputManager::keyDown(unsigned char key) {
     if(keyCallbacks.find(key) != keyCallbacks.end())
         pendingKeyCallbacks[key] = keyCallbacks[key];
+
+    //Call it imediately if its a one time thing
+    if(keyOnceCallbacks.find(key) != keyOnceCallbacks.end())
+        keyOnceCallbacks[key]();
 }
 
 void InputManager::specialKeyDown(int key) {
     if(specialKeyCallbacks.find(key) != specialKeyCallbacks.end())
         pendingSpecialKeyCallbacks[key] = specialKeyCallbacks[key];
+
+    if(specialKeyOnceCallbacks.find(key) != specialKeyOnceCallbacks.end())
+        specialKeyOnceCallbacks[key]();
 }
 
 void InputManager::keyUp(unsigned char key) {
@@ -80,9 +87,18 @@ void InputManager::addKeyAction(unsigned char key, std::function<void(int dt)> c
     keyCallbacks[key] = callback;
 }
 
+void InputManager::addKeyActionOnce(unsigned char key, std::function<void()> callback) {
+    keyOnceCallbacks[key] = callback;
+}
+
 void InputManager::addSpecialKeyAction(int key, std::function<void(int dt)> callback) {
     specialKeyCallbacks[key] = callback;
 }
+
+void InputManager::addSpecialKeyActionOnce(int key, std::function<void()> callback) {
+    specialKeyOnceCallbacks[key] = callback;
+}
+
 
 void InputManager::setMouseAction(std::function<void(int x, int y, int dt)> callback) {
     mouseMovementCallback = callback;

@@ -23,13 +23,17 @@ private:
     long lastUpdateTime = 0;
 
     int mouseX, mouseY;
+    std::unordered_map<unsigned char, std::function<void(int dt)>> keyCallbacks;//Call it until key is up
+    std::unordered_map<int, std::function<void(int dt)>> specialKeyCallbacks;
+
+    std::unordered_map<unsigned char, std::function<void()>> keyOnceCallbacks; //Only call it once per key down
+    std::unordered_map<int, std::function<void()>> specialKeyOnceCallbacks;
+
     std::map<unsigned char, std::function<void(int dt)>> pendingKeyCallbacks;
     std::map<int, std::function<void(int dt)>> pendingSpecialKeyCallbacks;
 
     std::function<void(int x, int y, int dt)> mouseMovementCallback = nullptr;
 
-    std::unordered_map<unsigned char, std::function<void(int dt)>> keyCallbacks;
-    std::unordered_map<int, std::function<void(int dt)>> specialKeyCallbacks;
     InputManager() = default;
 
 public:
@@ -41,6 +45,10 @@ public:
     /*Assign actions with these functions*/
     void addKeyAction(unsigned char key, std::function<void(int dt)> callback);
     void addSpecialKeyAction(int key, std::function<void(int dt)> callback);
+
+    void addKeyActionOnce(unsigned char key, std::function<void()> callback);
+    void addSpecialKeyActionOnce(int key, std::function<void()> callback);
+
     void setMouseAction(std::function<void(int x, int y, int dt)> callback);
 
     /*Call these functions from GLUT callbacks*/

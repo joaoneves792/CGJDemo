@@ -76,6 +76,10 @@ void SceneNode::translate(float x, float y, float z) {
     position = position + Vec3(x, y, z);
 }
 
+Vec3 SceneNode::getPosition(){
+    return position;
+}
+
 void SceneNode::setOrientation(float x, float y, float z, float angle) {
     orientation = Quat(angle, Vec3(x, y, z));
 }
@@ -98,6 +102,10 @@ void SceneNode::setPreDraw(std::function<void()> callback) {
 
 void SceneNode::setPostDraw(std::function<void()> callback) {
     post_draw = callback;
+}
+
+void SceneNode::setUpdateCallback(std::function<void(int dt)> callback) {
+    updateCallback = callback;
 }
 
 void SceneNode::setScene(SceneGraph *sceneGraph) {
@@ -132,9 +140,12 @@ void SceneNode::destroy() {
 }
 
 void SceneNode::update(int dt) {
-    //Empty for now
     if(scene == nullptr)
         scene = getScene();
+
+    if(updateCallback != nullptr)
+        updateCallback(dt);
+
     for(SceneNode* n : childs)
         n->update(dt);
 }
@@ -192,7 +203,7 @@ void SceneNode::hidden(bool b) {
     visible = !b;
 }
 
-SceneNode* SceneNode::findNode(std::string &name) {
+SceneNode* SceneNode::findNode(const std::string &name) {
     if(name == this->name)
         return this;
     for(SceneNode* n: childs){
@@ -301,6 +312,6 @@ void SceneGraph::draw(){
         root->draw();
 }
 
-SceneNode* SceneGraph::findNode(std::string& name) {
+SceneNode* SceneGraph::findNode(const std::string& name) {
     return root->findNode(name);
 }
