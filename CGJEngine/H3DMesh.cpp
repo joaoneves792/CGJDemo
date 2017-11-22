@@ -401,6 +401,7 @@ void H3DMesh::setMaterial(h3d_material *material){
     }
 
     if( material->textureId >= 0){
+        glActiveTexture((GLuint)material->textureId);
         glBindTexture( GL_TEXTURE_2D, (GLuint)material->textureId);
     }
 }

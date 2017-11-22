@@ -43,11 +43,13 @@ void main() {
 
 	vec3 l = normalize( lightDirection_cameraspace );
 
+	vec3 H = normalize(l+E);
+
 	float spotEffect = dot( normalize(lightCone.xyz), normalize(-lightDirection_worldspace) );
 	if(spotEffect > lightCone.w || lightCone.w <= 0){
 
         vec3 R = reflect(-l, n);
-		float cosAlpha = clamp( dot(E,R), 0,1);
+		float cosAlpha = clamp( dot(H,n), 0,1);
 		float cosTheta = clamp( dot(n,l), 0,1);
 
 		float decay;
@@ -57,7 +59,7 @@ void main() {
 			decay = (distance_to_light*distance_to_light/2);
 
 			light_color_sum += matDiffuse * lightColor.xyz * abs(lightColor.w) * cosTheta / decay +
-			matSpecular * (shininess/16.0) * lightColor.xyz * abs(lightColor.w) * pow(cosAlpha, 5) / decay;
+			matSpecular * lightColor.xyz * abs(lightColor.w) * pow(cosAlpha, shininess*4.0f) / decay;
 	}
 
 
