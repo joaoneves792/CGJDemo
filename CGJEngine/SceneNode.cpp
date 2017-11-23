@@ -114,9 +114,10 @@ SceneGraph* SceneNode::getScene(){
     if(scene != nullptr)
         return scene;
     //If we dont have a scene then somebody upstream must have it
-    if(parent != nullptr)
-        return parent->getScene();
-    else {
+    if(parent != nullptr) {
+        scene = parent->getScene();
+        return scene;
+    }else {
         std::cerr << "Warning: Scene node " << name << " has no scene and no parent!";
         return nullptr; //This should not happen!
     }
@@ -126,11 +127,18 @@ void SceneNode::addChild(SceneNode *child) {
     child->parent = this;
     child->setScene(scene);
     childs.push_back(child);
+    scene->lookUpTable[child->name] = child;
 }
 
 void SceneNode::destroy() {
     //Destroy all childs
     for (auto it = childs.begin(); it != childs.end(); ) {
+
+        getScene();
+        auto lookUpIt = scene->lookUpTable.find((*it)->name);
+        if(lookUpIt != scene->lookUpTable.end())
+            scene->lookUpTable.erase(lookUpIt);
+
         (*it)->destroy();
         delete (*it);
         it = childs.erase(it);
@@ -201,14 +209,12 @@ void SceneNode::hidden(bool b) {
     visible = !b;
 }
 
-SceneNode* SceneNode::findNode(const std::__cxx11::string &name) {
-    if(name == this->name)
-        return this;
-    for(SceneNode* n: childs){
-        SceneNode* found = n->findNode(name);
-        if(found != nullptr)
-            return found;
-    }
+SceneNode* SceneNode::findNode(const std::string &name) {
+    auto it = scene->lookUpTable.find(name);
+    if(it!=scene->lookUpTable.end())
+        return it->second;
+
+    std::cerr << "Node with name " << name << "not found in scenegraph."<< std::endl;
     return nullptr;
 }
 

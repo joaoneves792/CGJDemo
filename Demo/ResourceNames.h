@@ -25,6 +25,9 @@
 #define HEADLIGHT_R "headlight_r"
 #define HEADLIGHT_L "headlight_l"
 
+/*Misc constants*/
+#define ROAD_SEGMENTS 12
+
 
 
 #endif //CGJDEMO_RESOURCENAMES_H

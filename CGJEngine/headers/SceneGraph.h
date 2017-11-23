@@ -8,6 +8,7 @@
 #include <functional>
 #include <list>
 #include <string>
+#include <unordered_map>
 
 #include "vec.h"
 #include "mat.h"
@@ -17,10 +18,14 @@
 #include "Camera.h"
 #include "SceneNode.h"
 
+#define ROOT "root"
+
 class SceneGraph{
 private:
     Camera* camera;
     SceneNode* root;
+    std::unordered_map<std::string, SceneNode*> lookUpTable;
+    friend class SceneNode;
 public:
     SceneGraph(Camera* cam);
 

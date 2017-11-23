@@ -45,11 +45,11 @@ void setupScene(){
     roadModel->setMaterialUploadCallback(materialUploadCallback);
     auto road = new SceneNode(ROAD);
     root->addChild(road);
-    for(int i=-6; i<6; i++){
+    for(int i=0; i<ROAD_SEGMENTS; i++){
         std::stringstream name;
         name << ROAD << i;
         auto roadPart = new SceneNode(name.str(), roadModel, h3dShader);
-        roadPart->translate(0.0f, 0.0f, 60.0f*i);
+        roadPart->translate(0.0f, 0.0f, 60.0f*(i-ROAD_SEGMENTS/2));
         road->addChild(roadPart);
 
         /*Create the lights*/

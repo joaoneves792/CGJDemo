@@ -8,15 +8,19 @@
 
 SceneGraph::SceneGraph(Camera *cam) {
     camera = cam;
-    root = new SceneNode("root");
+    root = new SceneNode(ROOT);
+    lookUpTable[ROOT] = root;
     root->setScene(this);
 }
 
 void SceneGraph::destroy() {
     if(root != nullptr) {
         root->destroy();
+        auto it = lookUpTable.find(ROOT);
+        lookUpTable.erase(ROOT);
         delete root;
     }
+    lookUpTable.clear();
 }
 
 Mat4 SceneGraph::getProjectionMatrix() {
@@ -52,5 +56,12 @@ void SceneGraph::draw(){
 }
 
 SceneNode* SceneGraph::findNode(const std::string& name) {
-    return root->findNode(name);
+    auto it = lookUpTable.find(name);
+    if(it!=lookUpTable.end())
+        return it->second;
+    else{
+        std::cerr << "Node with name " << name << " not on scene graph!" << std::endl;
+        return nullptr;
+    }
+
 }

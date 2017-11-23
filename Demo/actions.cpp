@@ -2,6 +2,7 @@
 // Created by joao on 11/21/17.
 //
 
+#include <sstream>
 #include "CGJengine.h"
 #include "actions.h"
 #include "ResourceNames.h"
@@ -55,6 +56,30 @@ void setupActions() {
             scene->findNode(ROAD)->setUpdateCallback(Road::accelerate);
         }else {
             scene->findNode(ROAD)->setUpdateCallback(Road::deccelerate);
+        }
+    });
+    im->addKeyActionOnce('n', [=](){
+        static bool night = false;
+        night = !night;
+        auto lm = LightsManager::getInstance();
+        if(night){
+            for(int i=0; i<ROAD_SEGMENTS; i++) {
+                std::stringstream lightName;
+                lightName << LAMP_POST << i;
+                LightNode* l = (LightNode*)scene->findNode(lightName.str());
+                lm->setEnabled(l, true);
+            }
+            LightNode* l = (LightNode*)scene->findNode(SUN);
+            lm->setEnabled(l, false);
+        }else {
+            for(int i=0; i<ROAD_SEGMENTS; i++) {
+                std::stringstream lightName;
+                lightName << LAMP_POST << i;
+                LightNode* l = (LightNode*)scene->findNode(lightName.str());
+                lm->setEnabled(l, false);
+            }
+            LightNode* l = (LightNode*)scene->findNode(SUN);
+            lm->setEnabled(l, true);
         }
     });
 

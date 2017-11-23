@@ -30,12 +30,10 @@ void LightsManager::registerShader(Shader *shader,
 void LightsManager::updateLights() {
     int i = 0;
     for(auto it=enabledLights.begin(); it!=enabledLights.end(); it++){
-        if(it->second){
-            for(auto sit=shaderUpdateCallback.begin(); sit!=shaderUpdateCallback.end(); sit++){
-                sit->first->use();
-                sit->second((float*)it->first->getColor(), (float*)it->first->getPosition(),
-                            (float*)it->first->getCone(), (float*)it->first->getAttenuation(), it->second, i);
-            }
+        for(auto sit=shaderUpdateCallback.begin(); sit!=shaderUpdateCallback.end(); sit++){
+            sit->first->use();
+            sit->second((float*)it->first->getColor(), (float*)it->first->getPosition(),
+                        (float*)it->first->getCone(), (float*)it->first->getAttenuation(), it->second, i);
         }
         i++;
     }
