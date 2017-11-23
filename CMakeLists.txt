@@ -3,8 +3,8 @@ project(CGJDemo C CXX)
 
 if( MSVC )
 	list(APPEND CMAKE_PREFIX_PATH 
-		${CGJM_SOURCE_DIR}/dependencies/glew-2.1.0/ 
-		${CGJM_SOURCE_DIR}/dependencies/freeglut/ )
+		${CGJDemo_SOURCE_DIR}/dependencies/glew-2.1.0/ 
+		${CGJDemo_SOURCE_DIR}/dependencies/freeglut/ )
 endif (MSVC)
 
 find_package(GLEW REQUIRED)
@@ -15,11 +15,11 @@ find_package(PNG)
 
 if( MSVC )
 	if(CMAKE_SIZEOF_VOID_P EQUAL 4) #HACK TO FIGURE OUT WETHER BUILDING x86 or x64
-		set(GLEW_LIBRARIES ${CGJM_SOURCE_DIR}/dependencies/glew-2.1.0/lib/libx32/glew32s.lib)
-		set(GLUT_LIBRARIES ${CGJM_SOURCE_DIR}/dependencies/freeglut/lib/freeglut.lib)
+		set(GLEW_LIBRARIES ${CGJDemo_SOURCE_DIR}/dependencies/glew-2.1.0/lib/libx32/glew32s.lib)
+		set(GLUT_LIBRARIES ${CGJDemo_SOURCE_DIR}/dependencies/freeglut/lib/freeglut.lib)
 	else(CMAKE_SIZEOF_VOID_P EQUAL 4)
-		set(GLEW_LIBRARIES ${CGJM_SOURCE_DIR}/dependencies/glew-2.1.0/lib/lib64/glew32s.lib)
-		set(GLUT_LIBRARIES ${CGJM_SOURCE_DIR}/dependencies/freeglut/lib/x64/freeglut.lib)
+		set(GLEW_LIBRARIES ${CGJDemo_SOURCE_DIR}/dependencies/glew-2.1.0/lib/lib64/glew32s.lib)
+		set(GLUT_LIBRARIES ${CGJDemo_SOURCE_DIR}/dependencies/freeglut/lib/x64/freeglut.lib)
 	endif(CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif (MSVC)
 
