@@ -19,8 +19,6 @@ matrix:
             - libglew-dev
             - libxmu-dev
             - libxi-dev
-            - libjpeg-dev
-            - libpng-dev
             - cmake
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
