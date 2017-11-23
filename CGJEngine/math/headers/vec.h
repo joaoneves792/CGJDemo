@@ -25,6 +25,7 @@ public:
 	const Vec2 operator=(const Vec2& other);
 	const Vec2 operator+(const Vec2& right) const;
 	const Vec2 operator-(const Vec2& right) const;
+	operator float*();
 };
 
 class Vec3;
@@ -53,6 +54,7 @@ public:
 	const Vec4 operator=(const Vec4& other);
 	const Vec4 operator+(const Vec4& right) const;
 	const Vec4 operator-(const Vec4& right) const;
+	operator float*();
 };
 
 class Vec3{
@@ -80,6 +82,7 @@ public:
 	const Vec3 operator=(const Vec3& other);
 	const Vec3 operator+(const Vec3& right) const;
 	const Vec3 operator-(const Vec3& right) const;
+	operator float*();
 };
 
 

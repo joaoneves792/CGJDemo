@@ -8,7 +8,9 @@
 #include "H3DMesh.h"
 #include "Shader.h"
 #include "SceneGraph.h"
+#include "LightNode.h"
 #include "ResourceManager.h"
+#include "LightsManager.h"
 
 Mesh* ResourceFactory::createMesh(const std::string &name, const std::string &filename) {
     if(filename.substr(filename.find_last_of('.')+1) == ("h3d")){
@@ -36,4 +38,10 @@ SceneNode* ResourceFactory::createScene(const std::string &name, Camera *camera)
     auto scene = new SceneGraph(camera);
     ResourceManager::getInstance()->addScene(name, scene);
     return scene->getRoot();
+}
+
+LightNode* ResourceFactory::createLight(const std::string &name) {
+    auto light = new LightNode(name);
+    LightsManager::getInstance()->addLight(light);
+    return light;
 }

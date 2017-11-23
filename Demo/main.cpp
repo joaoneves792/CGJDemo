@@ -23,18 +23,48 @@ void cleanup()
     ResourceManager::getInstance()->deleteInstance();
 }
 
+
+void tempLights(){
+	/*int enabled[] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	float color[] = {0.9f, 0.9f, 0.9f};
+	float cone[] = {0.0f, -1.0f, 0.0f, -0.5f};
+	float attenuation[] = {1.0f, 0.0f, 0.0f, 500.0f};
+	float position[] = {10.0f, 20.0f, 0.0f};
+
+
+	Shader* shader = ResourceManager::getInstance()->getShader("h3d");
+	int positionLoc = shader->getUniformLocation("lightPosition_worldspace[0]");
+	int enabledLoc = shader->getUniformLocation("lightsEnabled[0]");
+	int colorLoc = shader->getUniformLocation("lightColor[0]");
+	int coneLoc = shader->getUniformLocation("lightCone[0]");
+	int attenuationLoc = shader->getUniformLocation("lightAttenuation[0]");
+
+    shader->use();
+
+	glUniform1iv(enabledLoc, 10, &enabled[0]);
+	glUniform3fv(colorLoc, 1, color);
+	glUniform4fv(coneLoc, 1, cone);
+	glUniform4fv(attenuationLoc, 1, attenuation);
+	glUniform3fv(positionLoc, 1, position);
+*/
+}
+
 void display()
 {
 	++FrameCount;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	LightsManager::getInstance()->updateLights();
+
     FrameBuffer* fb = new FrameBuffer(WinX, WinY);
 	fb->bind();
     SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	tempLights();
 	scene->draw();
 	fb->unbind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	tempLights();
     scene->draw();
 	fb->bindTexture();
 	scene = ResourceManager::getInstance()->getScene(POST);

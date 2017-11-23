@@ -116,6 +116,9 @@ const Vec3 operator*(float scalar, const Vec3& v){
 	return Vec3(v[0]*scalar, v[1]*scalar, v[2]*scalar);
 }
 
+Vec3::operator float*() {
+	return (vec);
+}
 
 float CGJM::dot(const Vec3& v1, const Vec3& v2){
 	return v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2];

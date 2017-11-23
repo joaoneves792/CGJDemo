@@ -99,6 +99,10 @@ const Vec2 Vec2::operator-(const Vec2& right) const{
 	return Vec2(vec[0]-right[0], vec[1]-right[1]);
 }
 
+Vec2::operator float*() {
+	return (vec);
+}
+
 const Vec2 operator*(const Vec2& v, float scalar){
 	return Vec2(v[0]*scalar, v[1]*scalar);
 }

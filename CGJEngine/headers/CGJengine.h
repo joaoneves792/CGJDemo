@@ -18,10 +18,12 @@
 #include "H3DMesh.h"
 #include "QuadMesh.h"
 #include "SceneGraph.h"
+#include "SceneNode.h"
 #include "FrameBuffer.h"
 #include "ResourceManager.h"
 #include "ResourceFactory.h"
 #include "InputManager.h"
+#include "LightsManager.h"
 
 
 #endif //CGJM_CGJENGINE_H

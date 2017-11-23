@@ -53,6 +53,9 @@ float& Vec4::operator[](std::size_t i){
 	return (vec)[i];
 }
 
+Vec4::operator float*() {
+	return (vec);
+}
 std::ostream& Vec4::write(std::ostream& os) const{
 	return os << "[ " << vec[0] << " " << vec[1] << " " << vec[2] << " " << vec[3] <<  " ]";
 }

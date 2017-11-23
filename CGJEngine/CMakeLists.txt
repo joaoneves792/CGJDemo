@@ -27,9 +27,13 @@ set(SOURCE_FILES
 	FreeCamera.cpp
 	Camera.cpp
 	SceneGraph.cpp
+	SceneNode.cpp
+    LightNode.cpp
 	ResourceManager.cpp
 	InputManager.cpp
-    Textures.cpp FrameBuffer.cpp headers/FrameBuffer.h ResourceFactory.cpp headers/ResourceFactory.h)
+    Textures.cpp
+	FrameBuffer.cpp
+	ResourceFactory.cpp LightNode.cpp LightsManager.cpp headers/LightsManager.h)
 
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 #add_executable(scene_viewer ${SOURCE_FILES} ${TEST_FILES})

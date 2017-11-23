@@ -128,7 +128,7 @@ void H3DMesh::prepare() {
 void H3DMesh::prepareGroup(h3d_group *group, unsigned int groupIndex) {
     glBindVertexArray(_vao[groupIndex]);
 
-    auto *vertices  = new GLfloat[group->numVertices*4];
+    auto *vertices  = new GLfloat[group->numVertices*3];
     auto *normals   = new GLfloat[group->numVertices*3];
     auto *texCoords = new GLfloat[group->numVertices*2];
     auto *bone_indices = new GLfloat[group->numVertices*BONE_COUNT];
@@ -146,7 +146,6 @@ void H3DMesh::prepareGroup(h3d_group *group, unsigned int groupIndex) {
         vertices[vi++] = group->vertices[i].vertex[0];
         vertices[vi++] = group->vertices[i].vertex[1];
         vertices[vi++] = group->vertices[i].vertex[2];
-        vertices[vi++] = 1.0;
 
         normals[ni++] = group->vertices[i].normal[0];
         normals[ni++] = group->vertices[i].normal[1];
@@ -171,7 +170,7 @@ void H3DMesh::prepareGroup(h3d_group *group, unsigned int groupIndex) {
 
     glGenBuffers(1, &_vbo[groupIndex]);
 
-    _vboDescriptions[groupIndex].positionSize     = sizeof(GLfloat)*group->numVertices*4;
+    _vboDescriptions[groupIndex].positionSize     = sizeof(GLfloat)*group->numVertices*3;
     _vboDescriptions[groupIndex].normalsSize      = sizeof(GLfloat)*group->numVertices*3;
     _vboDescriptions[groupIndex].textureCoordSize = sizeof(GLfloat)*group->numVertices*2;
     _vboDescriptions[groupIndex].jointsSize       = sizeof(GLfloat)*group->numVertices*BONE_COUNT*2;
@@ -211,7 +210,7 @@ void H3DMesh::prepareGroup(h3d_group *group, unsigned int groupIndex) {
 
 
     //Position Attribute
-    glVertexAttribPointer(VERTICES__ATTR, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*4, nullptr);
+    glVertexAttribPointer(VERTICES__ATTR, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*3, nullptr);
     glEnableVertexAttribArray(VERTICES__ATTR);
 
     //Texture coord attribute
@@ -401,7 +400,7 @@ void H3DMesh::setMaterial(h3d_material *material){
     }
 
     if( material->textureId >= 0){
-        glActiveTexture((GLuint)material->textureId);
+        //glActiveTexture((GLuint)material->textureId);
         glBindTexture( GL_TEXTURE_2D, (GLuint)material->textureId);
     }
 }

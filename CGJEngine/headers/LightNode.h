@@ -1,0 +1,38 @@
+//
+// Created by joao on 11/23/17.
+//
+
+#ifndef CGJDEMO_LIGHTNODE_H
+#define CGJDEMO_LIGHTNODE_H
+
+#include <functional>
+#include <list>
+#include <string>
+
+#include "vec.h"
+#include "mat.h"
+#include "quat.h"
+#include "Shader.h"
+#include "SceneNode.h"
+
+class LightNode : public SceneNode{
+private:
+    Vec4 cone;
+    Vec3 color;
+    Vec4 attenuation;
+
+public:
+    LightNode(std::string name);
+
+    void setCone(float x, float y, float z, float angle);
+    void setPoint(float x, float y, float z);
+    void setColor(float r, float g, float b);
+    void setAttenuation(float k, float kd, float kdd, float range);
+
+    virtual Vec3 getPosition();
+
+    Vec4 getCone();
+    Vec3 getColor();
+    Vec4 getAttenuation();
+};
+#endif //CGJDEMO_LIGHTNODE_H

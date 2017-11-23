@@ -6,6 +6,7 @@
 #include "actions.h"
 #include "ResourceNames.h"
 #include "Road.h"
+#include "SceneNode.h"
 
 #define ESCAPE 27
 

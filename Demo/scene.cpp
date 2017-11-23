@@ -5,10 +5,12 @@
 #include "scene.h"
 #include <string>
 #include <sstream>
+#include <math.h>
 #include "CGJengine.h"
 #include "shaders.h"
 #include "meshes.h"
 #include "ResourceNames.h"
+#include "SceneNode.h"
 
 void setupScene(){
     auto rm = ResourceManager::getInstance();
@@ -49,6 +51,19 @@ void setupScene(){
         auto roadPart = new SceneNode(name.str(), roadModel, h3dShader);
         roadPart->translate(0.0f, 0.0f, 60.0f*i);
         road->addChild(roadPart);
+
+        /*Create the lights*/
+        std::stringstream lightName;
+        lightName << LAMP_POST << i;
+        auto lamp = ResourceFactory::createLight(lightName.str());
+        lamp->setColor(0.8f, 0.8f, 0.3f);
+        lamp->setCone(-0.3f, -1.0f, 0.0f, M_PI/4.0f);
+        lamp->setAttenuation(1.0f, 0.0f, 0.0f, 30.0f);
+        lamp->setPosition(20.0f, 10.0f, -16.0f);
+        LightsManager::getInstance()->setEnabled(lamp, false);
+
+        roadPart->addChild(lamp);
+
     }
 
     /*Place the sky*/
@@ -60,14 +75,22 @@ void setupScene(){
     H3DMesh* chargerModel = (H3DMesh*)rm->getMesh(CAR);
     auto charger = new SceneNode(CAR, chargerModel, h3dShader);
     chargerModel->setMaterialUploadCallback(materialUploadCallback);
-    charger->translate(10.0f, 0.0f, -20.0f);
+    charger->translate(20.0f, 0.0f, -20.0f);
     root->addChild(charger);
 
+
+    /*Place the sun*/
+    auto sun = ResourceFactory::createLight(SUN);
+    sun->setColor(0.9f, 0.9f, 0.9f);
+    sun->setPoint(10.0f, 20.0f, 0.0f);
+    sun->setAttenuation(1.0f, 0.0f, 0.0f, -1.0f);
+    root->addChild(sun);
+    LightsManager::getInstance()->setEnabled(sun, true);
 
 
     /*PROTOTYPE CODE*/
     SceneNode* particleRoot = ResourceFactory::createScene(POST, camera);
-    particleRoot->translate(10.0f, 1.0f, -13.0f);
+    particleRoot->translate(20.0f, 1.0f, -13.0f);
     particleRoot->setBillboard(true);
     //particleRoot->scale(2.0f, 2.0f, 2.0f);
 

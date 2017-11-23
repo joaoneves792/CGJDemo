@@ -19,5 +19,12 @@
 #define SCENE "main"
 #define POST "post"
 
+/*Lights*/
+#define SUN "sun"
+#define LAMP_POST "lamp_post"
+#define HEADLIGHT_R "headlight_r"
+#define HEADLIGHT_L "headlight_l"
+
+
 
 #endif //CGJDEMO_RESOURCENAMES_H
