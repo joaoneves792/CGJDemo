@@ -24,53 +24,39 @@ void cleanup()
 }
 
 
-void tempLights(){
-	/*int enabled[] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	float color[] = {0.9f, 0.9f, 0.9f};
-	float cone[] = {0.0f, -1.0f, 0.0f, -0.5f};
-	float attenuation[] = {1.0f, 0.0f, 0.0f, 500.0f};
-	float position[] = {10.0f, 20.0f, 0.0f};
-
-
-	Shader* shader = ResourceManager::getInstance()->getShader("h3d");
-	int positionLoc = shader->getUniformLocation("lightPosition_worldspace[0]");
-	int enabledLoc = shader->getUniformLocation("lightsEnabled[0]");
-	int colorLoc = shader->getUniformLocation("lightColor[0]");
-	int coneLoc = shader->getUniformLocation("lightCone[0]");
-	int attenuationLoc = shader->getUniformLocation("lightAttenuation[0]");
-
-    shader->use();
-
-	glUniform1iv(enabledLoc, 10, &enabled[0]);
-	glUniform3fv(colorLoc, 1, color);
-	glUniform4fv(coneLoc, 1, cone);
-	glUniform4fv(attenuationLoc, 1, attenuation);
-	glUniform3fv(positionLoc, 1, position);
-*/
-}
-
 void display()
 {
+	static SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
+	static SceneGraph* postScene = ResourceManager::getInstance()->getScene(POST);
+	static SceneGraph* viewPortScene = ResourceManager::getInstance()->getScene(FINAL);
+
 	++FrameCount;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	LightsManager::getInstance()->updateLights();
 
-    FrameBuffer* fb = new FrameBuffer(WinX, WinY);
-	fb->bind();
-    SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
+    FrameBuffer* fbo = new FrameBuffer(WinX, WinY);
+	FrameBuffer* intermediateFbo;
+	/*Draw scene to fbo*/
+	fbo->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	tempLights();
 	scene->draw();
-	fb->unbind();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	tempLights();
-    scene->draw();
-	fb->bindTexture();
-	scene = ResourceManager::getInstance()->getScene(POST);
-	scene->draw();
+	fbo->unbind();
 
-	delete fb;
+	/*Copy fbo to texture and use the copy for post-processing*/
+	intermediateFbo = new FrameBuffer(fbo);
+	intermediateFbo->bindTexture();
+	fbo->bind();
+	postScene->draw();
+	fbo->unbind();
+
+	/*Bind the final result to a texture*/
+	fbo->bindTexture();
+	viewPortScene->draw();
+
+	delete intermediateFbo;
+	delete fbo;
+
 	checkOpenGLError("ERROR: Could not draw scene.");
 	glutSwapBuffers();
 }
@@ -98,7 +84,8 @@ void reshape(int w, int h)
 	glViewport(0, 0, WinX, WinY);
     SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
     scene->getCamera()->perspective((float)M_PI/4, (WinX/WinY), 0.1, 550);
-	//scene->getCamera()->ortho(-2, 2, -2, 2, 0, 10);
+	scene = ResourceManager::getInstance()->getScene(FINAL);
+	scene->getCamera()->ortho(-1, 1, 1, -1, 0, 1);
 }
 
 void timer(int value)

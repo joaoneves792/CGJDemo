@@ -16,10 +16,14 @@ private:
     int width, height;
 public:
     FrameBuffer(int x, int y);
+    FrameBuffer(FrameBuffer* otherFrameBuffer);
     ~FrameBuffer();
     void bind();
     void unbind();
     void bindTexture();
+
+private:
+    void initializeNewFrameBuffer(int x, int y);
 
 };
 

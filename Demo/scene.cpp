@@ -114,5 +114,13 @@ void setupScene(){
     //Camera* hudCamera = new FreeCamera(Vec3(0.0f, 0.0f, 0.1f), Quat(0.01f, Vec3(0.0f, 1.0f, 0.0f)));
    // hudCamera->ortho(-2, 2, 2, -2, 1, -1);
 
+
+    Camera* viewportCamera = new FreeCamera(Vec3(0.0f, 0.0f, 0.0f), Quat(0.01f, Vec3(0.0f, 1.0f, 0.0f)));
+    viewportCamera->ortho(-1, 1, 1, -1, 0, 1);
+    SceneNode* final = ResourceFactory::createScene(FINAL, viewportCamera);
+    final->setMesh(quad);
+    Shader* twoD = rm->getShader(TWO_D_SHADER);
+    final->setShader(twoD);
+    final->translate(0.0f, 0.0f, -0.1f);
 }
 

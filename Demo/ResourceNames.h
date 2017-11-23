@@ -13,11 +13,13 @@
 /*Shaders*/
 #define H3D_SHADER "h3d"
 #define SKY_SHADER "sky"
+#define TWO_D_SHADER "twoDShader"
 #define QUAD_SHADER "quad"
 
 /*Scenes*/
 #define SCENE "main"
 #define POST "post"
+#define FINAL "final"
 
 /*Lights*/
 #define SUN "sun"

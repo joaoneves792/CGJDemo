@@ -36,7 +36,7 @@ void loadShaders(){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, (P*V*M).transpose());
         glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, M.transpose());
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, V.transpose());
-        glUniformMatrix4fv(NormalLocation, 1, GL_FALSE, (V*M).inverse());
+        glUniformMatrix4fv(NormalLocation, 1, GL_FALSE, (V*M).inverse()); //Transpose is implicit
     });
 
     lightPositionLocation = h3dShader->getUniformLocation("lightPosition_worldspace[0]");
@@ -47,10 +47,12 @@ void loadShaders(){
     LightsManager::getInstance()->registerShader(h3dShader, [=](float* color, float* position, float* cone,
                                                                 float* attenuation, int enabled, int i){
         glUniform1iv(lightsEnabledLocation+i, 1, &enabled);
-        glUniform3fv(lightColorLocation+i, 1, color);
-        glUniform4fv(lightConeLocation+i, 1, cone);
-        glUniform4fv(lightAttenuationLocation+i, 1, attenuation);
-        glUniform3fv(lightPositionLocation+i, 1, position);
+        if(enabled) {
+            glUniform3fv(lightColorLocation + i, 1, color);
+            glUniform4fv(lightConeLocation + i, 1, cone);
+            glUniform4fv(lightAttenuationLocation + i, 1, attenuation);
+            glUniform3fv(lightPositionLocation + i, 1, position);
+        }
     });
 
 
@@ -71,6 +73,15 @@ void loadShaders(){
     quadShader->link();
     MVPLocation = quadShader->getUniformLocation("MVP");
     quadShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, (P * V * M).transpose());
+    });
+
+    /*2D shader*/
+    auto twoDShader = ResourceFactory::createShader(TWO_D_SHADER, "res/shaders/2Dv.glsl", "res/shaders/2Df.glsl");
+    twoDShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    twoDShader->link();
+    MVPLocation = twoDShader->getUniformLocation("MVP");
+    twoDShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, (P * V * M).transpose());
     });
 
