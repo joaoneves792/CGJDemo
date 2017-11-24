@@ -34,8 +34,10 @@ void InputManager::update(int value) {
         return;
 
     //Call the callbacks
-    if(im->mouseMovementCallback != nullptr)
+    if(im->mouseMovementCallback != nullptr && im->mouseDirty) {
         im->mouseMovementCallback(im->mouseX, im->mouseY, timeDelta);
+        im->mouseDirty = false;
+    }
 
     for(auto it=im->pendingKeyCallbacks.begin(); it!=im->pendingKeyCallbacks.end(); it++){
         it->second(timeDelta);
@@ -81,6 +83,7 @@ void InputManager::specialKeyUp(int key) {
 void InputManager::mouseMovement(int x, int y) {
     mouseX = x;
     mouseY = y;
+    mouseDirty = true;
 }
 
 void InputManager::addKeyAction(unsigned char key, std::function<void(int dt)> callback) {

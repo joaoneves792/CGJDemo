@@ -8,11 +8,13 @@
 #include "CGJengine.h"
 #include "scene.h"
 #include "actions.h"
-#include "ResourceNames.h"
+#include "Constants.h"
 
 #define CAPTION "CGJDemo"
 
-int WinX = 1024, WinY = 1024;
+
+int WinX = WIN_X;
+int WinY = WIN_Y;
 int WindowHandle = 0;
 unsigned int FrameCount = 0;
 
@@ -29,33 +31,30 @@ void display()
 	static SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
 	static SceneGraph* postScene = ResourceManager::getInstance()->getScene(POST);
 	static SceneGraph* viewPortScene = ResourceManager::getInstance()->getScene(FINAL);
+    static FrameBuffer* mainFBO = ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
+    static FrameBuffer* helperFBO = ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
 
 	++FrameCount;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	LightsManager::getInstance()->updateLights();
 
-    FrameBuffer* fbo = new FrameBuffer(WinX, WinY);
-	FrameBuffer* intermediateFbo;
 	/*Draw scene to fbo*/
-	fbo->bind();
+	mainFBO->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scene->draw();
-	fbo->unbind();
+	mainFBO->unbind();
 
 	/*Copy fbo to texture and use the copy for post-processing*/
-	intermediateFbo = new FrameBuffer(fbo);
-	intermediateFbo->bindTexture();
-	fbo->bind();
+	helperFBO->copyFrameBuffer(mainFBO);
+	helperFBO->bindTexture();
+	mainFBO->bind();
 	postScene->draw();
-	fbo->unbind();
+	mainFBO->unbind();
 
 	/*Bind the final result to a texture*/
-	fbo->bindTexture();
+	mainFBO->bindTexture();
 	viewPortScene->draw();
-
-	delete intermediateFbo;
-	delete fbo;
 
 	checkOpenGLError("ERROR: Could not draw scene.");
 	glutSwapBuffers();
@@ -81,15 +80,17 @@ void reshape(int w, int h)
 {
 	WinX = w;
 	WinY = h;
-	glViewport(0, 0, WinX, WinY);
-	ResourceManager::getInstance()->getCamera(FREE_CAM)->perspective((float)M_PI/4, (WinX/WinY), 0.1, 550);
-	ResourceManager::getInstance()->getCamera(ORTHO_CAM)->ortho(-1, 1, 1, -1, 0, 1);
+	ResourceManager::getInstance()->getCamera(FREE_CAM)->resize(w, h);
+	ResourceManager::getInstance()->getCamera(ORTHO_CAM)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO)->resize(w, h);
+	glViewport(0, 0, w, h);
 }
 
 void timer(int value)
 {
 	std::ostringstream oss;
-	oss << CAPTION << ": " << FrameCount << " FPS @ (" << WinX << "x" << WinY << ")";
+	oss << CAPTION << ": " << FrameCount << " FPS";
 	std::string s = oss.str();
 	glutSetWindow(WindowHandle);
 	glutSetWindowTitle(s.c_str());
@@ -181,7 +182,7 @@ void setupGLUT(int argc, char* argv[])
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	
-	glutInitWindowSize(WinX, WinY);
+	glutInitWindowSize(WIN_X, WIN_Y);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	WindowHandle = glutCreateWindow(CAPTION);
 	if(WindowHandle < 1) {

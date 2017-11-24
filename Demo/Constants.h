@@ -2,8 +2,8 @@
 // Created by joao on 11/21/17.
 //
 
-#ifndef CGJDEMO_RESOURCENAMES_H
-#define CGJDEMO_RESOURCENAMES_H
+#ifndef CGJDEMO_CONSTANTS_H
+#define CGJDEMO_CONSTANTS_H
 
 /*Meshes*/
 #define CAR "car"
@@ -32,8 +32,18 @@
 #define SPHERE_CAM "sphereCamera"
 #define ORTHO_CAM "orthoCamera"
 
+/*FBOs*/
+#define MAIN_FBO "main"
+#define HELPER_FBO "helper"
+
+/*Initial window size*/
+#define WIN_X 1024
+#define WIN_Y 1024
+
 /*Misc constants*/
 #define ROAD_SEGMENTS 12
+
+
 
 
 

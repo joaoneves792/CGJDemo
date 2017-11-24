@@ -4,7 +4,7 @@
 
 #include "CGJengine.h"
 #include "shaders.h"
-#include "ResourceNames.h"
+#include "Constants.h"
 
 
 void loadShaders(){
@@ -19,7 +19,7 @@ void loadShaders(){
     int lightAttenuationLocation;
 
     /*H3D Shader*/
-    auto h3dShader = ResourceFactory::createShader(H3D_SHADER, "res/shaders/vert.glsl", "res/shaders/frag.glsl");
+    auto h3dShader = ResourceManager::Factory::createShader(H3D_SHADER, "res/shaders/vert.glsl", "res/shaders/frag.glsl");
     h3dShader->setAttribLocation("inPositon", VERTICES__ATTR);
     h3dShader->setAttribLocation("inNormal", NORMALS__ATTR);
     h3dShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
@@ -58,7 +58,7 @@ void loadShaders(){
 
 
     /*Sky Shader*/
-    auto skyShader = ResourceFactory::createShader(SKY_SHADER, "res/shaders/skyv.glsl", "res/shaders/skyf.glsl");
+    auto skyShader = ResourceManager::Factory::createShader(SKY_SHADER, "res/shaders/skyv.glsl", "res/shaders/skyf.glsl");
     skyShader->setAttribLocation("inPosition", VERTICES__ATTR);
     skyShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
     skyShader->link();
@@ -68,7 +68,7 @@ void loadShaders(){
     });
 
     /*Quad shader*/
-    auto quadShader = ResourceFactory::createShader(QUAD_SHADER, "res/shaders/quadv.glsl", "res/shaders/quadf.glsl");
+    auto quadShader = ResourceManager::Factory::createShader(QUAD_SHADER, "res/shaders/quadv.glsl", "res/shaders/quadf.glsl");
     quadShader->setAttribLocation("inPosition", VERTICES__ATTR);
     quadShader->link();
     MVPLocation = quadShader->getUniformLocation("MVP");
@@ -77,7 +77,7 @@ void loadShaders(){
     });
 
     /*2D shader*/
-    auto twoDShader = ResourceFactory::createShader(TWO_D_SHADER, "res/shaders/2Dv.glsl", "res/shaders/2Df.glsl");
+    auto twoDShader = ResourceManager::Factory::createShader(TWO_D_SHADER, "res/shaders/2Dv.glsl", "res/shaders/2Df.glsl");
     twoDShader->setAttribLocation("inPosition", VERTICES__ATTR);
     twoDShader->link();
     MVPLocation = twoDShader->getUniformLocation("MVP");

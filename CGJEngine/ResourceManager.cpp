@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "ResourceManager.h"
+#include <unordered_map>
 
 ResourceManager* ResourceManager::ourInstance = nullptr;
 
@@ -39,6 +40,11 @@ void ResourceManager::__destroyCamera(Camera *camera) {
     delete camera;
 }
 
+void ResourceManager::__destroyFrameBuffer(FrameBuffer *fbo) {
+    fbo->unbind();
+    delete fbo;
+}
+
 void ResourceManager::addMesh(std::string name, Mesh *mesh) {
     meshes[name] = mesh;
 }
@@ -53,6 +59,10 @@ void ResourceManager::addScene(std::string name, SceneGraph *scene) {
 
 void ResourceManager::addCamera(std::string name, Camera *camera) {
     cameras[name] = camera;
+}
+
+void ResourceManager::addFrameBuffer(std::string name, FrameBuffer *fbo) {
+    fbos[name] = fbo;
 }
 
 Mesh* ResourceManager::getMesh(std::string name) {
@@ -82,6 +92,14 @@ SceneGraph* ResourceManager::getScene(std::string name) {
 Camera* ResourceManager::getCamera(std::string name){
     auto it = cameras.find(name);
     if(it == cameras.end()){
+        return nullptr;
+    }
+    return it->second;
+}
+
+FrameBuffer* ResourceManager::getFrameBuffer(std::string name) {
+    auto it = fbos.find(name);
+    if(it == fbos.end()){
         return nullptr;
     }
     return it->second;
@@ -122,6 +140,14 @@ void ResourceManager::destroyCamera(std::string name) {
     }
 }
 
+void ResourceManager::destroyFrameBuffer(std::string name) {
+    auto it = fbos.find(name);
+    if(it != fbos.end()){
+        __destroyFrameBuffer(it->second);
+        fbos.erase(it);
+    }
+}
+
 void ResourceManager::destroyAllMeshes() {
     for(auto it=meshes.begin(); it!=meshes.end(); it++){
         __destroyMesh(it->second);
@@ -150,9 +176,18 @@ void ResourceManager::destroyAllCameras() {
     cameras.clear();
 }
 
+void ResourceManager::destroyAllFrameBuffers() {
+    for(auto it=fbos.begin(); it!=fbos.end(); it++){
+        __destroyFrameBuffer(it->second);
+    }
+    fbos.clear();
+}
+
 void ResourceManager::destroyEverything() {
     destroyAllMeshes();
     destroyAllShaders();
     destroyAllScenes();
     destroyAllCameras();
+    destroyAllFrameBuffers();
 }
+

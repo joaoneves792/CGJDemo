@@ -34,4 +34,8 @@ void FreeCamera::changeOrientation(float yaw, float pitch, float roll){
     rotated_front = orientation.GLMatrix() * front;
 }
 
+void FreeCamera::resize(int x, int y) {
+    Camera::resize(x, y);
+}
+
 FreeCamera::~FreeCamera()=default;

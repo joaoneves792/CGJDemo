@@ -18,12 +18,15 @@ public:
     FrameBuffer(int x, int y);
     FrameBuffer(FrameBuffer* otherFrameBuffer);
     ~FrameBuffer();
+    void resize(int x, int y);
     void bind();
     void unbind();
     void bindTexture();
 
+    void copyFrameBuffer(FrameBuffer* otherFrameBuffer);
 private:
     void initializeNewFrameBuffer(int x, int y);
+    void destroy();
 };
 
 

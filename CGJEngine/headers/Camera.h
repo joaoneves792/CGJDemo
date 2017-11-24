@@ -19,12 +19,17 @@ protected:
     Quat orientation;
 
     Mat4 projection;
+    float fovy;
+    float near;
+    float far;
+
 public:
     virtual Mat4 getMatrix()=0;
     Mat4 getProjectionMatrix();
     virtual Mat4 getViewMatrix()=0;
     virtual void move(float x, float y, float z)=0;
     virtual void changeOrientation(float yaw, float pitch, float roll)=0;
+    virtual void resize(int x, int y);
     void perspective(float fovy, float aspectRatio, float near, float far);
     void ortho(float left, float right, float top, float bottom, float near, float far);
     virtual ~Camera()= default;

@@ -4,10 +4,10 @@
 
 #include "CGJengine.h"
 #include "meshes.h"
-#include "ResourceNames.h"
+#include "Constants.h"
 
 void loadMeshes(){
-    ResourceFactory::createMesh(CAR, "res/charger/charger.h3d");
-    ResourceFactory::createMesh(ROAD, "res/Road/road.h3d");
-    ResourceFactory::createMesh(SKY, "res/Road/sky.h3d");
+    ResourceManager::Factory::createMesh(CAR, "res/charger/charger.h3d");
+    ResourceManager::Factory::createMesh(ROAD, "res/Road/road.h3d");
+    ResourceManager::Factory::createMesh(SKY, "res/Road/sky.h3d");
 }

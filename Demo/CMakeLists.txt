@@ -18,7 +18,7 @@ set(SOURCE_FILES
 		meshes.h
 		shaders.cpp
 		shaders.h
-		ResourceNames.h
+        Constants.h
 		Road.cpp
 		Road.h)
 

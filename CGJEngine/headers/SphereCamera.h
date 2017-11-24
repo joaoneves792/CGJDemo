@@ -15,6 +15,7 @@ public:
     virtual Mat4 getViewMatrix();
     virtual void move(float x, float y, float z);
     virtual void changeOrientation(float yaw, float pitch, float roll);
+    virtual void resize(int x, int y);
     virtual ~SphereCamera();
 };
 #endif //CGJM_SPHERECAMERA_H

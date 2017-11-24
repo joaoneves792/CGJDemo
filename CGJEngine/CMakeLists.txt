@@ -25,6 +25,7 @@ set(SOURCE_FILES
 	QuadMesh.cpp
 	SphereCamera.cpp
 	FreeCamera.cpp
+	HUDCamera.cpp
 	Camera.cpp
 	SceneGraph.cpp
 	SceneNode.cpp
@@ -33,7 +34,10 @@ set(SOURCE_FILES
 	InputManager.cpp
     Textures.cpp
 	FrameBuffer.cpp
-	ResourceFactory.cpp LightNode.cpp LightsManager.cpp headers/LightsManager.h)
+	ResourceFactory.cpp
+	LightNode.cpp
+	LightsManager.cpp
+        )
 
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 

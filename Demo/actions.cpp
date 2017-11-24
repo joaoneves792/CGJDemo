@@ -5,7 +5,7 @@
 #include <sstream>
 #include "CGJengine.h"
 #include "actions.h"
-#include "ResourceNames.h"
+#include "Constants.h"
 #include "Road.h"
 #include "SceneNode.h"
 
@@ -41,10 +41,10 @@ void setupActions() {
         scene->getCamera()->move(timeDelta * movementRate, 0.0f, 0.0f);
     });
     im->addKeyAction('q', [=](int timeDelta){
-        scene->getCamera()->changeOrientation(0.0f, 0.0f, -(timeDelta * movementRate));
+        scene->getCamera()->changeOrientation(0.0f, 0.0f, (timeDelta * movementRate));
     });
     im->addKeyAction('e', [=](int timeDelta){
-        scene->getCamera()->changeOrientation(0.0f, 0.0f, (timeDelta * movementRate));
+        scene->getCamera()->changeOrientation(0.0f, 0.0f, -(timeDelta * movementRate));
     });
     im->addKeyAction(ESCAPE, [=](int timeDelta){
         glutLeaveMainLoop();

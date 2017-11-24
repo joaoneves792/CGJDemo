@@ -9,7 +9,7 @@
 #include "CGJengine.h"
 #include "shaders.h"
 #include "meshes.h"
-#include "ResourceNames.h"
+#include "Constants.h"
 #include "SceneNode.h"
 
 void setupScene(){
@@ -17,8 +17,13 @@ void setupScene(){
     loadMeshes();
     loadShaders();
 
-    auto camera = ResourceFactory::createFreeCamera(FREE_CAM, Vec3(0.0f, 5.0f, 5.0f), Quat(0.1, Vec3(0.0f, 1.0f, 0.0f)));
-    SceneNode* root = ResourceFactory::createScene(SCENE, camera);
+    ResourceManager::Factory::createFrameBuffer(MAIN_FBO, WIN_X, WIN_Y);
+    ResourceManager::Factory::createFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
+
+
+    auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(0.0f, 5.0f, 5.0f), Quat(0.1, Vec3(0.0f, 1.0f, 0.0f)));
+    camera->perspective((float)M_PI/4.0f, 0, 0.1f, 550.0f);
+    SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
 
     /*Setup material handling for H3D models*/
     Shader* h3dShader = rm->getShader(H3D_SHADER);
@@ -55,7 +60,7 @@ void setupScene(){
         /*Create the lights*/
         std::stringstream lightName;
         lightName << LAMP_POST << i;
-        auto lamp = ResourceFactory::createLight(lightName.str());
+        auto lamp = ResourceManager::Factory::createLight(lightName.str());
         lamp->setColor(0.8f, 0.8f, 0.3f);
         lamp->setCone(-0.3f, -1.0f, 0.0f, M_PI/4.0f);
         lamp->setAttenuation(1.0f, 0.0f, 0.0f, 30.0f);
@@ -80,7 +85,7 @@ void setupScene(){
 
 
     /*Place the sun*/
-    auto sun = ResourceFactory::createLight(SUN);
+    auto sun = ResourceManager::Factory::createLight(SUN);
     sun->setColor(0.9f, 0.9f, 0.9f);
     sun->setPoint(10.0f, 20.0f, 0.0f);
     sun->setAttenuation(1.0f, 0.0f, 0.0f, -1.0f);
@@ -89,7 +94,7 @@ void setupScene(){
 
 
     /*PROTOTYPE CODE*/
-    SceneNode* particleRoot = ResourceFactory::createScene(POST, camera);
+    SceneNode* particleRoot = ResourceManager::Factory::createScene(POST, camera);
     particleRoot->translate(20.0f, 1.0f, -13.0f);
     particleRoot->setBillboard(true);
     //particleRoot->scale(2.0f, 2.0f, 2.0f);
@@ -111,9 +116,9 @@ void setupScene(){
         particleRoot->addChild(quadNode);
     }
 
-    auto viewportCamera = ResourceFactory::createFreeCamera(ORTHO_CAM, Vec3(0.0f, 0.0f, 0.0f), Quat(0.01f, Vec3(0.0f, 1.0f, 0.0f)));
-    viewportCamera->ortho(-1, 1, 1, -1, 0, 1);
-    SceneNode* final = ResourceFactory::createScene(FINAL, viewportCamera);
+    /*Setup Final result*/
+    auto viewportCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1);
+    SceneNode* final = ResourceManager::Factory::createScene(FINAL, viewportCamera);
     final->setMesh(quad);
     Shader* twoD = rm->getShader(TWO_D_SHADER);
     final->setShader(twoD);

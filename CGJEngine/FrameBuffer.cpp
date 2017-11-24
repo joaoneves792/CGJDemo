@@ -47,22 +47,30 @@ void FrameBuffer::initializeNewFrameBuffer(int x, int y) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void FrameBuffer::resize(int x, int y) {
+    destroy();
+    initializeNewFrameBuffer(x, y);
+}
+
 FrameBuffer::FrameBuffer(FrameBuffer *otherFrameBuffer) {
     initializeNewFrameBuffer(otherFrameBuffer->width, otherFrameBuffer->height);
+    copyFrameBuffer(otherFrameBuffer);
 
-    // Bind input FBO + texture to a color attachment
+}
+
+void FrameBuffer::copyFrameBuffer(FrameBuffer *otherFrameBuffer) {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, otherFrameBuffer->frameBuffer);
     glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, otherFrameBuffer->texture, 0);
     glReadBuffer(GL_COLOR_ATTACHMENT0);
 
     // Bind destination FBO + texture to another color attachment
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texture, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->frameBuffer);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->texture, 0);
     glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
     // specify source, destination drawing (sub)rectangles.
-    glBlitFramebuffer(0, 0, width, height,
-                      0, 0, width, height,
+    glBlitFramebuffer(0, 0, this->width, this->height,
+                      0, 0, this->width, this->height,
                       GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
     // unbind the color attachments
@@ -75,12 +83,16 @@ FrameBuffer::FrameBuffer(FrameBuffer *otherFrameBuffer) {
 }
 
 FrameBuffer::~FrameBuffer() {
+    destroy();
+}
+
+void FrameBuffer::destroy(){
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDeleteTextures(1, &texture);
-    glDeleteRenderbuffers(1, &depthRenderBuffer);
-    glDeleteFramebuffers(1, &frameBuffer);
+    glDeleteTextures(1, &this->texture);
+    glDeleteRenderbuffers(1, &this->depthRenderBuffer);
+    glDeleteFramebuffers(1, &this->frameBuffer);
 }
 
 void FrameBuffer::bind() {

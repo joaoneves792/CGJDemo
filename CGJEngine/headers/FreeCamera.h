@@ -18,6 +18,7 @@ public:
     virtual Mat4 getViewMatrix();
     virtual void move(float x, float y, float z);
     virtual void changeOrientation(float yaw, float pitch, float roll);
+    virtual void resize(int x, int y);
     virtual ~FreeCamera();
 };
 #endif //CGJM_FREECAMERA_H

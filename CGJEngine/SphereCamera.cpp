@@ -30,4 +30,7 @@ void SphereCamera::changeOrientation(float yaw, float pitch, float roll){
     orientation = Quat(roll, front) * orientation;
 }
 
+void SphereCamera::resize(int x, int y) {
+    Camera::resize(x, y);
+}
 SphereCamera::~SphereCamera()=default;

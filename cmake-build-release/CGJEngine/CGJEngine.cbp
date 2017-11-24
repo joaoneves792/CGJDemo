@@ -78,6 +78,9 @@
 		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/H3DMesh.cpp">
 			<Option target="CGJEngine"/>
 		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/HUDCamera.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
 		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/InputManager.cpp">
 			<Option target="CGJEngine"/>
 		</Unit>
@@ -114,10 +117,10 @@
 		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/Textures.cpp">
 			<Option target="CGJEngine"/>
 		</Unit>
-		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/glerror.cpp">
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/WindowManager.cpp">
 			<Option target="CGJEngine"/>
 		</Unit>
-		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/headers/LightsManager.h">
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/glerror.cpp">
 			<Option target="CGJEngine"/>
 		</Unit>
 		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/math/Mat2.cpp">

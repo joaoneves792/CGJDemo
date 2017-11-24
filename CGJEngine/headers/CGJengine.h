@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "SphereCamera.h"
 #include "FreeCamera.h"
+#include "HUDCamera.h"
 #include "Mesh.h"
 #include "OBJMesh.h"
 #include "H3DMesh.h"
@@ -21,9 +22,7 @@
 #include "SceneNode.h"
 #include "FrameBuffer.h"
 #include "ResourceManager.h"
-#include "ResourceFactory.h"
 #include "InputManager.h"
 #include "LightsManager.h"
-
 
 #endif //CGJM_CGJENGINE_H

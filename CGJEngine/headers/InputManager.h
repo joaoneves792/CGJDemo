@@ -23,6 +23,8 @@ private:
     long lastUpdateTime = 0;
 
     int mouseX, mouseY;
+    bool mouseDirty = true;
+
     std::unordered_map<unsigned char, std::function<void(int dt)>> keyCallbacks;//Call it until key is up
     std::unordered_map<int, std::function<void(int dt)>> specialKeyCallbacks;
 
