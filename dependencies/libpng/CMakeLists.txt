@@ -10,7 +10,7 @@
 # For conditions of distribution and use, see the disclaimer
 # and license in png.h
 
-project ( png C )
+project ( png_lib C )
 cmake_minimum_required ( VERSION 2.8 )
 include ( cmake/dist.cmake )
 
@@ -21,8 +21,8 @@ set ( PNGLIB_NAME libpng${PNGLIB_MAJOR}${PNGLIB_MINOR} )
 set ( PNGLIB_VERSION ${PNGLIB_MAJOR}.${PNGLIB_MINOR}.${PNGLIB_RELEASE} )
 
 # needed packages
-find_package ( ZLIB REQUIRED )
-include_directories ( ${ZLIB_INCLUDE_DIR} )
+#find_package ( ZLIB REQUIRED )
+include_directories ( ${ZLIB_INCLUDE_DIRS} )
 
 if ( NOT WIN32 )
   find_library ( M_LIBRARY NAMES m PATHS /usr/lib /usr/local/lib )
@@ -63,32 +63,34 @@ add_definitions ( -DPNG_CONFIGURE_LIBPNG )
 if ( PNG_DEBUG )
   add_definitions ( -DPNG_DEBUG )
 endif ( )
-include_directories ( ${CMAKE_CURRENT_SOURCE_DIR} ${ZLIB_INCLUDE_DIR} )
+include_directories ( ${CMAKE_CURRENT_SOURCE_DIR} ${ZLIB_INCLUDE_DIRS} )
 
-add_library ( ${PNG_LIB_NAME} ${libpng_sources} )
-target_link_libraries ( ${PNG_LIB_NAME} ${ZLIB_LIBRARY} ${M_LIBRARY} )
+
+
+add_library ( ${PNG_LIB_NAME} STATIC ${libpng_sources} )
+#target_link_libraries ( ${PNG_LIB_NAME} z_lib ${M_LIBRARY} )
 
 if ( PNG_SHARED AND WIN32 )
   set_target_properties ( ${PNG_LIB_NAME} PROPERTIES DEFINE_SYMBOL PNG_BUILD_DLL )
 endif ( )
 
-enable_testing ( )
-if ( PNG_TESTS )
+#enable_testing ( )
+#if ( PNG_TESTS )
   # removed: AND PNG_SHARED
   # does not work with msvc due to png_lib_ver issue
-  add_executable ( pngtest ${pngtest_sources} )
-  target_link_libraries ( pngtest ${PNG_LIB_NAME} )
-  add_test ( pngtest ./pngtest ${CMAKE_CURRENT_SOURCE_DIR}/pngtest.png )
+  #add_executable ( pngtest ${pngtest_sources} )
+  #target_link_libraries ( pngtest ${PNG_LIB_NAME} )
+  #add_test ( pngtest ./pngtest ${CMAKE_CURRENT_SOURCE_DIR}/pngtest.png )
   #
-  add_executable ( pngvalid ${pngvalid_sources} )
-  target_link_libraries ( pngvalid ${PNG_LIB_NAME} )
-  add_test ( pngvalid ./pngvalid )
-endif ( )
+  #add_executable ( pngvalid ${pngvalid_sources} )
+  #target_link_libraries ( pngvalid ${PNG_LIB_NAME} )
+  #add_test ( pngvalid ./pngvalid )
+#endif ( )
 
-install_library ( ${PNG_LIB_NAME} )
-install_header ( ${libpng_public_hdrs} )
+#install_library ( ${PNG_LIB_NAME} )
+#install_header ( ${libpng_public_hdrs} )
 #removed: install_header(${libpng_public_hdrs} INTO ${PNGLIB_NAME})
-install_doc ( libpng.3 libpng.3 png.5 )
+#install_doc ( libpng.3 libpng.3 png.5 )
 
 #~ removed from original: pkgconfig
 #~ removed from original: create_symlink

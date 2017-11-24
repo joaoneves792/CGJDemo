@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2.2)
 project(CGJDemo C CXX)
 
 if( MSVC )
-	list(APPEND CMAKE_PREFIX_PATH 
+	list(APPEND CMAKE_PREFIX_PATH
 		${CGJDemo_SOURCE_DIR}/dependencies/glew-2.1.0/ 
 		${CGJDemo_SOURCE_DIR}/dependencies/freeglut/ )
 endif (MSVC)
@@ -10,8 +10,8 @@ endif (MSVC)
 find_package(GLEW REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(JPEG)
-find_package(PNG)
+#find_package(JPEG)
+#find_package(PNG)
 
 if( MSVC )
 	if(CMAKE_SIZEOF_VOID_P EQUAL 4) #HACK TO FIGURE OUT WETHER BUILDING x86 or x64
@@ -30,6 +30,8 @@ if (UNIX)
 endif (UNIX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/x64)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 if( MSVC )
 	if(CMAKE_SIZEOF_VOID_P EQUAL 4)
@@ -45,15 +47,19 @@ else(MSVC)
 		add_custom_target(InstallFreeGLUT ALL)
 endif (MSVC)
 
-if(NOT JPEG_FOUND)
-	add_subdirectory(dependencies/libjpeg)
-	set(JPEG_INCLUDE_DIR dependencies/libjpeg)
-	set(JPEG_LIBRARIES jpeg)
-endif(NOT JPEG_FOUND)
-if(NOT PNG_FOUND)
-	add_subdirectory(dependencies/libpng)
-	set(PNG_INCLUDE_DIR dependencies/libpng)
-	set(PNG_LIBRARIES png)
-endif(NOT PNG_FOUND)
-add_subdirectory(CGJEngine) 
-add_subdirectory(Demo) 
+
+set(ZLIB_INCLUDE_DIRS ${CGJDemo_SOURCE_DIR}/dependencies/zlib
+        CACHE INTERNAL "ZLIB: Include Directories" FORCE)
+set(JPEG_INCLUDE_DIR ${CGJDemo_SOURCE_DIR}/dependencies/libjpeg
+        CACHE INTERNAL "JPEG: Include Directories" FORCE)
+set(PNG_INCLUDE_DIR ${CGJDemo_SOURCE_DIR}/dependencies/libpng
+        CACHE INTERNAL "PNG: Include Directories" FORCE)
+add_subdirectory(dependencies/zlib)
+add_subdirectory(dependencies/libjpeg)
+add_subdirectory(dependencies/libpng)
+
+list(INSERT CMAKE_PREFIX_PATH 0
+        ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+
+add_subdirectory(CGJEngine)
+add_subdirectory(Demo)

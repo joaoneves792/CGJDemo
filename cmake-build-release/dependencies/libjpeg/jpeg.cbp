@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="jpeg"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\dependencies\;CMake Files\dependencies\zlib\;CMake Files\dependencies\libjpeg\;CMake Files\dependencies\libpng\;CMake Files\dependencies\libpng\cmake\;CMake Files\dependencies\libpng\scripts\;CMake Files\CGJEngine\;CMake Files\Demo\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libjpeg">
+				<Option output="/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/liblibjpeg.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 libjpeg"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libjpeg/fast">
+				<Option output="/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/liblibjpeg.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 libjpeg/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="djpeg">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/djpeg" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 djpeg"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="djpeg/fast">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/djpeg" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 djpeg/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="jpegtran">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/jpegtran" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 jpegtran"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="jpegtran/fast">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/jpegtran" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 jpegtran/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rdjpgcom">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/rdjpgcom" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 rdjpgcom"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rdjpgcom/fast">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/rdjpgcom" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 rdjpgcom/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="cjpeg">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/cjpeg" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 cjpeg"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="cjpeg/fast">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/cjpeg" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 cjpeg/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="wrjpgcom">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/wrjpgcom" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 wrjpgcom"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="wrjpgcom/fast">
+				<Option output="/home/joao/workspace/CGJDemo/bin/x64/wrjpgcom" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/bin/x64"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 wrjpgcom/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/dependencies/libjpeg/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/cdjpeg.c">
+			<Option target="djpeg"/>
+			<Option target="jpegtran"/>
+			<Option target="cjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/cdjpeg.h">
+			<Option target="djpeg"/>
+			<Option target="jpegtran"/>
+			<Option target="cjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/cjpeg.c">
+			<Option target="cjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/djpeg.c">
+			<Option target="djpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jaricom.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcapimin.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcapistd.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcarith.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jccoefct.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jccolor.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcdctmgr.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jchuff.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcinit.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcmainct.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcmarker.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcmaster.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcomapi.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcparam.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcprepct.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jcsample.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jctrans.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdapimin.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdapistd.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdarith.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdatadst.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdatasrc.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdcoefct.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdcolor.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jddctmgr.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdhuff.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdinput.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdmainct.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdmarker.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdmaster.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdmerge.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdpostct.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdsample.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jdtrans.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jerror.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jerror.h">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jfdctflt.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jfdctfst.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jfdctint.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jidctflt.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jidctfst.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jidctint.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jmemmgr.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jmemnobs.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jpegtran.c">
+			<Option target="jpegtran"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jquant1.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jquant2.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jutils.c">
+			<Option target="libjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/rdbmp.c">
+			<Option target="cjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/rdcolmap.c">
+			<Option target="djpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/rdgif.c">
+			<Option target="cjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/rdjpgcom.c">
+			<Option target="rdjpgcom"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/rdppm.c">
+			<Option target="cjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/rdrle.c">
+			<Option target="cjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/rdswitch.c">
+			<Option target="jpegtran"/>
+			<Option target="cjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/rdtarga.c">
+			<Option target="cjpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/transupp.c">
+			<Option target="jpegtran"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/transupp.h">
+			<Option target="jpegtran"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/wrbmp.c">
+			<Option target="djpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/wrgif.c">
+			<Option target="djpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/wrjpgcom.c">
+			<Option target="wrjpgcom"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/wrppm.c">
+			<Option target="djpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/wrrle.c">
+			<Option target="djpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/wrtarga.c">
+			<Option target="djpeg"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/.NoDartCoverage">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlibDllConfig.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlib_mangle.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlib.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zconf.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/.NoDartCoverage">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlibDllConfig.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlib_mangle.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlib.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zconf.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\libjpeg\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jconfig.h.in">
+			<Option virtualFolder="CMake Files\dependencies\libjpeg\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\libjpeg\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jconfig.h.in">
+			<Option virtualFolder="CMake Files\dependencies\libjpeg\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\libpng\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\libpng\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/cmake/dist.cmake">
+			<Option virtualFolder="CMake Files\dependencies\libpng\cmake\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/cmake/dist.cmake">
+			<Option virtualFolder="CMake Files\dependencies\libpng\cmake\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/scripts/pnglibconf.h.prebuilt">
+			<Option virtualFolder="CMake Files\dependencies\libpng\scripts\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/scripts/pnglibconf.h.prebuilt">
+			<Option virtualFolder="CMake Files\dependencies\libpng\scripts\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\CGJEngine\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\CGJEngine\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/Demo/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\Demo\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/Demo/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\Demo\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

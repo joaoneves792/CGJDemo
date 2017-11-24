@@ -9,6 +9,14 @@ include_directories(
 	${JPEG_INCLUDE_DIR}
 	${PNG_INCLUDE_DIR}
 	)
+set(PNG_INCLUDE_FILES
+    ${PNG_INCLUDE_DIR}/pngconf.h
+    ${PNG_INCLUDE_DIR}/pngdebug.h
+    ${PNG_INCLUDE_DIR}/png.h
+    ${PNG_INCLUDE_DIR}/pnginfo.h
+    ${PNG_INCLUDE_DIR}/pngpriv.h
+    ${PNG_INCLUDE_DIR}/pngstruct.h
+    )
 set(SOURCE_FILES
 	math/Vec2.cpp
 	math/Vec3.cpp
@@ -39,7 +47,15 @@ set(SOURCE_FILES
 	LightsManager.cpp
         )
 
-add_library(${PROJECT_NAME} ${SOURCE_FILES})
+add_library(jpeg_lib STATIC IMPORTED)
+SET_TARGET_PROPERTIES(jpeg_lib PROPERTIES IMPORTED_LOCATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/liblibjpeg.a)
+add_library(png_lib STATIC IMPORTED)
+SET_TARGET_PROPERTIES(png_lib PROPERTIES IMPORTED_LOCATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/libpng.a)
+add_library(z_lib STATIC IMPORTED)
+SET_TARGET_PROPERTIES(z_lib PROPERTIES IMPORTED_LOCATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/libzlib.a)
+
+add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
+target_link_libraries(${PROJECT_NAME} jpeg_lib png_lib z_lib)
 
 set(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/headers ${PROJECT_SOURCE_DIR}/math/headers
 	CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)

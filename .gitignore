@@ -9,6 +9,7 @@
 */build/
 /build
 /bin/*
+/lib/*
 .vs
 .idea
 cmake-build-debug

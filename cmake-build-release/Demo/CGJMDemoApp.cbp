@@ -5,7 +5,7 @@
 		<Option title="CGJMDemoApp"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\CGJEngine\;CMake Files\Demo\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\dependencies\;CMake Files\dependencies\zlib\;CMake Files\dependencies\libjpeg\;CMake Files\dependencies\libpng\;CMake Files\dependencies\libpng\cmake\;CMake Files\dependencies\libpng\scripts\;CMake Files\CGJEngine\;CMake Files\Demo\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/joao/workspace/CGJDemo/cmake-build-release/Demo"/>
@@ -68,7 +68,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/joao/workspace/CGJDemo/Demo/ResourceNames.h">
+		<Unit filename="/home/joao/workspace/CGJDemo/Demo/Constants.h">
 			<Option target="demo"/>
 		</Unit>
 		<Unit filename="/home/joao/workspace/CGJDemo/Demo/Road.cpp">
@@ -106,6 +106,72 @@
 		</Unit>
 		<Unit filename="/home/joao/workspace/CGJDemo/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/.NoDartCoverage">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlibDllConfig.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlib_mangle.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlib.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zconf.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/.NoDartCoverage">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlibDllConfig.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlib_mangle.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zlib.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/zlib/zconf.h">
+			<Option virtualFolder="CMake Files\dependencies\zlib\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\libjpeg\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jconfig.h.in">
+			<Option virtualFolder="CMake Files\dependencies\libjpeg\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\libjpeg\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libjpeg/jconfig.h.in">
+			<Option virtualFolder="CMake Files\dependencies\libjpeg\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\libpng\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\dependencies\libpng\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/cmake/dist.cmake">
+			<Option virtualFolder="CMake Files\dependencies\libpng\cmake\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/cmake/dist.cmake">
+			<Option virtualFolder="CMake Files\dependencies\libpng\cmake\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/scripts/pnglibconf.h.prebuilt">
+			<Option virtualFolder="CMake Files\dependencies\libpng\scripts\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/dependencies/libpng/scripts/pnglibconf.h.prebuilt">
+			<Option virtualFolder="CMake Files\dependencies\libpng\scripts\"/>
 		</Unit>
 		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\CGJEngine\"/>

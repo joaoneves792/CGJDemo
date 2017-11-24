@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 
-project(jpeg)
+project(jpeg_lib)
 
 include(CheckIncludeFile)
 include(CheckSymbolExists)
@@ -44,7 +44,7 @@ endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/jconfig.h.in ${PROJECT_SOURCE_DIR}/jconfig.h)
 
-add_library(libjpeg
+add_library(libjpeg STATIC
     jaricom.c
     jcapimin.c
     jcapistd.c
@@ -93,34 +93,34 @@ add_library(libjpeg
     jmemnobs.c
 )
 
-add_executable(cjpeg cjpeg.c rdppm.c rdgif.c rdtarga.c rdrle.c rdbmp.c rdswitch.c cdjpeg.c)
-target_link_libraries(cjpeg libjpeg)
+#add_executable(cjpeg cjpeg.c rdppm.c rdgif.c rdtarga.c rdrle.c rdbmp.c rdswitch.c cdjpeg.c)
+#target_link_libraries(cjpeg libjpeg)
 
-add_executable(djpeg djpeg.c wrppm.c wrgif.c wrtarga.c wrrle.c wrbmp.c rdcolmap.c cdjpeg.c)
-target_link_libraries(djpeg libjpeg)
+#add_executable(djpeg djpeg.c wrppm.c wrgif.c wrtarga.c wrrle.c wrbmp.c rdcolmap.c cdjpeg.c)
+#target_link_libraries(djpeg libjpeg)
 
-add_executable(jpegtran jpegtran.c rdswitch.c cdjpeg.c transupp.c)
-target_link_libraries(jpegtran libjpeg)
+#add_executable(jpegtran jpegtran.c rdswitch.c cdjpeg.c transupp.c)
+#target_link_libraries(jpegtran libjpeg)
 
-add_executable(rdjpgcom rdjpgcom.c)
+#add_executable(rdjpgcom rdjpgcom.c)
 
-add_executable(wrjpgcom wrjpgcom.c)
+#add_executable(wrjpgcom wrjpgcom.c)
 
-install(
-    TARGETS libjpeg cjpeg djpeg jpegtran rdjpgcom wrjpgcom
-    EXPORT "libjpegTargets"
-    LIBRARY DESTINATION "lib"
-    ARCHIVE DESTINATION "lib"
-    RUNTIME DESTINATION "bin"
-    INCLUDES DESTINATION "include"
-)
-install(
-    FILES
-        jconfig.h jerror.h jmorecfg.h jpeglib.h
-    DESTINATION "include"
-)
+#install(
+#    TARGETS libjpeg cjpeg djpeg jpegtran rdjpgcom wrjpgcom
+#    EXPORT "libjpegTargets"
+#    LIBRARY DESTINATION "lib"
+#    ARCHIVE DESTINATION "lib"
+#    RUNTIME DESTINATION "bin"
+#    INCLUDES DESTINATION "include"
+#)
+#install(
+#    FILES
+#        jconfig.h jerror.h jmorecfg.h jpeglib.h
+#    DESTINATION "include"
+#)
 
-install(
-    EXPORT "libjpegTargets"
-    DESTINATION "lib/cmake/libjpeg"
-)
+#install(
+#    EXPORT "libjpegTargets"
+#    DESTINATION "lib/cmake/libjpeg"
+#)

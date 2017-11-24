@@ -7,7 +7,7 @@
 #include "Shader.h"
 #include "SceneNode.h"
 
-SceneNode::SceneNode(std::__cxx11::string name) {
+SceneNode::SceneNode(std::string name) {
     this->name = name;
     mesh = nullptr;
     shader = nullptr;
@@ -22,7 +22,7 @@ SceneNode::SceneNode(std::__cxx11::string name) {
     billboard = false;
 }
 
-SceneNode::SceneNode(std::__cxx11::string name, Mesh *mesh) {
+SceneNode::SceneNode(std::string name, Mesh *mesh) {
     this->name = name;
     this->mesh = mesh;
     shader = nullptr;
@@ -38,7 +38,7 @@ SceneNode::SceneNode(std::__cxx11::string name, Mesh *mesh) {
     billboard = false;
 }
 
-SceneNode::SceneNode(std::__cxx11::string name, Mesh *mesh, Shader *shader) {
+SceneNode::SceneNode(std::string name, Mesh *mesh, Shader *shader) {
     this->name = name;
     this->mesh = mesh;
     this->shader = shader;
@@ -54,7 +54,7 @@ SceneNode::SceneNode(std::__cxx11::string name, Mesh *mesh, Shader *shader) {
     billboard = false;
 }
 
-std::__cxx11::string SceneNode::getName() {
+std::string SceneNode::getName() {
     return name;
 }
 
