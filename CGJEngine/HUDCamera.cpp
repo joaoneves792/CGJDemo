@@ -6,8 +6,8 @@
 #include "mat.h"
 
 HUDCamera::HUDCamera(float left, float right, float top, float bottom, float near, float far) {
-    this->near = near;
-    this->far = far;
+    _near = near;
+    _far = far;
     projection = CGJM::ortho(left, right, top, bottom, near, far);
 }
 

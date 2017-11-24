@@ -5,6 +5,10 @@
 #ifndef CGJDEMO_CONSTANTS_H
 #define CGJDEMO_CONSTANTS_H
 
+#ifndef M_PI
+#define M_PI 3.14156
+#endif
+
 /*Meshes*/
 #define CAR "car"
 #define ROAD "road"

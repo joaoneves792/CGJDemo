@@ -20,8 +20,8 @@ protected:
 
     Mat4 projection;
     float fovy;
-    float near;
-    float far;
+    float _near;
+    float _far;
 
 public:
     virtual Mat4 getMatrix()=0;
@@ -31,7 +31,6 @@ public:
     virtual void changeOrientation(float yaw, float pitch, float roll)=0;
     virtual void resize(int x, int y);
     void perspective(float fovy, float aspectRatio, float near, float far);
-    void ortho(float left, float right, float top, float bottom, float near, float far);
     virtual ~Camera()= default;
 };
 

@@ -24,7 +24,7 @@ set(SOURCE_FILES
 
 add_executable(demo ${SOURCE_FILES})
 target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} CGJEngine)
-add_dependencies(demo InstallFreeGLUT)
+add_dependencies(demo InstallFreeGLUT CGJEngine)
 
 add_custom_command(TARGET demo POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory

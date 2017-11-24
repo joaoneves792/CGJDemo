@@ -217,5 +217,5 @@ const Mat3 CGJM::dualMatrix(const Vec3& v){
 }
 
 Mat3::operator const float*() const{
-	return (mat)[0];
+		return &(mat[0][0]);
 }
