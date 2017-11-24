@@ -29,7 +29,6 @@ void cleanup()
 void display()
 {
 	static SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
-	static SceneGraph* postScene = ResourceManager::getInstance()->getScene(POST);
 	static SceneGraph* viewPortScene = ResourceManager::getInstance()->getScene(FINAL);
     static FrameBuffer* mainFBO = ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
     static FrameBuffer* helperFBO = ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
@@ -37,7 +36,7 @@ void display()
 	++FrameCount;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	LightsManager::getInstance()->updateLights();
+    LightsManager::getInstance()->uploadLights();
 
 	/*Draw scene to fbo*/
 	mainFBO->bind();
@@ -49,7 +48,7 @@ void display()
 	helperFBO->copyFrameBuffer(mainFBO);
 	helperFBO->bindTexture();
 	mainFBO->bind();
-	postScene->draw();
+	scene->draw(HEAT_HAZE_LEVEL);
 	mainFBO->unbind();
 
 	/*Bind the final result to a texture*/

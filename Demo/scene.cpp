@@ -94,10 +94,11 @@ void setupScene(){
 
 
     /*PROTOTYPE CODE*/
-    SceneNode* particleRoot = ResourceManager::Factory::createScene(POST, camera);
-    particleRoot->translate(20.0f, 1.0f, -13.0f);
+    auto particleRoot = new SceneNode("particleRoot");
+    particleRoot->translate(0.0f, 1.0f, 7.0f);
     particleRoot->setBillboard(true);
-    //particleRoot->scale(2.0f, 2.0f, 2.0f);
+    particleRoot->setProcessingLevel(HEAT_HAZE_LEVEL);
+    charger->addChild(particleRoot);
 
     Mesh* quad = new QuadMesh();
     rm->addMesh("quad", quad);
@@ -113,6 +114,7 @@ void setupScene(){
             glUniform1f(shader->getUniformLocation("offset"), (float)(glutGet(GLUT_ELAPSED_TIME)/ 1000.0 * 2*3.14159 * uniqueness));
         });
         quadNode->translate(i/5.0f, i/5.0f, i/5.0f);
+        quadNode->setProcessingLevel(HEAT_HAZE_LEVEL);
         particleRoot->addChild(quadNode);
     }
 

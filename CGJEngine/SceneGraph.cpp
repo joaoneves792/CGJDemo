@@ -50,11 +50,14 @@ void SceneGraph::update(int dt) {
         root->update(dt);
 }
 
-void SceneGraph::draw(){
+void SceneGraph::draw(int level){
     if(root != nullptr)
-        root->draw();
+        root->draw(level);
 }
 
+void SceneGraph::draw(){
+    draw(0);
+}
 SceneNode* SceneGraph::findNode(const std::string& name) {
     auto it = lookUpTable.find(name);
     if(it!=lookUpTable.end())

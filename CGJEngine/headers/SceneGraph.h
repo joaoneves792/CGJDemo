@@ -41,6 +41,7 @@ public:
 
     void update(int dt);
     void draw();
+    void draw(int level);
 };
 
 #endif //CGJM_SCENEGRAPH_H

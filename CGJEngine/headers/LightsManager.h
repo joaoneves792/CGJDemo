@@ -23,7 +23,7 @@ public:
     void registerShader(Shader* shader, std::function<void(float* color, float* position, float* cone,
                                                            float* attenuation, int enabled, int i)> callback);
 
-    void updateLights();
+    void uploadLights();
 };
 
 

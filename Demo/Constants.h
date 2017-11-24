@@ -42,6 +42,7 @@
 
 /*Misc constants*/
 #define ROAD_SEGMENTS 12
+#define HEAT_HAZE_LEVEL 10
 
 
 

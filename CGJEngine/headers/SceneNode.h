@@ -56,6 +56,8 @@ public:
 
     void setScene(SceneGraph* sceneGraph);
 
+    void setProcessingLevel(int level);
+
     void setPosition(float x, float y, float z);
     void translate(float x, float y, float z);
     virtual Vec3 getPosition();
@@ -77,7 +79,7 @@ public:
 
 
     void update(int dt);
-    void draw();
+    void draw(int level);
 
     Mat4 getModelMatrix();
 

@@ -66,6 +66,10 @@ void SceneNode::setShader(Shader *shader) {
     this->shader = shader;
 }
 
+void SceneNode::setProcessingLevel(int level) {
+    processingLevel = level;
+}
+
 void SceneNode::setPosition(float x, float y, float z) {
     position = Vec3(x, y, z);
 }
@@ -218,54 +222,56 @@ SceneNode* SceneNode::findNode(const std::string &name) {
     return nullptr;
 }
 
-void SceneNode::draw() {
+void SceneNode::draw(int level) {
     if(!visible)
         return;
 
-    if(scene == nullptr)
-        scene = getScene();
+    if(level == processingLevel) {
 
-    if(mesh != nullptr) {
-        //Set the shader
-        if (shader != nullptr)
-            shader->use();
-        else {
-            SceneNode *n = this;
-            while (n->parent != nullptr) {
-                if (n->parent->shader != nullptr) {
-                    n->parent->shader->use();
-                    break;
-                } else {
-                    if (parent == nullptr) {
-                        std::cerr << "Missing shader in Scenegraph" << std::endl;
-                        exit(EXIT_FAILURE);
+        if (scene == nullptr)
+            scene = getScene();
+
+        if (mesh != nullptr) {
+            //Set the shader
+            if (shader != nullptr)
+                shader->use();
+            else {
+                SceneNode *n = this;
+                while (n->parent != nullptr) {
+                    if (n->parent->shader != nullptr) {
+                        n->parent->shader->use();
+                        break;
+                    } else {
+                        if (parent == nullptr) {
+                            std::cerr << "Missing shader in Scenegraph" << std::endl;
+                            exit(EXIT_FAILURE);
+                        }
+                        n = parent;
                     }
-                    n = parent;
                 }
             }
         }
+        //Call pre draw
+        if (pre_draw != nullptr)
+            pre_draw();
+
+        if (mesh != nullptr) {
+            //Upload MVP
+            Mat4 P = scene->getProjectionMatrix();
+            Mat4 V = scene->getViewMatrix();
+            Mat4 M = getModelMatrix();
+            shader->uploadMVP(M, V, P);
+
+            //Draw
+            mesh->draw();
+        }
+        //Call post draw
+        if (post_draw != nullptr)
+            post_draw();
+
+        glUseProgram(0);
     }
-    //Call pre draw
-    if(pre_draw != nullptr)
-        pre_draw();
-
-    if(mesh != nullptr) {
-        //Upload MVP
-        Mat4 P = scene->getProjectionMatrix();
-        Mat4 V = scene->getViewMatrix();
-        Mat4 M = getModelMatrix();
-        shader->uploadMVP(M, V, P);
-
-        //Draw
-        mesh->draw();
-    }
-    //Call post draw
-    if(post_draw != nullptr)
-        post_draw();
-
-    glUseProgram(0);
-
     //Draw the childs
     for(SceneNode* n : childs)
-        n->draw();
+        n->draw(level);
 }

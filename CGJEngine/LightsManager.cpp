@@ -27,7 +27,7 @@ void LightsManager::registerShader(Shader *shader,
     shaderUpdateCallback[shader] = callback;
 }
 
-void LightsManager::updateLights() {
+void LightsManager::uploadLights() {
     int i = 0;
     for(auto it=enabledLights.begin(); it!=enabledLights.end(); it++){
         for(auto sit=shaderUpdateCallback.begin(); sit!=shaderUpdateCallback.end(); sit++){
