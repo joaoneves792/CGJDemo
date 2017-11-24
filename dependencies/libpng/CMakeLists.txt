@@ -48,11 +48,11 @@ set ( PNG_LIB_NAME png )
 #~# TODO: fix this by building with awk; without this no cmake build can be
 #~# configured directly (to do so indirectly use your local awk to build a
 #~# pnglibconf.h in the build directory.)
-configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/scripts/pnglibconf.h.prebuilt ${CMAKE_CURRENT_BINARY_DIR}/pnglibconf.h )
+configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/scripts/pnglibconf.h.prebuilt ${PROJECT_SOURCE_DIR}/pnglibconf.h )
 include_directories ( ${CMAKE_CURRENT_BINARY_DIR} )
 
 # OUR SOURCES
-set ( libpng_public_hdrs png.h pngconf.h ${CMAKE_CURRENT_BINARY_DIR}/pnglibconf.h )
+set ( libpng_public_hdrs png.h pngconf.h ${PROJECT_SOURCE_DIR}/pnglibconf.h )
 set ( libpng_sources ${libpng_public_hdrs} pngdebug.h pnginfo.h pngpriv.h pngstruct.h 
   png.c pngerror.c pngget.c pngmem.c pngpread.c pngread.c pngrio.c pngrtran.c pngrutil.c 
   pngset.c pngtrans.c pngwio.c pngwrite.c pngwtran.c pngwutil.c )
