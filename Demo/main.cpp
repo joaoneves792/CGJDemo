@@ -82,10 +82,8 @@ void reshape(int w, int h)
 	WinX = w;
 	WinY = h;
 	glViewport(0, 0, WinX, WinY);
-    SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
-    scene->getCamera()->perspective((float)M_PI/4, (WinX/WinY), 0.1, 550);
-	scene = ResourceManager::getInstance()->getScene(FINAL);
-	scene->getCamera()->ortho(-1, 1, 1, -1, 0, 1);
+	ResourceManager::getInstance()->getCamera(FREE_CAM)->perspective((float)M_PI/4, (WinX/WinY), 0.1, 550);
+	ResourceManager::getInstance()->getCamera(ORTHO_CAM)->ortho(-1, 1, 1, -1, 0, 1);
 }
 
 void timer(int value)

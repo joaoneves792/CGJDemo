@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="CGJEngine"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\CGJEngine\;CMake Files\Demo\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CGJEngine">
+				<Option output="/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/libCGJEngine.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/joao/workspace/CGJDemo/CGJEngine/headers"/>
+					<Add directory="/home/joao/workspace/CGJDemo/CGJEngine/math/headers"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 CGJEngine"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="CGJEngine/fast">
+				<Option output="/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/libCGJEngine.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/joao/workspace/CGJDemo/CGJEngine/headers"/>
+					<Add directory="/home/joao/workspace/CGJDemo/CGJEngine/math/headers"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/../../../../include/c++/7.2.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 CGJEngine/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/joao/workspace/CGJDemo/cmake-build-release/CGJEngine/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/Camera.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/FrameBuffer.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/FreeCamera.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/H3DMesh.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/InputManager.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/LightNode.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/LightsManager.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/OBJMesh.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/QuadMesh.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/ResourceFactory.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/ResourceManager.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/SceneGraph.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/SceneNode.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/Shader.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/SphereCamera.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/Textures.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/glerror.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/headers/LightsManager.h">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/math/Mat2.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/math/Mat3.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/math/Mat4.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/math/Vec2.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/math/Vec3.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/math/Vec4.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/math/quat.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/math/transforms.cpp">
+			<Option target="CGJEngine"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\CGJEngine\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/CGJEngine/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\CGJEngine\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/Demo/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\Demo\"/>
+		</Unit>
+		<Unit filename="/home/joao/workspace/CGJDemo/Demo/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\Demo\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

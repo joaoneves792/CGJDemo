@@ -27,6 +27,11 @@
 #define HEADLIGHT_R "headlight_r"
 #define HEADLIGHT_L "headlight_l"
 
+/*Cameras*/
+#define FREE_CAM "freeCamera"
+#define SPHERE_CAM "sphereCamera"
+#define ORTHO_CAM "orthoCamera"
+
 /*Misc constants*/
 #define ROAD_SEGMENTS 12
 

@@ -47,6 +47,8 @@ public:
     SceneNode(std::string name, Mesh* mesh);
     SceneNode(std::string name, Mesh* mesh, Shader* shader);
 
+    virtual ~SceneNode() = default;
+
     std::string getName();
 
     void setMesh(Mesh* mesh);

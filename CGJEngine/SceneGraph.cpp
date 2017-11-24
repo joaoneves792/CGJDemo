@@ -17,7 +17,7 @@ void SceneGraph::destroy() {
     if(root != nullptr) {
         root->destroy();
         auto it = lookUpTable.find(ROOT);
-        lookUpTable.erase(ROOT);
+        lookUpTable.erase(it);
         delete root;
     }
     lookUpTable.clear();

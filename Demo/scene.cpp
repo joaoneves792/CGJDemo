@@ -17,7 +17,7 @@ void setupScene(){
     loadMeshes();
     loadShaders();
 
-    auto camera = new FreeCamera(Vec3(0.0f, 5.0f, 5.0f), Quat(0.1, Vec3(0.0f, 1.0f, 0.0f)));
+    auto camera = ResourceFactory::createFreeCamera(FREE_CAM, Vec3(0.0f, 5.0f, 5.0f), Quat(0.1, Vec3(0.0f, 1.0f, 0.0f)));
     SceneNode* root = ResourceFactory::createScene(SCENE, camera);
 
     /*Setup material handling for H3D models*/
@@ -111,11 +111,7 @@ void setupScene(){
         particleRoot->addChild(quadNode);
     }
 
-    //Camera* hudCamera = new FreeCamera(Vec3(0.0f, 0.0f, 0.1f), Quat(0.01f, Vec3(0.0f, 1.0f, 0.0f)));
-   // hudCamera->ortho(-2, 2, 2, -2, 1, -1);
-
-
-    Camera* viewportCamera = new FreeCamera(Vec3(0.0f, 0.0f, 0.0f), Quat(0.01f, Vec3(0.0f, 1.0f, 0.0f)));
+    auto viewportCamera = ResourceFactory::createFreeCamera(ORTHO_CAM, Vec3(0.0f, 0.0f, 0.0f), Quat(0.01f, Vec3(0.0f, 1.0f, 0.0f)));
     viewportCamera->ortho(-1, 1, 1, -1, 0, 1);
     SceneNode* final = ResourceFactory::createScene(FINAL, viewportCamera);
     final->setMesh(quad);

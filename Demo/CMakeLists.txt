@@ -23,8 +23,7 @@ set(SOURCE_FILES
 		Road.h)
 
 add_executable(demo ${SOURCE_FILES})
-#target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${JPEG_LIBRARIES} ${PNG_LIBRARIES} CGJEngine)
-target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} png jpeg CGJEngine)
+target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${JPEG_LIBRARIES} ${PNG_LIBRARIES} CGJEngine)
 add_dependencies(demo InstallFreeGLUT)
 
 add_custom_command(TARGET demo POST_BUILD

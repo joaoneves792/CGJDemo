@@ -31,9 +31,12 @@ void ResourceManager::__destroyShader(Shader *shader) {
 }
 
 void ResourceManager::__destroyScene(SceneGraph *scene) {
-    delete scene->getCamera();
     scene->destroy();
     delete scene;
+}
+
+void ResourceManager::__destroyCamera(Camera *camera) {
+    delete camera;
 }
 
 void ResourceManager::addMesh(std::string name, Mesh *mesh) {
@@ -46,6 +49,10 @@ void ResourceManager::addShader(std::string name, Shader *shader) {
 
 void ResourceManager::addScene(std::string name, SceneGraph *scene) {
     scenes[name] = scene;
+}
+
+void ResourceManager::addCamera(std::string name, Camera *camera) {
+    cameras[name] = camera;
 }
 
 Mesh* ResourceManager::getMesh(std::string name) {
@@ -67,6 +74,14 @@ Shader* ResourceManager::getShader(std::string name) {
 SceneGraph* ResourceManager::getScene(std::string name) {
     auto it = scenes.find(name);
     if(it == scenes.end()){
+        return nullptr;
+    }
+    return it->second;
+}
+
+Camera* ResourceManager::getCamera(std::string name){
+    auto it = cameras.find(name);
+    if(it == cameras.end()){
         return nullptr;
     }
     return it->second;
@@ -99,6 +114,14 @@ void ResourceManager::destroyScene(std::string name) {
     }
 }
 
+void ResourceManager::destroyCamera(std::string name) {
+    auto it = cameras.find(name);
+    if(it != cameras.end()){
+        __destroyCamera(it->second);
+        cameras.erase(it);
+    }
+}
+
 void ResourceManager::destroyAllMeshes() {
     for(auto it=meshes.begin(); it!=meshes.end(); it++){
         __destroyMesh(it->second);
@@ -120,8 +143,16 @@ void ResourceManager::destroyAllScenes() {
     scenes.clear();
 }
 
+void ResourceManager::destroyAllCameras() {
+    for(auto it=cameras.begin(); it!=cameras.end(); it++){
+        __destroyCamera(it->second);
+    }
+    cameras.clear();
+}
+
 void ResourceManager::destroyEverything() {
     destroyAllMeshes();
     destroyAllShaders();
     destroyAllScenes();
+    destroyAllCameras();
 }

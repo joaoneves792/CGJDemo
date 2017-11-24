@@ -259,7 +259,8 @@ void H3DMesh::recursiveParentTransform(Mat4* transforms, bool* hasParentTransfor
         hasParentTransform[jointIndex] = true;
     }
 }
-
+/*
+    //TODO Fix animations for CGJ
 Mat4 H3DMesh::getBoneTransform(h3d_joint* joint) {
     h3d_keyframe* prevKeyframe = nullptr;
     h3d_keyframe* nextKeyframe = nullptr;
@@ -276,8 +277,7 @@ Mat4 H3DMesh::getBoneTransform(h3d_joint* joint) {
         }
     }
 
-    //TODO Fix animations for CGJ
-    /*if(joint->numKeyframes > 0) {
+    if(joint->numKeyframes > 0) {
         float lerpFactor;
         if (nextKeyframe->frame - prevKeyframe->frame == 0) {
             lerpFactor = 0;
@@ -293,9 +293,9 @@ Mat4 H3DMesh::getBoneTransform(h3d_joint* joint) {
 
         return glm::interpolate(prevKeyframe->transform, nextKeyframe->transform, lerpFactor);
 
-    }*/
+    }
     return Mat4(1.0f);
-}
+}*/
 
 
 Mat4 H3DMesh::getBindPose(h3d_joint* joint) {
@@ -316,6 +316,7 @@ Mat4 H3DMesh::getBindPose(h3d_joint* joint) {
     */
 }
 
+/*
 void H3DMesh::handleAnimation(h3d_group* group) {
     //Check for the Uniform, if its none existent then do nothing
     //TODO fix animations for CGJ
@@ -345,7 +346,6 @@ void H3DMesh::handleAnimation(h3d_group* group) {
             continue;
 
         //TODO Fix animations for CGJ
-        /*
         glm::mat4 transform = getBoneTransform(&armature->joints[i]);
 
         glm::mat4 bindPose = armature->joints[i].bindPose;
@@ -353,7 +353,6 @@ void H3DMesh::handleAnimation(h3d_group* group) {
         glm::mat4 invBindPose = armature->joints[i].invBindPose;
 
         transforms[i] = bindPose * transform * invBindPose;
-        */
     }
 
     //Recursively check and apply parent transforms
@@ -372,11 +371,11 @@ void H3DMesh::handleAnimation(h3d_group* group) {
     }
 
 
-}
+}*/
 
 void H3DMesh::draw() {
     for(int i=0; i < _groupCount; i++){
-        handleAnimation(&_groups[i]);
+        //handleAnimation(&_groups[i]);
         int materialIndex = _groups[i].materialIndex;
         if( materialIndex >= 0 )
             setMaterial(&_materials[materialIndex]);
@@ -565,7 +564,7 @@ void H3DMesh::loadFromFile(const std::string& filename) {
                 fread(&_armatures[i].joints[j].keyframes[k].frame, 1, sizeof(int), fp);
                 fread(_armatures[i].joints[j].keyframes[k].position, 3, sizeof(float), fp);
                 fread(_armatures[i].joints[j].keyframes[k].rotation, 3, sizeof(float), fp);
-                float x, y, z;
+                /*float x, y, z;
                 h3d_keyframe* keyframe = &_armatures[i].joints[j].keyframes[k];
 
                 x = keyframe->rotation[0];
@@ -575,7 +574,7 @@ void H3DMesh::loadFromFile(const std::string& filename) {
 
                 x = keyframe->position[0];
                 y = keyframe->position[1];
-                z = keyframe->position[2];
+                z = keyframe->position[2];*/
                 //TODO Fix animations for CGJ
                 //keyframe->transform = CGJM::translate(x, y, z) * glm::toMat4(glm::quat(euler));
             }

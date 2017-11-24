@@ -11,6 +11,9 @@
 #include "LightNode.h"
 #include "ResourceManager.h"
 #include "LightsManager.h"
+#include "Camera.h"
+#include "FreeCamera.h"
+#include "SphereCamera.h"
 
 Mesh* ResourceFactory::createMesh(const std::string &name, const std::string &filename) {
     if(filename.substr(filename.find_last_of('.')+1) == ("h3d")){
@@ -44,4 +47,16 @@ LightNode* ResourceFactory::createLight(const std::string &name) {
     auto light = new LightNode(name);
     LightsManager::getInstance()->addLight(light);
     return light;
+}
+
+FreeCamera* ResourceFactory::createFreeCamera(const std::string &name, Vec3 position, Quat orientation) {
+    auto camera = new FreeCamera(position, orientation);
+    ResourceManager::getInstance()->addCamera(name, camera);
+    return camera;
+}
+
+SphereCamera* ResourceFactory::createSphereCamera(const std::string &name, float distance, Vec3 center, Quat orientation) {
+    auto camera = new SphereCamera(distance, center, orientation);
+    ResourceManager::getInstance()->addCamera(name, camera);
+    return camera;
 }

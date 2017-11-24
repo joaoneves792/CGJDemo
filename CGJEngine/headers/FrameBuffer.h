@@ -24,7 +24,6 @@ public:
 
 private:
     void initializeNewFrameBuffer(int x, int y);
-
 };
 
 
