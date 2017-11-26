@@ -3,7 +3,6 @@ project(CGJEngine CXX)
 
 include_directories(
 	headers
-	math/headers
 	${GLEW_INCLUDE_DIR}
 	${GLUT_INCLUDE_DIR}
 	${JPEG_INCLUDE_DIR}
