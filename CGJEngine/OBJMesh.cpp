@@ -77,7 +77,7 @@ void OBJMesh::loadFromFile(const std::string& filename) {
         auto sin = std::stringstream(line);
         parseLine(sin, group);
     }
-    group->faceCount = group->faces.size();
+    group->faceCount = (unsigned long)group->faces.size();
 }
 
 void OBJMesh::freeMeshData() {

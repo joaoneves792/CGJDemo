@@ -16,5 +16,5 @@ Mat4 Camera::getProjectionMatrix() {
 }
 
 void Camera::resize(int x, int y) {
-    perspective(_fovy, x/y, _near, _far);
+    perspective(_fovy, (float)x/(float)y, _near, _far);
 }

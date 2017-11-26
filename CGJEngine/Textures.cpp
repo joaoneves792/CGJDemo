@@ -72,7 +72,7 @@ int loadETC1(const char* fileName, textureImage* texture){
 
     //size_t bytesToRead = textWidth* textHeight / 2 * sizeof(char);
     size_t bytesToRead = ((textWidth >> 2) * (textHeight >> 2)) << 3;
-    texture->data_lenght = bytesToRead;
+    texture->data_lenght = (GLsizei)bytesToRead;
     texture->data = (unsigned char *)malloc(bytesToRead);
 
     fread(texture->data, sizeof(char), bytesToRead, fp);
@@ -180,7 +180,7 @@ int loadPNG(const char* file_name, textureImage* texture){
     png_read_update_info(png_ptr, info_ptr);
 
     // Row size in bytes.
-    int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
+    int rowbytes = (int)png_get_rowbytes(png_ptr, info_ptr);
 
     // glTexImage2d requires rows to be 4-byte aligned
     rowbytes += 3 - ((rowbytes-1) % 4);

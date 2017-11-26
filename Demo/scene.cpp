@@ -63,7 +63,7 @@ void setupScene(){
         lightName << LAMP_POST << i;
         auto lamp = ResourceManager::Factory::createLight(lightName.str());
         lamp->setColor(0.8f, 0.8f, 0.3f);
-        lamp->setCone(-0.3f, -1.0f, 0.0f, M_PI/4.0f);
+        lamp->setCone(-0.3f, -1.0f, 0.0f, (float)M_PI/4.0f);
         lamp->setAttenuation(1.0f, 0.0f, 0.0f, 30.0f);
         lamp->setPosition(20.0f, 10.0f, -16.0f);
         LightsManager::getInstance()->setEnabled(lamp, false);

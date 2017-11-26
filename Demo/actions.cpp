@@ -18,7 +18,7 @@ void setupActions() {
     im->setActionInterval(10); //Update every 10ms
 
     /*Update camera movement*/
-    const float movementRate = 0.005; //magic number
+    const float movementRate = 0.005f; //magic number
     const float cameraRate = (float)-1.0f*(3.1415f / (WinX * 2));
 
     im->setMouseAction([=](int x, int y, int timeDelta){
