@@ -13,6 +13,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/rotate_normalized_axis.hpp>
+#include <glm/gtx/matrix_interpolation.hpp>
 
 typedef glm::mat4 Mat4;
 typedef glm::vec3 Vec3;

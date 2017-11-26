@@ -257,8 +257,7 @@ void H3DMesh::recursiveParentTransform(Mat4* transforms, bool* hasParentTransfor
         hasParentTransform[jointIndex] = true;
     }
 }
-/*
-    //TODO Fix animations for CGJ
+
 Mat4 H3DMesh::getBoneTransform(h3d_joint* joint) {
     h3d_keyframe* prevKeyframe = nullptr;
     h3d_keyframe* nextKeyframe = nullptr;
@@ -293,13 +292,10 @@ Mat4 H3DMesh::getBoneTransform(h3d_joint* joint) {
 
     }
     return Mat4(1.0f);
-}*/
+}
 
 
 Mat4 H3DMesh::getBindPose(h3d_joint* joint) {
-    //TODO Fix animations for CGJ
-    return Mat4(1.0f);
-/*
     glm::mat4 bindPoseTranslation = glm::translate(glm::mat4(1.0f),
                                                    glm::vec3(joint->position[0],
                                                              joint->position[1],
@@ -311,30 +307,26 @@ Mat4 H3DMesh::getBindPose(h3d_joint* joint) {
 
     glm::mat4 bindPose = bindPoseTranslation * bindPoseRotation;
     return bindPose;
-    */
 }
 
-/*
 void H3DMesh::handleAnimation(h3d_group* group) {
     //Check for the Uniform, if its none existent then do nothing
-    //TODO fix animations for CGJ
-    GLint bones = -1;
-    // /GLint bones = glGetUniformLocation(_shader, "bones");
-    if(-1 == bones)
-        return;
+    //GLint bones = glGetUniformLocation(_shader, "bones");
+    //if(-1 == bones)
+    //    return;
 
     h3d_armature* armature = &_armatures[group->armatureIndex];
 
-    Mat4 transforms[armature->jointsCount];
+    auto transforms = new Mat4[armature->jointsCount];
     for(int i=0; i<armature->jointsCount; i++){
         transforms[i] = Mat4(1.0f);
     }
 
     if(!group->isAnimated){ //If not animated the we still have to upload identities if the bones exist
         for(int i=0; i<armature->jointsCount; i++) {
-            //TODO Fix animations for CGJ
-            // /glUniformMatrix4fv(bones + i, 1, GL_FALSE, glm::value_ptr(transforms[i]));
+            //glUniformMatrix4fv(bones + i, 1, GL_FALSE, glm::value_ptr(transforms[i]));
         }
+        delete[] transforms;
         return;
     }
 
@@ -343,7 +335,6 @@ void H3DMesh::handleAnimation(h3d_group* group) {
         if(armature->joints[i].numKeyframes == 0)
             continue;
 
-        //TODO Fix animations for CGJ
         glm::mat4 transform = getBoneTransform(&armature->joints[i]);
 
         glm::mat4 bindPose = armature->joints[i].bindPose;
@@ -354,7 +345,7 @@ void H3DMesh::handleAnimation(h3d_group* group) {
     }
 
     //Recursively check and apply parent transforms
-    bool hasParentTransform[armature->jointsCount];
+    auto hasParentTransform = new bool[armature->jointsCount];
     for(int i=0;i<armature->jointsCount;i++){
         hasParentTransform[i] = false;
     }
@@ -364,12 +355,12 @@ void H3DMesh::handleAnimation(h3d_group* group) {
     }
 
     for(int i=0; i<armature->jointsCount; i++) {
-        //TODO Fix animations for CGJ
-        // /glUniformMatrix4fv(bones + i, 1, GL_FALSE, glm::value_ptr(transforms[i]));
+        //glUniformMatrix4fv(bones + i, 1, GL_FALSE, glm::value_ptr(transforms[i]));
     }
+    delete[] hasParentTransform;
+    delete[] transforms;
 
-
-}*/
+}
 
 void H3DMesh::draw() {
     for(int i=0; i < _groupCount; i++){
@@ -562,7 +553,7 @@ void H3DMesh::loadFromFile(const std::string& filename) {
                 fread(&_armatures[i].joints[j].keyframes[k].frame, 1, sizeof(int), fp);
                 fread(_armatures[i].joints[j].keyframes[k].position, 3, sizeof(float), fp);
                 fread(_armatures[i].joints[j].keyframes[k].rotation, 3, sizeof(float), fp);
-                /*float x, y, z;
+                float x, y, z;
                 h3d_keyframe* keyframe = &_armatures[i].joints[j].keyframes[k];
 
                 x = keyframe->rotation[0];
@@ -572,9 +563,8 @@ void H3DMesh::loadFromFile(const std::string& filename) {
 
                 x = keyframe->position[0];
                 y = keyframe->position[1];
-                z = keyframe->position[2];*/
-                //TODO Fix animations for CGJ
-                //keyframe->transform = CGJM::translate(x, y, z) * glm::toMat4(glm::quat(euler));
+                z = keyframe->position[2];
+                keyframe->transform = glm::translate(Mat4(1.0f), Vec3(x, y, z)) * glm::toMat4(glm::quat(euler));
             }
 
         }
