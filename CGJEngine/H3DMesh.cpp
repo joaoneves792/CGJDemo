@@ -171,8 +171,8 @@ void H3DMesh::prepareGroup(h3d_group *group, unsigned int groupIndex) {
     _vboDescriptions[groupIndex].positionSize     = sizeof(GLfloat)*group->numVertices*3;
     _vboDescriptions[groupIndex].normalsSize      = sizeof(GLfloat)*group->numVertices*3;
     _vboDescriptions[groupIndex].textureCoordSize = sizeof(GLfloat)*group->numVertices*2;
-    _vboDescriptions[groupIndex].jointsSize       = sizeof(GLfloat)*group->numVertices*BONE_COUNT*2;
-    _vboDescriptions[groupIndex].weightsSize      = sizeof(GLfloat)*group->numVertices*BONE_COUNT*2;
+    _vboDescriptions[groupIndex].jointsSize       = sizeof(GLfloat)*group->numVertices*BONE_COUNT;
+    _vboDescriptions[groupIndex].weightsSize      = sizeof(GLfloat)*group->numVertices*BONE_COUNT;
 
     _vboDescriptions[groupIndex].totalSize = _vboDescriptions[groupIndex].positionSize
                                              + _vboDescriptions[groupIndex].normalsSize
