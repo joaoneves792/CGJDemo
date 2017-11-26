@@ -5,9 +5,7 @@
 #ifndef CGJM_CAMERA_H
 #define CGJM_CAMERA_H
 
-#include "quat.h"
-#include "mat.h"
-#include "vec.h"
+#include "glm_wrapper.h"
 
 const Vec3 up(0.0f, 1.0f, 0.0f);
 const Vec3 front(0.0f, 0.0f, -1.0f);
@@ -15,11 +13,11 @@ const Vec3 right(1.0f, 0.0f, 0.0f);
 
 class Camera{
 protected:
-    Vec3 position;
-    Quat orientation;
+    Vec3 _position;
+    Quat _orientation;
 
-    Mat4 projection;
-    float fovy;
+    Mat4 _projection;
+    float _fovy;
     float _near;
     float _far;
 

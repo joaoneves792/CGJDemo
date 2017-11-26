@@ -8,103 +8,103 @@
 #include <GL/freeglut.h>
 #include "InputManager.h"
 
-InputManager* InputManager::ourInstance = nullptr;
+InputManager* InputManager::_ourInstance = nullptr;
 
 InputManager* InputManager::getInstance() {
-    if(ourInstance == nullptr){
-        ourInstance = new InputManager();
+    if(_ourInstance == nullptr){
+        _ourInstance = new InputManager();
     }
-    return ourInstance;
+    return _ourInstance;
 }
 
 void InputManager::setActionInterval(unsigned int milliseconds) {
-    this->updateInterval = milliseconds;
-    ++updateCallbackCounter;
-    glutTimerFunc(milliseconds, InputManager::update, updateCallbackCounter);
+    this->_updateInterval = milliseconds;
+    ++_updateCallbackCounter;
+    glutTimerFunc(milliseconds, InputManager::update, _updateCallbackCounter);
 }
 
 void InputManager::update(int value) {
     auto im = InputManager::getInstance();
 
     int currentTime = glutGet(GLUT_ELAPSED_TIME);
-    int timeDelta = (int)(currentTime-(im->lastUpdateTime));
-    im->lastUpdateTime = currentTime;
+    int timeDelta = (int)(currentTime-(im->_lastUpdateTime));
+    im->_lastUpdateTime = currentTime;
 
-    if(value != im->updateCallbackCounter)
+    if(value != im->_updateCallbackCounter)
         return;
 
     //Call the callbacks
-    if(im->mouseMovementCallback != nullptr && im->mouseDirty) {
-        im->mouseMovementCallback(im->mouseX, im->mouseY, timeDelta);
-        im->mouseDirty = false;
+    if(im->_mouseMovementCallback != nullptr && im->_mouseDirty) {
+        im->_mouseMovementCallback(im->_mouseX, im->_mouseY, timeDelta);
+        im->_mouseDirty = false;
     }
 
-    for(auto it=im->pendingKeyCallbacks.begin(); it!=im->pendingKeyCallbacks.end(); it++){
+    for(auto it=im->_pendingKeyCallbacks.begin(); it!=im->_pendingKeyCallbacks.end(); it++){
         it->second(timeDelta);
     }
 
-    for(auto it=im->pendingSpecialKeyCallbacks.begin(); it!=im->pendingSpecialKeyCallbacks.end(); it++){
+    for(auto it=im->_pendingSpecialKeyCallbacks.begin(); it!=im->_pendingSpecialKeyCallbacks.end(); it++){
         it->second(timeDelta);
     }
 
-    glutTimerFunc(im->updateInterval, InputManager::update, im->updateCallbackCounter);
+    glutTimerFunc(im->_updateInterval, InputManager::update, im->_updateCallbackCounter);
 }
 
 
 void InputManager::keyDown(unsigned char key) {
-    if(keyCallbacks.find(key) != keyCallbacks.end())
-        pendingKeyCallbacks[key] = keyCallbacks[key];
+    if(_keyCallbacks.find(key) != _keyCallbacks.end())
+        _pendingKeyCallbacks[key] = _keyCallbacks[key];
 
     //Call it imediately if its a one time thing
-    if(keyOnceCallbacks.find(key) != keyOnceCallbacks.end())
-        keyOnceCallbacks[key]();
+    if(_keyOnceCallbacks.find(key) != _keyOnceCallbacks.end())
+        _keyOnceCallbacks[key]();
 }
 
 void InputManager::specialKeyDown(int key) {
-    if(specialKeyCallbacks.find(key) != specialKeyCallbacks.end())
-        pendingSpecialKeyCallbacks[key] = specialKeyCallbacks[key];
+    if(_specialKeyCallbacks.find(key) != _specialKeyCallbacks.end())
+        _pendingSpecialKeyCallbacks[key] = _specialKeyCallbacks[key];
 
-    if(specialKeyOnceCallbacks.find(key) != specialKeyOnceCallbacks.end())
-        specialKeyOnceCallbacks[key]();
+    if(_specialKeyOnceCallbacks.find(key) != _specialKeyOnceCallbacks.end())
+        _specialKeyOnceCallbacks[key]();
 }
 
 void InputManager::keyUp(unsigned char key) {
-    auto it = pendingKeyCallbacks.find(key);
-    if(it!=pendingKeyCallbacks.end())
-        pendingKeyCallbacks.erase(it);
+    auto it = _pendingKeyCallbacks.find(key);
+    if(it!=_pendingKeyCallbacks.end())
+        _pendingKeyCallbacks.erase(it);
 }
 
 void InputManager::specialKeyUp(int key) {
-    auto it = pendingSpecialKeyCallbacks.find(key);
-    if(it!=pendingSpecialKeyCallbacks.end())
-        pendingSpecialKeyCallbacks.erase(it);
+    auto it = _pendingSpecialKeyCallbacks.find(key);
+    if(it!=_pendingSpecialKeyCallbacks.end())
+        _pendingSpecialKeyCallbacks.erase(it);
 }
 
 void InputManager::mouseMovement(int x, int y) {
-    mouseX = x;
-    mouseY = y;
-    mouseDirty = true;
+    _mouseX = x;
+    _mouseY = y;
+    _mouseDirty = true;
 }
 
 void InputManager::addKeyAction(unsigned char key, std::function<void(int dt)> callback) {
-    keyCallbacks[key] = callback;
+    _keyCallbacks[key] = callback;
 }
 
 void InputManager::addKeyActionOnce(unsigned char key, std::function<void()> callback) {
-    keyOnceCallbacks[key] = callback;
+    _keyOnceCallbacks[key] = callback;
 }
 
 void InputManager::addSpecialKeyAction(int key, std::function<void(int dt)> callback) {
-    specialKeyCallbacks[key] = callback;
+    _specialKeyCallbacks[key] = callback;
 }
 
 void InputManager::addSpecialKeyActionOnce(int key, std::function<void()> callback) {
-    specialKeyOnceCallbacks[key] = callback;
+    _specialKeyOnceCallbacks[key] = callback;
 }
 
 
 void InputManager::setMouseAction(std::function<void(int x, int y, int dt)> callback) {
-    mouseMovementCallback = callback;
+    _mouseMovementCallback = callback;
 }
 
 

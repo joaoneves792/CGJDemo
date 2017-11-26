@@ -1,66 +1,68 @@
 //
 // Created by joao on 11/12/17.
 //
+#include <iostream>
 
 #include "Shader.h"
 #include "SceneGraph.h"
 #include "SceneNode.h"
+#include "glm_wrapper.h"
 
 SceneGraph::SceneGraph(Camera *cam) {
-    camera = cam;
-    root = new SceneNode(ROOT);
-    lookUpTable[ROOT] = root;
-    root->setScene(this);
+    _camera = cam;
+    _root = new SceneNode(ROOT);
+    _lookUpTable[ROOT] = _root;
+    _root->setScene(this);
 }
 
 void SceneGraph::destroy() {
-    if(root != nullptr) {
-        root->destroy();
-        auto it = lookUpTable.find(ROOT);
-        lookUpTable.erase(it);
-        delete root;
+    if(_root != nullptr) {
+        _root->destroy();
+        auto it = _lookUpTable.find(ROOT);
+        _lookUpTable.erase(it);
+        delete _root;
     }
-    lookUpTable.clear();
+    _lookUpTable.clear();
 }
 
 Mat4 SceneGraph::getProjectionMatrix() {
-    if(camera != nullptr)
-        return camera->getProjectionMatrix();
+    if(_camera != nullptr)
+        return _camera->getProjectionMatrix();
     else
-        return Mat4(1);
+        return Mat4(1.0f);
 }
 
 Mat4 SceneGraph::getViewMatrix() {
-    if(camera != nullptr)
-        return camera->getViewMatrix();
+    if(_camera != nullptr)
+        return _camera->getViewMatrix();
     else
-        return Mat4(1);
+        return Mat4(1.0f);
 }
 
 Camera* SceneGraph::getCamera() {
-    return camera;
+    return _camera;
 }
 
 SceneNode* SceneGraph::getRoot() {
-    return root;
+    return _root;
 }
 
 void SceneGraph::update(int dt) {
-    if(root != nullptr)
-        root->update(dt);
+    if(_root != nullptr)
+        _root->update(dt);
 }
 
 void SceneGraph::draw(int level){
-    if(root != nullptr)
-        root->draw(level);
+    if(_root != nullptr)
+        _root->draw(level);
 }
 
 void SceneGraph::draw(){
     draw(0);
 }
 SceneNode* SceneGraph::findNode(const std::string& name) {
-    auto it = lookUpTable.find(name);
-    if(it!=lookUpTable.end())
+    auto it = _lookUpTable.find(name);
+    if(it!=_lookUpTable.end())
         return it->second;
     else{
         std::cerr << "Node with name " << name << " not on scene graph!" << std::endl;

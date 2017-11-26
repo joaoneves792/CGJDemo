@@ -6,9 +6,10 @@
 #define CGJM_SPHERECAMERA_H
 
 #include "Camera.h"
+#include "glm_wrapper.h"
 
 class SphereCamera : public Camera{
-    float distance;
+    float _distance;
 public:
     SphereCamera(float distance, Vec3 center, Quat originalOrientation);
     virtual Mat4 getMatrix();

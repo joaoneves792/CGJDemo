@@ -10,8 +10,16 @@ endif (MSVC)
 find_package(GLEW REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
-#find_package(JPEG)
-#find_package(PNG)
+find_package(glm)
+
+if(glm_FOUND)
+    message(STATUS "Using system GLM")
+    message(STATUS "GLM : " ${GLM_INCLUDE_DIRS})
+else(glm_FOUND)
+    message(STATUS "Using bundled GLM")
+    set(GLM_INCLUDE_DIRS "${CGJDemo_SOURCE_DIR}/dependencies/glm-0.9.9-a2/")
+    message(STATUS "GLM : " ${GLM_INCLUDE_DIRS})
+endif(glm_FOUND)
 
 if( MSVC )
 	if(CMAKE_SIZEOF_VOID_P EQUAL 4) #HACK TO FIGURE OUT WETHER BUILDING x86 or x64

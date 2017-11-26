@@ -9,17 +9,15 @@
 #include <list>
 #include <string>
 
-#include "vec.h"
-#include "mat.h"
-#include "quat.h"
+#include "glm_wrapper.h"
 #include "Shader.h"
 #include "SceneNode.h"
 
 class LightNode : public SceneNode{
 private:
-    Vec4 cone;
-    Vec3 color;
-    Vec4 attenuation;
+    Vec4 _cone;
+    Vec3 _color;
+    Vec4 _attenuation;
 
 public:
     LightNode(std::string name);

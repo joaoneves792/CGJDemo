@@ -9,11 +9,11 @@
 
 class FrameBuffer {
 private:
-    GLuint frameBuffer;
-    GLuint depthRenderBuffer;
-    GLuint texture;
+    GLuint _frameBuffer;
+    GLuint _depthRenderBuffer;
+    GLuint _texture;
 
-    int width, height;
+    int _width, _height;
 public:
     FrameBuffer(int x, int y);
     FrameBuffer(FrameBuffer* otherFrameBuffer);

@@ -21,12 +21,12 @@
 
 class ResourceManager {
 private:
-    static ResourceManager* ourInstance;
-    std::unordered_map<std::string, Shader*> shaders;
-    std::unordered_map<std::string, Mesh*> meshes;
-    std::unordered_map<std::string, SceneGraph*> scenes;
-    std::unordered_map<std::string, Camera*> cameras;
-    std::unordered_map<std::string, FrameBuffer*> fbos;
+    static ResourceManager* _ourInstance;
+    std::unordered_map<std::string, Shader*> _shaders;
+    std::unordered_map<std::string, Mesh*> _meshes;
+    std::unordered_map<std::string, SceneGraph*> _scenes;
+    std::unordered_map<std::string, Camera*> _cameras;
+    std::unordered_map<std::string, FrameBuffer*> _fbos;
 public:
     class Factory{
     public:

@@ -33,10 +33,10 @@ void loadShaders(){
     ViewLocation = h3dShader->getUniformLocation("View");
     NormalLocation = h3dShader->getUniformLocation("NormalMatrix");
     h3dShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P){
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, (P*V*M).transpose());
-        glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, M.transpose());
-        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, V.transpose());
-        glUniformMatrix4fv(NormalLocation, 1, GL_FALSE, (V*M).inverse()); //Transpose is implicit
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P*V*M));
+        glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, glm::value_ptr(M));
+        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
+        glUniformMatrix4fv(NormalLocation, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(V*M))));
     });
 
     lightPositionLocation = h3dShader->getUniformLocation("lightPosition_worldspace[0]");
@@ -44,14 +44,14 @@ void loadShaders(){
     lightColorLocation = h3dShader->getUniformLocation("lightColor[0]");
     lightConeLocation = h3dShader->getUniformLocation("lightCone[0]");
     lightAttenuationLocation = h3dShader->getUniformLocation("lightAttenuation[0]");
-    LightsManager::getInstance()->registerShader(h3dShader, [=](float* color, float* position, float* cone,
-                                                                float* attenuation, int enabled, int i){
+    LightsManager::getInstance()->registerShader(h3dShader, [=](Vec3 color, Vec3 position, Vec4 cone,
+                                                                Vec4 attenuation, int enabled, int i){
         glUniform1iv(lightsEnabledLocation+i, 1, &enabled);
         if(enabled) {
-            glUniform3fv(lightColorLocation + i, 1, color);
-            glUniform4fv(lightConeLocation + i, 1, cone);
-            glUniform4fv(lightAttenuationLocation + i, 1, attenuation);
-            glUniform3fv(lightPositionLocation + i, 1, position);
+            glUniform3fv(lightColorLocation + i, 1, glm::value_ptr(color));
+            glUniform4fv(lightConeLocation + i, 1, glm::value_ptr(cone));
+            glUniform4fv(lightAttenuationLocation + i, 1, glm::value_ptr(attenuation));
+            glUniform3fv(lightPositionLocation + i, 1, glm::value_ptr(position));
         }
     });
 
@@ -64,7 +64,7 @@ void loadShaders(){
     skyShader->link();
     MVPLocation = skyShader->getUniformLocation("MVP");
     skyShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, (P * V * M).transpose());
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
     /*Quad shader*/
@@ -73,7 +73,7 @@ void loadShaders(){
     quadShader->link();
     MVPLocation = quadShader->getUniformLocation("MVP");
     quadShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, (P * V * M).transpose());
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
     /*2D shader*/
@@ -82,7 +82,7 @@ void loadShaders(){
     twoDShader->link();
     MVPLocation = twoDShader->getUniformLocation("MVP");
     twoDShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, (P * V * M).transpose());
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
 }

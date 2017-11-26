@@ -1,12 +1,10 @@
 #include <string.h>
 #include <iostream>
 
+#include "glm_wrapper.h"
 
 #include <GL/glew.h>
 #include <H3DMesh.h>
-#include "vec.h"
-#include "mat.h"
-#include "quat.h"
 #include "H3DMesh.h"
 #include "Textures.h"
 
@@ -556,7 +554,7 @@ void H3DMesh::loadFromFile(const std::string& filename) {
 
             //Calculate the bindpose matrix
             _armatures[i].joints[j].bindPose = getBindPose(&_armatures[i].joints[j]);
-            _armatures[i].joints[j].invBindPose = (_armatures[i].joints[j].bindPose).inverse();
+            _armatures[i].joints[j].invBindPose = glm::inverse(_armatures[i].joints[j].bindPose);
 
             fread(&_armatures[i].joints[j].numKeyframes, 1, sizeof(int), fp);
             _armatures[i].joints[j].keyframes = new h3d_keyframe[_armatures[i].joints[j].numKeyframes];

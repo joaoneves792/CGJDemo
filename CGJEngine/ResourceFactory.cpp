@@ -1,7 +1,7 @@
 //
 // Created by joao on 11/21/17.
 //
-
+#include <iostream>
 #include "ResourceManager.h"
 #include "Mesh.h"
 #include "OBJMesh.h"

@@ -3,16 +3,16 @@
 //
 
 #include "HUDCamera.h"
-#include "mat.h"
+#include "glm_wrapper.h"
 
 HUDCamera::HUDCamera(float left, float right, float top, float bottom, float near, float far) {
     _near = near;
     _far = far;
-    projection = CGJM::ortho(left, right, top, bottom, near, far);
+    _projection = glm::ortho(left, right, bottom, top, near, far);
 }
 
 Mat4 HUDCamera::getMatrix() {
-    return projection;
+    return _projection;
 }
 
 Mat4 HUDCamera::getViewMatrix() {

@@ -8,6 +8,7 @@ include_directories(
 	${GLUT_INCLUDE_DIR}
 	${JPEG_INCLUDE_DIR}
 	${PNG_INCLUDE_DIR}
+    ${GLM_INCLUDE_DIRS}
 	)
 set(PNG_INCLUDE_FILES
     ${PNG_INCLUDE_DIR}/pngconf.h
@@ -18,14 +19,6 @@ set(PNG_INCLUDE_FILES
     ${PNG_INCLUDE_DIR}/pngstruct.h
     )
 set(SOURCE_FILES
-	math/Vec2.cpp
-	math/Vec3.cpp
-	math/Vec4.cpp
-	math/Mat2.cpp
-	math/Mat3.cpp
-	math/Mat4.cpp
-	math/transforms.cpp
-	math/quat.cpp
 	Shader.cpp
 	glerror.cpp
 	OBJMesh.cpp
@@ -44,8 +37,30 @@ set(SOURCE_FILES
 	FrameBuffer.cpp
 	ResourceFactory.cpp
 	LightNode.cpp
-	LightsManager.cpp
-        )
+	LightsManager.cpp)
+
+set(HEADER_FILES
+		headers/Camera.h
+        headers/CGJengine.h
+        headers/FrameBuffer.h
+        headers/glerrors.h
+        headers/glm_wrapper.h
+        headers/H3DMesh.h
+        headers/HUDCamera.h
+        headers/InputManager.h
+        headers/LightNode.h
+        headers/LightsManager.h
+        headers/Mesh.h
+        headers/OBJMesh.h
+        headers/QuadMesh.h
+        headers/ResourceManager.h
+        headers/SceneGraph.h
+        headers/SceneNode.h
+        headers/Shader.h
+        headers/Shader.h
+        headers/SphereCamera.h
+        headers/Textures.h)
+
 
 add_library(jpeg_lib STATIC IMPORTED)
 add_library(png_lib STATIC IMPORTED)
@@ -60,7 +75,7 @@ else(MSVC)
 	SET_TARGET_PROPERTIES(z_lib PROPERTIES IMPORTED_LOCATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/libzlib.a)
 endif(MSVC)
 
-add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
+add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
 target_link_libraries(${PROJECT_NAME} jpeg_lib png_lib z_lib)
 add_dependencies(${PROJECT_NAME} libjpeg png zlib)
 

@@ -5,6 +5,7 @@ include_directories(
 	includes/
 	${GLEW_INCLUDE_DIR}
 	${GLUT_INCLUDE_DIR}
+	${GLM_INCLUDE_DIRS}
    	${CGJEngine_INCLUDE_DIRS})
 
 

@@ -21,7 +21,8 @@ void setupScene(){
     ResourceManager::Factory::createFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
 
 
-    auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(0.0f, 5.0f, 5.0f), Quat(0.1, Vec3(0.0f, 1.0f, 0.0f)));
+    //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, 5.0f, 5.0f), Quat());
+    auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0, 0.0, -20.0f), Quat());
     camera->perspective((float)M_PI/4.0f, 0, 0.1f, 550.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
 

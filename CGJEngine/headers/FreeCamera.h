@@ -6,12 +6,9 @@
 #define CGJM_FREECAMERA_H
 
 #include "Camera.h"
+#include "glm_wrapper.h"
 
 class FreeCamera : public Camera{
-private:
-    Vec3 rotated_front;
-    Vec3 rotated_right;
-    Vec3 rotated_up;
 public:
     FreeCamera(Vec3 originalPosition, Quat originalOrientation);
     virtual Mat4 getMatrix();

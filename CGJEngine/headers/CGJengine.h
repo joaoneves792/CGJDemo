@@ -5,9 +5,7 @@
 #ifndef CGJM_CGJENGINE_H
 #define CGJM_CGJENGINE_H
 
-#include "vec.h"
-#include "mat.h"
-#include "quat.h"
+#include "glm_wrapper.h"
 #include "glerrors.h"
 #include "Shader.h"
 #include "Camera.h"

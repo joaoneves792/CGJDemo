@@ -12,9 +12,7 @@
 #include <functional>
 
 #include "Mesh.h"
-#include "vec.h"
-#include "mat.h"
-#include "quat.h"
+#include "glm_wrapper.h"
 
 #ifndef RC_INVOKED
 #pragma pack(push,1)

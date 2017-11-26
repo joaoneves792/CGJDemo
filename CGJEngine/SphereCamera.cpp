@@ -3,31 +3,30 @@
 //
 
 #include "SphereCamera.h"
-#include "quat.h"
-#include "mat.h"
-#include "vec.h"
+#include "glm_wrapper.h"
 
 SphereCamera::SphereCamera(float distance, Vec3 center, Quat originalOrientation) {
-    position = center;
-    this->distance = distance;
-    orientation = originalOrientation;
+    _position = center;
+    this->_distance = distance;
+    _orientation = originalOrientation;
 }
 Mat4 SphereCamera::getMatrix() {
-    return projection * getViewMatrix();
+    return _projection * getViewMatrix();
 }
 
 Mat4 SphereCamera::getViewMatrix() {
-    return CGJM::translate(0, 0, -distance) * orientation.GLMatrix().transpose()
-           * CGJM::translate(-position[0], -position[1], -position[2]);
+    return glm::translate(Mat4(1.0f), Vec3(0, 0, -_distance))
+           * glm::translate(glm::toMat4(_orientation), Vec3(-_position[0], -_position[1], -_position[2]));
 }
 
 void SphereCamera::move(float x, float y, float z){
-    distance = distance + z;
+    _distance = _distance + z;
 }
 void SphereCamera::changeOrientation(float yaw, float pitch, float roll){
-    orientation = Quat(yaw, up) * orientation;
-    orientation = Quat(pitch, right) * orientation;
-    orientation = Quat(roll, front) * orientation;
+    _orientation = glm::angleAxis(yaw, up) * _orientation;
+    _orientation = glm::angleAxis(pitch, right) * _orientation;
+    _orientation = glm::angleAxis(roll, front) * _orientation;
+    glm::normalize(_orientation);
 }
 
 void SphereCamera::resize(int x, int y) {

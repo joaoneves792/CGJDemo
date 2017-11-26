@@ -71,7 +71,7 @@ void OBJMesh::loadFromFile(const std::string& filename) {
     std::string line;
 
     auto group = new objGroup;
-    groups.push_back(group);
+    _groups.push_back(group);
 
     while(std::getline(ifile, line)) {
         auto sin = std::stringstream(line);
@@ -81,7 +81,7 @@ void OBJMesh::loadFromFile(const std::string& filename) {
 }
 
 void OBJMesh::freeMeshData() {
-    for(objGroup* g : groups){
+    for(objGroup* g : _groups){
         for(objVertex* v : g->vertices)
             delete v;
         g->vertices.clear();
@@ -266,7 +266,7 @@ void prepareGroup(objGroup* group){
 }
 
 void OBJMesh::prepare() {
-    for(objGroup* group : groups) {
+    for(objGroup* group : _groups) {
         prepareGroup(group);
     }
 }
@@ -284,7 +284,7 @@ void unloadGroup(objGroup* group){
 }
 
 void OBJMesh::unload() {
-    for(objGroup* group : groups)
+    for(objGroup* group : _groups)
         unloadGroup(group);
 }
 
@@ -295,6 +295,6 @@ void drawGroup(objGroup* group){
 }
 
 void OBJMesh::draw(){
-    for(objGroup* group : groups)
+    for(objGroup* group : _groups)
         drawGroup(group);
 }

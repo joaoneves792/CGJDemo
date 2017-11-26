@@ -10,9 +10,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "vec.h"
-#include "mat.h"
-#include "quat.h"
+#include "glm_wrapper.h"
 #include "Shader.h"
 #include "Mesh.h"
 #include "Camera.h"
@@ -22,9 +20,9 @@
 
 class SceneGraph{
 private:
-    Camera* camera;
-    SceneNode* root;
-    std::unordered_map<std::string, SceneNode*> lookUpTable;
+    Camera* _camera;
+    SceneNode* _root;
+    std::unordered_map<std::string, SceneNode*> _lookUpTable;
     friend class SceneNode;
 public:
     SceneGraph(Camera* cam);

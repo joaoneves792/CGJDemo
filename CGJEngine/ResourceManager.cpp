@@ -8,18 +8,18 @@
 #include "ResourceManager.h"
 #include <unordered_map>
 
-ResourceManager* ResourceManager::ourInstance = nullptr;
+ResourceManager* ResourceManager::_ourInstance = nullptr;
 
 ResourceManager* ResourceManager::getInstance() {
-    if(ourInstance == nullptr){
-        ourInstance = new ResourceManager();
+    if(_ourInstance == nullptr){
+        _ourInstance = new ResourceManager();
     }
-    return ourInstance;
+    return _ourInstance;
 }
 
 void ResourceManager::deleteInstance() {
-    delete ourInstance;
-    ourInstance = nullptr;
+    delete _ourInstance;
+    _ourInstance = nullptr;
 }
 
 void ResourceManager::__destroyMesh(Mesh *mesh) {
@@ -46,141 +46,141 @@ void ResourceManager::__destroyFrameBuffer(FrameBuffer *fbo) {
 }
 
 void ResourceManager::addMesh(std::string name, Mesh *mesh) {
-    meshes[name] = mesh;
+    _meshes[name] = mesh;
 }
 
 void ResourceManager::addShader(std::string name, Shader *shader) {
-    shaders[name] = shader;
+    _shaders[name] = shader;
 }
 
 void ResourceManager::addScene(std::string name, SceneGraph *scene) {
-    scenes[name] = scene;
+    _scenes[name] = scene;
 }
 
 void ResourceManager::addCamera(std::string name, Camera *camera) {
-    cameras[name] = camera;
+    _cameras[name] = camera;
 }
 
 void ResourceManager::addFrameBuffer(std::string name, FrameBuffer *fbo) {
-    fbos[name] = fbo;
+    _fbos[name] = fbo;
 }
 
 Mesh* ResourceManager::getMesh(std::string name) {
-    auto it = meshes.find(name);
-    if(it == meshes.end()){
+    auto it = _meshes.find(name);
+    if(it == _meshes.end()){
         return nullptr;
     }
     return it->second;
 }
 
 Shader* ResourceManager::getShader(std::string name) {
-    auto it = shaders.find(name);
-    if(it == shaders.end()){
+    auto it = _shaders.find(name);
+    if(it == _shaders.end()){
         return nullptr;
     }
     return it->second;
 }
 
 SceneGraph* ResourceManager::getScene(std::string name) {
-    auto it = scenes.find(name);
-    if(it == scenes.end()){
+    auto it = _scenes.find(name);
+    if(it == _scenes.end()){
         return nullptr;
     }
     return it->second;
 }
 
 Camera* ResourceManager::getCamera(std::string name){
-    auto it = cameras.find(name);
-    if(it == cameras.end()){
+    auto it = _cameras.find(name);
+    if(it == _cameras.end()){
         return nullptr;
     }
     return it->second;
 }
 
 FrameBuffer* ResourceManager::getFrameBuffer(std::string name) {
-    auto it = fbos.find(name);
-    if(it == fbos.end()){
+    auto it = _fbos.find(name);
+    if(it == _fbos.end()){
         return nullptr;
     }
     return it->second;
 }
 
 void ResourceManager::destroyMesh(std::string name) {
-    auto it = meshes.find(name);
-    if(it != meshes.end()){
+    auto it = _meshes.find(name);
+    if(it != _meshes.end()){
         Mesh* m = it->second;
         __destroyMesh(m);
-        meshes.erase(it);
+        _meshes.erase(it);
     }
 }
 
 void ResourceManager::destroyShader(std::string name) {
-    auto it = shaders.find(name);
-    if(it != shaders.end()){
+    auto it = _shaders.find(name);
+    if(it != _shaders.end()){
         Shader* s = it->second;
         __destroyShader(s);
-        shaders.erase(it);
+        _shaders.erase(it);
     }
 }
 
 void ResourceManager::destroyScene(std::string name) {
-    auto it = scenes.find(name);
-    if(it != scenes.end()){
+    auto it = _scenes.find(name);
+    if(it != _scenes.end()){
         SceneGraph* s = it->second;
         __destroyScene(s);
-        scenes.erase(it);
+        _scenes.erase(it);
     }
 }
 
 void ResourceManager::destroyCamera(std::string name) {
-    auto it = cameras.find(name);
-    if(it != cameras.end()){
+    auto it = _cameras.find(name);
+    if(it != _cameras.end()){
         __destroyCamera(it->second);
-        cameras.erase(it);
+        _cameras.erase(it);
     }
 }
 
 void ResourceManager::destroyFrameBuffer(std::string name) {
-    auto it = fbos.find(name);
-    if(it != fbos.end()){
+    auto it = _fbos.find(name);
+    if(it != _fbos.end()){
         __destroyFrameBuffer(it->second);
-        fbos.erase(it);
+        _fbos.erase(it);
     }
 }
 
 void ResourceManager::destroyAllMeshes() {
-    for(auto it=meshes.begin(); it!=meshes.end(); it++){
+    for(auto it=_meshes.begin(); it!=_meshes.end(); it++){
         __destroyMesh(it->second);
     }
-    meshes.clear();
+    _meshes.clear();
 }
 
 void ResourceManager::destroyAllShaders() {
-    for(auto it=shaders.begin(); it!=shaders.end(); it++){
+    for(auto it=_shaders.begin(); it!=_shaders.end(); it++){
         __destroyShader(it->second);
     }
-    shaders.clear();
+    _shaders.clear();
 }
 
 void ResourceManager::destroyAllScenes() {
-    for(auto it=scenes.begin(); it!=scenes.end(); it++){
+    for(auto it=_scenes.begin(); it!=_scenes.end(); it++){
         __destroyScene(it->second);
     }
-    scenes.clear();
+    _scenes.clear();
 }
 
 void ResourceManager::destroyAllCameras() {
-    for(auto it=cameras.begin(); it!=cameras.end(); it++){
+    for(auto it=_cameras.begin(); it!=_cameras.end(); it++){
         __destroyCamera(it->second);
     }
-    cameras.clear();
+    _cameras.clear();
 }
 
 void ResourceManager::destroyAllFrameBuffers() {
-    for(auto it=fbos.begin(); it!=fbos.end(); it++){
+    for(auto it=_fbos.begin(); it!=_fbos.end(); it++){
         __destroyFrameBuffer(it->second);
     }
-    fbos.clear();
+    _fbos.clear();
 }
 
 void ResourceManager::destroyEverything() {

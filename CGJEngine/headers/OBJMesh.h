@@ -57,7 +57,7 @@ typedef struct {
 
 class OBJMesh : public Mesh{
 private:
-   std::vector<objGroup*> groups;
+   std::vector<objGroup*> _groups;
 
 public:
     OBJMesh();

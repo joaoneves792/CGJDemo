@@ -190,6 +190,7 @@ void setupGLUT(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
     glutSetCursor(GLUT_CURSOR_NONE);
+	glutWarpPointer(WIN_X/2, WIN_Y/2);
 }
 
 void init(int argc, char* argv[])

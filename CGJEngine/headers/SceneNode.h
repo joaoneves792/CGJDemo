@@ -9,9 +9,7 @@
 #include <list>
 #include <string>
 
-#include "vec.h"
-#include "mat.h"
-#include "quat.h"
+#include "glm_wrapper.h"
 #include "Shader.h"
 #include "Mesh.h"
 #include "Camera.h"
@@ -20,27 +18,27 @@ class SceneGraph;
 
 class SceneNode{
 protected:
-    SceneGraph* scene;
+    SceneGraph* _scene;
 
-    std::string name;
-    Mesh* mesh;
-    Shader* shader;
+    std::string _name;
+    Mesh* _mesh;
+    Shader* _shader;
 
-    bool billboard;
-    Vec3 position;
-    Quat orientation;
-    Vec3 size;
+    bool _billboard;
+    Vec3 _position;
+    Quat _orientation;
+    Vec3 _size;
 
-    bool visible;
+    bool _visible;
 
-    SceneNode* parent;
-    std::list<SceneNode*> childs = {};
+    SceneNode* _parent;
+    std::list<SceneNode*> _childs = {};
 
-    std::function<void()> pre_draw;
-    std::function<void()> post_draw;
-    std::function<void(int dt)> updateCallback;
+    std::function<void()> _preDraw;
+    std::function<void()> _postDraw;
+    std::function<void(int dt)> _updateCallback;
 
-    int processingLevel = 0;
+    int _processingLevel = 0;
 
 public:
     SceneNode(std::string name);

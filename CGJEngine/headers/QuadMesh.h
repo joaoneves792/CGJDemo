@@ -12,9 +12,9 @@
 
 class QuadMesh : public Mesh{
 private:
-    GLuint vao;
-    GLuint vbo;
-    GLuint eab;
+    GLuint _vao;
+    GLuint _vbo;
+    GLuint _eab;
 
 public:
     QuadMesh();

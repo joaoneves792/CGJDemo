@@ -30,17 +30,17 @@ void QuadMesh::prepare() {
             0, 3, 1
     };
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    glGenVertexArrays(1, &_vao);
+    glBindVertexArray(_vao);
     {
-        glGenBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glGenBuffers(1, &_vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
         glEnableVertexAttribArray(VERTICES__ATTR);
         glVertexAttribPointer(VERTICES__ATTR, 3, GL_FLOAT, GL_FALSE, sizeof(float)*3, 0);
 
-        glGenBuffers(1, &eab);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eab);
+        glGenBuffers(1, &_eab);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _eab);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     }
@@ -50,16 +50,16 @@ void QuadMesh::prepare() {
 }
 
 void QuadMesh::unload() {
-    glBindVertexArray(vao);
+    glBindVertexArray(_vao);
     glDisableVertexAttribArray(VERTICES__ATTR);
-    glDeleteBuffers(1, &vbo);
-    glDeleteBuffers(1, &eab);
-    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &_vbo);
+    glDeleteBuffers(1, &_eab);
+    glDeleteVertexArrays(1, &_vao);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
 void QuadMesh::draw(){
-    glBindVertexArray(vao);
+    glBindVertexArray(_vao);
     glDrawElements(GL_TRIANGLES, (GLsizei)6, GL_UNSIGNED_SHORT, 0);
     glBindVertexArray(0);
 }

@@ -6,11 +6,11 @@
 
 #include "Shader.h"
 #include "glerrors.h"
-#include "mat.h"
+#include "glm_wrapper.h"
 
 Shader::Shader(const char* path_vert_shader, const char* path_frag_shader){
 	create_program(path_vert_shader, path_frag_shader);
-    uploadMVPCallback = nullptr;
+    _uploadMVPCallback = nullptr;
 }
 
 
@@ -156,10 +156,10 @@ void Shader::use(){
 }
 
 void Shader::setMVPFunction(std::function<void(Mat4, Mat4, Mat4)> callback) {
-    uploadMVPCallback = callback;
+    _uploadMVPCallback = callback;
 }
 
 void Shader::uploadMVP(Mat4 M, Mat4 V, Mat4 P) {
-    if(uploadMVPCallback != nullptr)
-        uploadMVPCallback(M, V, P);
+    if(_uploadMVPCallback != nullptr)
+        _uploadMVPCallback(M, V, P);
 }

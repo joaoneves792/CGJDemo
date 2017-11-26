@@ -5,7 +5,7 @@
 #include <functional>
 #define GLEW_STATIC
 #include <GL/glew.h>
-#include "mat.h"
+#include "glm_wrapper.h"
 
 class Shader{
 private:
@@ -13,9 +13,8 @@ private:
 	GLuint _vertexShader;
 	GLuint _fragmentShader;
 
-    std::function<void(Mat4, Mat4, Mat4)> uploadMVPCallback;
+    std::function<void(Mat4, Mat4, Mat4)> _uploadMVPCallback;
 
-    //void(*uploadMVPCallback)(Mat4 M, Mat4 V, Mat4 P);
 public:
 	Shader(const char* path_vert_shader, const char* path_frag_shader);
 	virtual ~Shader();

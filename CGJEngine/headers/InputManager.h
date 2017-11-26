@@ -15,26 +15,26 @@
 
 class InputManager {
 private:
-    static InputManager* ourInstance;
+    static InputManager* _ourInstance;
 
-    unsigned int updateInterval = 10;
-    int updateCallbackCounter = 0;
+    unsigned int _updateInterval = 10;
+    int _updateCallbackCounter = 0;
 
-    long lastUpdateTime = 0;
+    long _lastUpdateTime = 0;
 
-    int mouseX, mouseY;
-    bool mouseDirty = true;
+    int _mouseX, _mouseY;
+    bool _mouseDirty = true;
 
-    std::unordered_map<unsigned char, std::function<void(int dt)>> keyCallbacks;//Call it until key is up
-    std::unordered_map<int, std::function<void(int dt)>> specialKeyCallbacks;
+    std::unordered_map<unsigned char, std::function<void(int dt)>> _keyCallbacks;//Call it until key is up
+    std::unordered_map<int, std::function<void(int dt)>> _specialKeyCallbacks;
 
-    std::unordered_map<unsigned char, std::function<void()>> keyOnceCallbacks; //Only call it once per key down
-    std::unordered_map<int, std::function<void()>> specialKeyOnceCallbacks;
+    std::unordered_map<unsigned char, std::function<void()>> _keyOnceCallbacks; //Only call it once per key down
+    std::unordered_map<int, std::function<void()>> _specialKeyOnceCallbacks;
 
-    std::map<unsigned char, std::function<void(int dt)>> pendingKeyCallbacks;
-    std::map<int, std::function<void(int dt)>> pendingSpecialKeyCallbacks;
+    std::map<unsigned char, std::function<void(int dt)>> _pendingKeyCallbacks;
+    std::map<int, std::function<void(int dt)>> _pendingSpecialKeyCallbacks;
 
-    std::function<void(int x, int y, int dt)> mouseMovementCallback = nullptr;
+    std::function<void(int x, int y, int dt)> _mouseMovementCallback = nullptr;
 
     InputManager() = default;
 
