@@ -55,6 +55,8 @@ void ParticleEmitterNode::update(int dt) {
         _updateCallback(dt);
 
     if(_currentRate > 0) {
+        Vec3 position = getPosition();
+
         /*Calculate how many new particles we need*/
         static float leftOverParticles = 0.0f;
         float newParticlesCount = _currentRate * dt;
@@ -73,20 +75,19 @@ void ParticleEmitterNode::update(int dt) {
                 p->emitterNode = this;
                 p->level = _processingLevel;
                 p->life = 1.0f;
-                p->position = Vec3(0.0f, 0.0f, 0.0f);
+                p->position = position;
                 p->velocity = _velocity;
                 _particles.push_back(p);
             }
         }
     }
-
     /*Update particles*/
     //TODO take randomness into consideration
     auto it = _particles.begin();
     while(it!=_particles.end()){
         Particle *p = (*it);
         p->velocity += (_acceleration * (float)dt);
-        p->position += (p->velocity * (float)dt);
+        p->position += (p->velocity * (float) dt);
         p->life -= _lifeDecayRate * dt;
         if(p->life <= 0){
             _particles.erase(it++);
