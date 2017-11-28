@@ -9,8 +9,8 @@
 #include "SceneNode.h"
 #include "glm_wrapper.h"
 
-SceneNode::SceneNode(std::string name) {
-    this->_name = name;
+SceneNode::SceneNode(const std::string& name) {
+    _name = name;
     _mesh = nullptr;
     _shader = nullptr;
     _position = Vec3(0.0f, 0.0f, 0.0f);
@@ -24,9 +24,9 @@ SceneNode::SceneNode(std::string name) {
     _billboard = false;
 }
 
-SceneNode::SceneNode(std::string name, Mesh *mesh) {
-    this->_name = name;
-    this->_mesh = mesh;
+SceneNode::SceneNode(const std::string& name, Mesh *mesh) {
+    _name = name;
+    _mesh = mesh;
     _shader = nullptr;
     _position = Vec3(0.0f, 0.0f, 0.0f);
     _orientation = Quat();
@@ -39,10 +39,10 @@ SceneNode::SceneNode(std::string name, Mesh *mesh) {
     _billboard = false;
 }
 
-SceneNode::SceneNode(std::string name, Mesh *mesh, Shader *shader) {
-    this->_name = name;
-    this->_mesh = mesh;
-    this->_shader = shader;
+SceneNode::SceneNode(const std::string& name, Mesh *mesh, Shader *shader) {
+    _name = name;
+    _mesh = mesh;
+    _shader = shader;
     _position = Vec3(0.0f, 0.0f, 0.0f);
     _orientation = Quat();
     _size = Vec3(1.0f, 1.0f, 1.0f);

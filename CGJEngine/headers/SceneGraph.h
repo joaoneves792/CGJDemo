@@ -17,6 +17,9 @@
 #include "SceneNode.h"
 
 #define ROOT "root"
+#define DEFAULT_LEVEL 0
+#define DEFAULT_PARTICLES_LEVEL 5
+
 
 class SceneGraph{
 private:

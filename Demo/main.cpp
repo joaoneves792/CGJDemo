@@ -32,16 +32,19 @@ void display()
 	static SceneGraph* viewPortScene = ResourceManager::getInstance()->getScene(FINAL);
     static FrameBuffer* mainFBO = ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
     static FrameBuffer* helperFBO = ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
+	static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
 
 	++FrameCount;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     LightsManager::getInstance()->uploadLights();
 
-	/*Draw scene to fbo*/
+    std::cout <<"new frame" << std::endl;
+    /*Draw scene to fbo*/
 	mainFBO->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scene->draw();
+	particlePool->draw(DEFAULT_PARTICLES_LEVEL);
 	mainFBO->unbind();
 
 	/*Copy fbo to texture and use the copy for post-processing*/
@@ -61,12 +64,16 @@ void display()
 
 void update(){
     static int lastTime = glutGet(GLUT_ELAPSED_TIME);
+	static SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
+	static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
 
     int currentTime = glutGet(GLUT_ELAPSED_TIME);
     int timeDelta = currentTime-lastTime;
     lastTime = currentTime;
 
-	ResourceManager::getInstance()->getScene(SCENE)->update(timeDelta);
+	scene->update(timeDelta);
+	particlePool->update(timeDelta);
+
 }
 
 void idle()

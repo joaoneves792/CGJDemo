@@ -41,9 +41,9 @@ protected:
     int _processingLevel = 0;
 
 public:
-    SceneNode(std::string name);
-    SceneNode(std::string name, Mesh* mesh);
-    SceneNode(std::string name, Mesh* mesh, Shader* shader);
+    SceneNode(const std::string& name);
+    SceneNode(const std::string& name, Mesh* mesh);
+    SceneNode(const std::string& name, Mesh* mesh, Shader* shader);
 
     virtual ~SceneNode() = default;
 
@@ -54,7 +54,7 @@ public:
 
     void setScene(SceneGraph* sceneGraph);
 
-    void setProcessingLevel(int level);
+    virtual void setProcessingLevel(int level);
 
     void setPosition(float x, float y, float z);
     void translate(float x, float y, float z);
@@ -76,8 +76,8 @@ public:
     void setBillboard(bool billboarded);
 
 
-    void update(int dt);
-    void draw(int level);
+    virtual void update(int dt);
+    virtual void draw(int level);
 
     Mat4 getModelMatrix();
 

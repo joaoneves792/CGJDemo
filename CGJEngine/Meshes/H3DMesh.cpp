@@ -235,6 +235,10 @@ void H3DMesh::prepareGroup(h3d_group *group, unsigned int groupIndex) {
              _vboDescriptions[groupIndex].jointsSize) );
     glEnableVertexAttribArray(BONEWEIGHTS__ATTR);
 
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
     //Free all the temporary memory
     delete[] vertices;
     delete[] indices;
@@ -372,6 +376,7 @@ void H3DMesh::draw() {
             glBindTexture(GL_TEXTURE_2D, 0);
         glBindVertexArray(_vao[i]);
         glDrawElements(GL_TRIANGLES, _groups[i].numTriangles*3, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
     }
 }
 

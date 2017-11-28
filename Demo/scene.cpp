@@ -67,9 +67,7 @@ void setupScene(){
         lamp->setAttenuation(1.0f, 0.0f, 0.0f, 30.0f);
         lamp->setPosition(20.0f, 10.0f, -16.0f);
         LightsManager::getInstance()->setEnabled(lamp, false);
-
         roadPart->addChild(lamp);
-
     }
 
     /*Place the sky*/
@@ -95,6 +93,20 @@ void setupScene(){
 
 
     /*PROTOTYPE CODE*/
+
+    GLuint smokeTexture = LoadGLTexture("res/smoke.png");
+    auto scene = ResourceManager::getInstance()->getScene(SCENE);
+    auto pool = ResourceManager::Factory::createParticlePool(POOL, MAX_PARTICLES, scene);
+    auto smokeShader = ResourceManager::getInstance()->getShader(SMOKE_SHADER);
+    auto smokeEmitter = ResourceManager::Factory::createParticleEmmiter(SMOKE_EMITTER, pool, smokeShader, smokeTexture,
+                                                                        Vec3(0.0f, 0.01f, 0.0f), Vec3(0.0f, 0.0f, 0.0f),
+                                                                        Vec3(10.0f, 1.0f, -10.0f), 0.01, 0.0f);
+    smokeEmitter->setVelocity(Vec3(0.0f, 0.01f, 0.0f));
+    smokeEmitter->setAcceleration(Vec3(0.0f, 0.0f, 0.0f));
+    smokeEmitter->emmit();
+    root->addChild(smokeEmitter);
+
+
     auto particleRoot = new SceneNode("particleRoot");
     particleRoot->translate(0.0f, 1.0f, 7.0f);
     particleRoot->setBillboard(true);

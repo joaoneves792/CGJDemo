@@ -34,6 +34,7 @@ public:
     virtual void changeOrientation(float yaw, float pitch, float roll)=0;
     virtual void resize(int x, int y);
     void perspective(float fovy, float aspectRatio, float near, float far);
+    Vec3 getPosition();
     virtual ~Camera()= default;
 };
 

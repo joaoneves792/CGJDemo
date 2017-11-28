@@ -11,6 +11,7 @@ void loadShaders(){
     int MVPLocation;
     int ModelLocation;
     int ViewLocation;
+    int ProjectionLocation;
     int NormalLocation;
     int lightPositionLocation;
     int lightsEnabledLocation;
@@ -82,6 +83,19 @@ void loadShaders(){
     twoDShader->link();
     MVPLocation = twoDShader->getUniformLocation("MVP");
     twoDShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+    });
+
+    /*Smoke shader*/
+    auto smokeShader = ResourceManager::Factory::createShader(SMOKE_SHADER, "res/shaders/smokev.glsl", "res/shaders/smokef.glsl");
+    smokeShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
+    smokeShader->setAttribLocation("position", PARTICLE_POS_ATTR);
+    smokeShader->setAttribLocation("life", PARTICLE_LIFE_ATTR);
+    smokeShader->link();
+    MVPLocation = smokeShader->getUniformLocation("MVP");
+    /*ViewLocation = smokeShader->getUniformLocation("View");
+    ProjectionLocation = smokeShader->getUniformLocation("Projection");*/
+    smokeShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 

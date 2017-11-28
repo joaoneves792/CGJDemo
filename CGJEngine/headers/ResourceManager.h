@@ -18,6 +18,7 @@
 #include "SphereCamera.h"
 #include "HUDCamera.h"
 #include "FrameBuffer.h"
+#include "ParticlePool.h"
 
 class ResourceManager {
 private:
@@ -27,11 +28,13 @@ private:
     std::unordered_map<std::string, SceneGraph*> _scenes;
     std::unordered_map<std::string, Camera*> _cameras;
     std::unordered_map<std::string, FrameBuffer*> _fbos;
+    std::unordered_map<std::string, ParticlePool*> _pools;
 public:
     class Factory{
     public:
         static Mesh* createMesh(const std::string& name, const std::string& filename);
-        static Shader* createShader(const std::string& name, const std::string& vertexShader, const std::string fragmentShader);
+        static Shader* createShader(const std::string& name, const std::string& vertexShader,
+                                    const std::string& fragmentShader);
         static SceneNode* createScene(const std::string& name, Camera* camera);
         static LightNode* createLight(const std::string& name);
         static FrameBuffer* createFrameBuffer(const std::string& name, int x, int y);
@@ -39,6 +42,10 @@ public:
         static SphereCamera* createSphereCamera(const std::string& name, float distance, Vec3 center, Quat orientation);
         static HUDCamera* createHUDCamera(const std::string& name,
                                           float left, float right, float top, float bottom, float near, float far);
+        static ParticlePool* createParticlePool(const std::string& name, int particleCount, SceneGraph* scene);
+        static ParticleEmitterNode* createParticleEmmiter(const std::string& name, ParticlePool* pool,
+                                                          Shader* shader, GLuint texture, Vec3 acceleration,
+                                                          Vec3 velocity, Vec3 position, float rate, float rateDecay);
     };
 
 private:
@@ -49,32 +56,37 @@ private:
     void __destroyScene(SceneGraph* scene);
     void __destroyCamera(Camera* camera);
     void __destroyFrameBuffer(FrameBuffer* fbo);
+    void __destroyParticlePool(ParticlePool* pool);
 public:
     static ResourceManager* getInstance();
     static void deleteInstance();
-    void addShader(std::string name, Shader* shader);
-    void addMesh(std::string name, Mesh* mesh);
-    void addScene(std::string name, SceneGraph* scene);
-    void addCamera(std::string name, Camera* camera);
-    void addFrameBuffer(std::string name, FrameBuffer* fbo);
+    void addShader(const std::string& name, Shader* shader);
+    void addMesh(const std::string& name, Mesh* mesh);
+    void addScene(const std::string& name, SceneGraph* scene);
+    void addCamera(const std::string& name, Camera* camera);
+    void addFrameBuffer(const std::string& name, FrameBuffer* fbo);
+    void addParticlePool(const std::string& name, ParticlePool* pool);
 
-    Shader* getShader(std::string name);
-    Mesh* getMesh(std::string name);
-    SceneGraph* getScene(std::string name);
-    Camera* getCamera(std::string name);
-    FrameBuffer* getFrameBuffer(std::string name);
+    Shader* getShader(const std::string& name);
+    Mesh* getMesh(const std::string& name);
+    SceneGraph* getScene(const std::string& name);
+    Camera* getCamera(const std::string& name);
+    FrameBuffer* getFrameBuffer(const std::string& name);
+    ParticlePool* getParticlePool(const std::string& name);
 
-    void destroyShader(std::string name);
-    void destroyMesh(std::string name);
-    void destroyScene(std::string name);
-    void destroyCamera(std::string name);
-    void destroyFrameBuffer(std::string name);
+    void destroyShader(const std::string& name);
+    void destroyMesh(const std::string& name);
+    void destroyScene(const std::string& name);
+    void destroyCamera(const std::string& name);
+    void destroyFrameBuffer(const std::string& name);
+    void destroyParticlePool(const std::string& name);
 
     void destroyAllShaders();
     void destroyAllMeshes();
     void destroyAllScenes();
     void destroyAllCameras();
     void destroyAllFrameBuffers();
+    void destroyAllParticlePools();
 
     void destroyEverything();
 };

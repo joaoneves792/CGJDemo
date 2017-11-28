@@ -19,6 +19,7 @@
 #define SKY_SHADER "sky"
 #define TWO_D_SHADER "twoDShader"
 #define QUAD_SHADER "quad"
+#define SMOKE_SHADER "smoke"
 
 /*Scenes*/
 #define SCENE "main"
@@ -39,6 +40,11 @@
 /*FBOs*/
 #define MAIN_FBO "main"
 #define HELPER_FBO "helper"
+
+/*Particles*/
+#define MAX_PARTICLES 1024
+#define POOL "pool"
+#define SMOKE_EMITTER "smoke"
 
 /*Initial window size*/
 #define WIN_X 1024

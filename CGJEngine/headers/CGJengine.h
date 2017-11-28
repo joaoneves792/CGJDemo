@@ -22,5 +22,9 @@
 #include "ResourceManager.h"
 #include "InputManager.h"
 #include "LightsManager.h"
+#include "ParticlePool.h"
+#include "ParticleEmitterNode.h"
+#include "Particle.h"
+#include "Textures.h"
 
 #endif //CGJM_CGJENGINE_H

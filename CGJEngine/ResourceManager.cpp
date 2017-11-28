@@ -45,27 +45,35 @@ void ResourceManager::__destroyFrameBuffer(FrameBuffer *fbo) {
     delete fbo;
 }
 
-void ResourceManager::addMesh(std::string name, Mesh *mesh) {
+void ResourceManager::__destroyParticlePool(ParticlePool *pool) {
+    delete pool;
+}
+
+void ResourceManager::addMesh(const std::string& name, Mesh *mesh) {
     _meshes[name] = mesh;
 }
 
-void ResourceManager::addShader(std::string name, Shader *shader) {
+void ResourceManager::addShader(const std::string& name, Shader *shader) {
     _shaders[name] = shader;
 }
 
-void ResourceManager::addScene(std::string name, SceneGraph *scene) {
+void ResourceManager::addScene(const std::string& name, SceneGraph *scene) {
     _scenes[name] = scene;
 }
 
-void ResourceManager::addCamera(std::string name, Camera *camera) {
+void ResourceManager::addCamera(const std::string& name, Camera *camera) {
     _cameras[name] = camera;
 }
 
-void ResourceManager::addFrameBuffer(std::string name, FrameBuffer *fbo) {
+void ResourceManager::addFrameBuffer(const std::string& name, FrameBuffer *fbo) {
     _fbos[name] = fbo;
 }
 
-Mesh* ResourceManager::getMesh(std::string name) {
+void ResourceManager::addParticlePool(const std::string &name, ParticlePool *pool) {
+    _pools[name] = pool;
+}
+
+Mesh* ResourceManager::getMesh(const std::string& name) {
     auto it = _meshes.find(name);
     if(it == _meshes.end()){
         return nullptr;
@@ -73,7 +81,7 @@ Mesh* ResourceManager::getMesh(std::string name) {
     return it->second;
 }
 
-Shader* ResourceManager::getShader(std::string name) {
+Shader* ResourceManager::getShader(const std::string& name) {
     auto it = _shaders.find(name);
     if(it == _shaders.end()){
         return nullptr;
@@ -81,7 +89,7 @@ Shader* ResourceManager::getShader(std::string name) {
     return it->second;
 }
 
-SceneGraph* ResourceManager::getScene(std::string name) {
+SceneGraph* ResourceManager::getScene(const std::string& name) {
     auto it = _scenes.find(name);
     if(it == _scenes.end()){
         return nullptr;
@@ -89,7 +97,7 @@ SceneGraph* ResourceManager::getScene(std::string name) {
     return it->second;
 }
 
-Camera* ResourceManager::getCamera(std::string name){
+Camera* ResourceManager::getCamera(const std::string& name){
     auto it = _cameras.find(name);
     if(it == _cameras.end()){
         return nullptr;
@@ -97,7 +105,7 @@ Camera* ResourceManager::getCamera(std::string name){
     return it->second;
 }
 
-FrameBuffer* ResourceManager::getFrameBuffer(std::string name) {
+FrameBuffer* ResourceManager::getFrameBuffer(const std::string& name) {
     auto it = _fbos.find(name);
     if(it == _fbos.end()){
         return nullptr;
@@ -105,7 +113,15 @@ FrameBuffer* ResourceManager::getFrameBuffer(std::string name) {
     return it->second;
 }
 
-void ResourceManager::destroyMesh(std::string name) {
+ParticlePool* ResourceManager::getParticlePool(const std::string &name) {
+    auto it = _pools.find(name);
+    if(it == _pools.end()){
+        return nullptr;
+    }
+    return it->second;
+}
+
+void ResourceManager::destroyMesh(const std::string& name) {
     auto it = _meshes.find(name);
     if(it != _meshes.end()){
         Mesh* m = it->second;
@@ -114,7 +130,7 @@ void ResourceManager::destroyMesh(std::string name) {
     }
 }
 
-void ResourceManager::destroyShader(std::string name) {
+void ResourceManager::destroyShader(const std::string& name) {
     auto it = _shaders.find(name);
     if(it != _shaders.end()){
         Shader* s = it->second;
@@ -123,7 +139,7 @@ void ResourceManager::destroyShader(std::string name) {
     }
 }
 
-void ResourceManager::destroyScene(std::string name) {
+void ResourceManager::destroyScene(const std::string& name) {
     auto it = _scenes.find(name);
     if(it != _scenes.end()){
         SceneGraph* s = it->second;
@@ -132,7 +148,7 @@ void ResourceManager::destroyScene(std::string name) {
     }
 }
 
-void ResourceManager::destroyCamera(std::string name) {
+void ResourceManager::destroyCamera(const std::string& name) {
     auto it = _cameras.find(name);
     if(it != _cameras.end()){
         __destroyCamera(it->second);
@@ -140,7 +156,7 @@ void ResourceManager::destroyCamera(std::string name) {
     }
 }
 
-void ResourceManager::destroyFrameBuffer(std::string name) {
+void ResourceManager::destroyFrameBuffer(const std::string& name) {
     auto it = _fbos.find(name);
     if(it != _fbos.end()){
         __destroyFrameBuffer(it->second);
@@ -148,39 +164,53 @@ void ResourceManager::destroyFrameBuffer(std::string name) {
     }
 }
 
+void ResourceManager::destroyParticlePool(const std::string &name) {
+    auto it = _pools.find(name);
+    if(it != _pools.end()){
+        __destroyParticlePool(it->second);
+        _pools.erase(it);
+    }
+}
+
 void ResourceManager::destroyAllMeshes() {
-    for(auto it=_meshes.begin(); it!=_meshes.end(); it++){
-        __destroyMesh(it->second);
+    for(auto it: _meshes){
+        __destroyMesh(it.second);
     }
     _meshes.clear();
 }
 
 void ResourceManager::destroyAllShaders() {
-    for(auto it=_shaders.begin(); it!=_shaders.end(); it++){
-        __destroyShader(it->second);
+    for(auto it: _shaders){
+        __destroyShader(it.second);
     }
     _shaders.clear();
 }
 
 void ResourceManager::destroyAllScenes() {
-    for(auto it=_scenes.begin(); it!=_scenes.end(); it++){
-        __destroyScene(it->second);
+    for(auto it:_scenes){
+        __destroyScene(it.second);
     }
     _scenes.clear();
 }
 
 void ResourceManager::destroyAllCameras() {
-    for(auto it=_cameras.begin(); it!=_cameras.end(); it++){
-        __destroyCamera(it->second);
+    for(auto it : _cameras){
+        __destroyCamera(it.second);
     }
     _cameras.clear();
 }
 
 void ResourceManager::destroyAllFrameBuffers() {
-    for(auto it=_fbos.begin(); it!=_fbos.end(); it++){
-        __destroyFrameBuffer(it->second);
+    for(auto it: _fbos){
+        __destroyFrameBuffer(it.second);
     }
     _fbos.clear();
+}
+
+void ResourceManager::destroyAllParticlePools() {
+    for(auto it : _pools){
+        __destroyParticlePool(it.second);
+    }
 }
 
 void ResourceManager::destroyEverything() {
@@ -189,5 +219,6 @@ void ResourceManager::destroyEverything() {
     destroyAllScenes();
     destroyAllCameras();
     destroyAllFrameBuffers();
+    destroyAllParticlePools();
 }
 

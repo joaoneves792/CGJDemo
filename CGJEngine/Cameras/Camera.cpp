@@ -32,3 +32,7 @@ void Camera::calculateBillboard() {
 Quat Camera::getBillboardOrientation() {
     return _pseudoBillboard;
 }
+
+Vec3 Camera::getPosition() {
+    return _position;
+}

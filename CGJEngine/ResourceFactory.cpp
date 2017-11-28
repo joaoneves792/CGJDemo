@@ -30,7 +30,7 @@ Mesh* ResourceManager::Factory::createMesh(const std::string &name, const std::s
 }
 
 Shader* ResourceManager::Factory::createShader(const std::string &name, const std::string &vertexShader,
-                                      const std::string fragmentShader) {
+                                      const std::string& fragmentShader) {
     auto shader = new Shader(vertexShader.c_str(), fragmentShader.c_str());
     ResourceManager::getInstance()->addShader(name, shader);
     return shader;
@@ -72,4 +72,24 @@ FrameBuffer* ResourceManager::Factory::createFrameBuffer(const std::string &name
     auto fbo = new FrameBuffer(x, y);
     ResourceManager::getInstance()->addFrameBuffer(name, fbo);
     return fbo;
+}
+
+ParticlePool* ResourceManager::Factory::createParticlePool(const std::string &name, int particleCount,
+                                                           SceneGraph *scene) {
+    auto pool = new ParticlePool(particleCount, scene);
+    ResourceManager::getInstance()->addParticlePool(name, pool);
+    return pool;
+}
+
+ParticleEmitterNode* ResourceManager::Factory::createParticleEmmiter(const std::string &name, ParticlePool *pool,
+                                                                     Shader *shader, GLuint texture, Vec3 acceleration,
+                                                                     Vec3 velocity, Vec3 position, float rate,
+                                                                     float rateDecay) {
+    auto emitter = new ParticleEmitterNode(name, pool, shader, texture);
+    emitter->setAcceleration(acceleration);
+    emitter->setVelocity(velocity);
+    emitter->setPosition(position[0], position[1], position[2]);
+    emitter->setRate(rate);
+    emitter->setRateDecay(rateDecay);
+    return emitter;
 }
