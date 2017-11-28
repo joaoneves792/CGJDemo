@@ -1,5 +1,6 @@
-# CGJM
-Individual project for CGJ
+# CGJDemo
+# Car related particle effects
+Final project for CGJ
 
 
 Windows build status: [![Build status](https://ci.appveyor.com/api/projects/status/m4dxesdtcw54ugdl?svg=true)](https://ci.appveyor.com/project/joaoneves792/cgjdemo)
