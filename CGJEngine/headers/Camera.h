@@ -16,14 +16,19 @@ protected:
     Vec3 _position;
     Quat _orientation;
 
+    Quat _pseudoBillboard;
+
     Mat4 _projection;
     float _fovy;
     float _near;
     float _far;
 
+protected:
+    void calculateBillboard();
 public:
     virtual Mat4 getMatrix()=0;
     Mat4 getProjectionMatrix();
+    Quat getBillboardOrientation();
     virtual Mat4 getViewMatrix()=0;
     virtual void move(float x, float y, float z)=0;
     virtual void changeOrientation(float yaw, float pitch, float roll)=0;

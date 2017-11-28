@@ -86,7 +86,6 @@ public:
 
 protected:
     SceneGraph* getScene();
-    Mat4 billboardMatrix(Mat4 View);
     Mat4 getTranslation();
     Quat getOrientation();
     Mat4 getScale();

@@ -7,8 +7,9 @@
 
 SphereCamera::SphereCamera(float distance, Vec3 center, Quat originalOrientation) {
     _position = center;
-    this->_distance = distance;
+    _distance = distance;
     _orientation = originalOrientation;
+    calculateBillboard();
 }
 Mat4 SphereCamera::getMatrix() {
     return _projection * getViewMatrix();
@@ -27,6 +28,8 @@ void SphereCamera::changeOrientation(float yaw, float pitch, float roll){
     _orientation = glm::angleAxis(pitch, right) * _orientation;
     _orientation = glm::angleAxis(roll, front) * _orientation;
     glm::normalize(_orientation);
+
+    calculateBillboard();
 }
 
 void SphereCamera::resize(int x, int y) {

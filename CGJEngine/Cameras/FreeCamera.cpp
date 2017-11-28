@@ -9,6 +9,8 @@
 FreeCamera::FreeCamera(Vec3 originalPosition, Quat originalOrientation) {
     _position = originalPosition;
     _orientation = originalOrientation;
+    calculateBillboard();
+
 }
 Mat4 FreeCamera::getMatrix() {
     return _projection * getViewMatrix();
@@ -26,6 +28,8 @@ void FreeCamera::changeOrientation(float yaw, float pitch, float roll){
     _orientation = glm::angleAxis(pitch, right) * _orientation;
     _orientation = glm::angleAxis(roll, front) * _orientation;
     glm::normalize(_orientation);
+
+    calculateBillboard();
 }
 
 void FreeCamera::resize(int x, int y) {

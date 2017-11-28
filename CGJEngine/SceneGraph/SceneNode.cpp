@@ -178,16 +178,8 @@ Mat4 SceneNode::getScale() {
 
 Quat SceneNode::getOrientation() {
     Quat result = _orientation;
-    if (_billboard) {
-        //Invert the rotation of The view Matrix (simply the transpose of the rotation part)
-        Mat4 View = _scene->getCamera()->getViewMatrix();
-        Mat4 ViewT = Mat4(View[0][0], View[1][0], View[2][0], 0,
-                          View[0][1], View[1][1], View[2][1], 0,
-                          View[0][2], View[1][2], View[2][2], 0,
-                          0, 0, 0, 1);
-        //Convert it into a quat
-        result = glm::toQuat(ViewT);
-    }
+    if (_billboard)
+        result = _scene->getCamera()->getBillboardOrientation();
     if(_parent == nullptr)
         return result;
     else
@@ -196,13 +188,6 @@ Quat SceneNode::getOrientation() {
 
 Mat4 SceneNode::getModelMatrix() {
         return getTranslation()*glm::toMat4(getOrientation())*getScale();
-}
-
-Mat4 SceneNode::billboardMatrix(Mat4 View) {
-    return Mat4(View[0][0], View[1][0], View[2][0], 0,
-                View[0][1], View[1][1], View[2][1], 0,
-                View[0][2], View[1][2], View[2][2], 0,
-                0, 0, 0, 1);
 }
 
 void SceneNode::setBillboard(bool billboarded) {

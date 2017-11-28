@@ -20,22 +20,22 @@ set(PNG_INCLUDE_FILES
 set(SOURCE_FILES
 	Shader.cpp
 	glerror.cpp
-	OBJMesh.cpp
-	H3DMesh.cpp
-	QuadMesh.cpp
-	SphereCamera.cpp
-	FreeCamera.cpp
-	HUDCamera.cpp
-	Camera.cpp
-	SceneGraph.cpp
-	SceneNode.cpp
-    LightNode.cpp
+		Meshes/OBJMesh.cpp
+		Meshes/H3DMesh.cpp
+		Meshes/QuadMesh.cpp
+		Cameras/SphereCamera.cpp
+		Cameras/FreeCamera.cpp
+		Cameras/HUDCamera.cpp
+        Cameras/Camera.cpp
+		SceneGraph/SceneGraph.cpp
+		SceneGraph/SceneNode.cpp
+		SceneGraph/LightNode.cpp
 	ResourceManager.cpp
 	InputManager.cpp
     Textures.cpp
 	FrameBuffer.cpp
 	ResourceFactory.cpp
-	LightNode.cpp
+		SceneGraph/LightNode.cpp
 	LightsManager.cpp)
 
 set(HEADER_FILES
