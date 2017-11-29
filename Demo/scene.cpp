@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <math.h>
+#include <iostream>
 #include "CGJengine.h"
 #include "shaders.h"
 #include "meshes.h"
@@ -76,12 +77,31 @@ void setupScene(){
     root->addChild(sky);
 
     /*Place the car (should be last because of transparency on glasses)*/
-    H3DMesh* chargerModel = (H3DMesh*)rm->getMesh(CAR);
-    auto charger = new SceneNode(CAR, chargerModel, h3dShader);
-    chargerModel->setMaterialUploadCallback(materialUploadCallback);
-    charger->translate(20.0f, 0.0f, -20.0f);
-    root->addChild(charger);
+    H3DMesh* carModel = (H3DMesh*)rm->getMesh(CAR);
+    auto carNode = new SceneNode(CAR, carModel, h3dShader);
+    carModel->setMaterialUploadCallback(materialUploadCallback);
+    carNode->translate(20.0f, 0.0f, -20.0f);
+    root->addChild(carNode);
 
+    /*Place the exhaust emmitters*/
+
+    GLuint fireTexture = ResourceManager::Factory::createTexture(FIRE_PARTICLE);
+    auto scene = ResourceManager::getInstance()->getScene(SCENE);
+    auto pool = ResourceManager::Factory::createParticlePool(POOL, MAX_PARTICLES, scene);
+    auto fireShader = ResourceManager::getInstance()->getShader(FIRE_SHADER);
+    auto exhaustLeft = ResourceManager::Factory::createParticleEmmiter(LEFT_EXHAUST, pool, fireShader, fireTexture,
+                                                                       Vec3(0.0f, 0.000001f, -0.000003f), Vec3(0.0f, 0.0001f, 0.003f),
+                                                                       Vec3(-0.8f, 0.4f, 5.9f), 0.3, 0.0012f);
+    auto exhaustRight = ResourceManager::Factory::createParticleEmmiter(RIGHT_EXHAUST, pool, fireShader, fireTexture,
+                                                                       Vec3(0.0f, 0.00001f, 0.00003f), Vec3(0.0f, 0.0f, 0.0f),
+                                                                       Vec3(0.8f, 0.4f, 5.9f), 0.3, 0.0012f);
+    exhaustLeft->setParticleLifeDecayRate(0.006f);
+    exhaustRight->setParticleLifeDecayRate(0.006f);
+    //exhaustLeft->setRandomness(Vec3(1.0f, 0.0f, 1.0f));
+    //exhaustRight->setRandomness(Vec3(0.0f, 0.0f, 0.0f));
+
+    carNode->addChild(exhaustLeft);
+    carNode->addChild(exhaustRight);
 
     /*Place the sun*/
     auto sun = ResourceManager::Factory::createLight(SUN);
@@ -94,9 +114,7 @@ void setupScene(){
 
     /*PROTOTYPE CODE*/
 
-    GLuint smokeTexture = LoadGLTexture("res/smoke.png");
-    auto scene = ResourceManager::getInstance()->getScene(SCENE);
-    auto pool = ResourceManager::Factory::createParticlePool(POOL, MAX_PARTICLES, scene);
+    GLuint smokeTexture = ResourceManager::Factory::createTexture(SMOKE_PARTICLE);
     auto smokeShader = ResourceManager::getInstance()->getShader(SMOKE_SHADER);
     auto smokeEmitter = ResourceManager::Factory::createParticleEmmiter(SMOKE_EMITTER, pool, smokeShader, smokeTexture,
                                                                         Vec3(0.0f, 0.01f, 0.0f), Vec3(0.0f, 0.0f, 0.0f),
@@ -112,7 +130,7 @@ void setupScene(){
     particleRoot->translate(0.0f, 1.0f, 7.0f);
     particleRoot->setBillboard(true);
     particleRoot->setProcessingLevel(HEAT_HAZE_LEVEL);
-    charger->addChild(particleRoot);
+    carNode->addChild(particleRoot);
 
     Mesh* quad = new QuadMesh();
     rm->addMesh("quad", quad);

@@ -78,8 +78,8 @@ void SceneNode::translate(float x, float y, float z) {
     _position = _position + Vec3(x, y, z);
 }
 
-Vec3 SceneNode::getPosition(){
-    return _position;
+Vec3 SceneNode::getPositionWorldspace(){
+    return Vec3(getModelMatrix()*Vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void SceneNode::setOrientation(float x, float y, float z, float angle) {

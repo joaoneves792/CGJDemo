@@ -58,7 +58,7 @@ public:
 
     void setPosition(float x, float y, float z);
     void translate(float x, float y, float z);
-    virtual Vec3 getPosition();
+    virtual Vec3 getPositionWorldspace();
 
     void setOrientation(float x, float y, float z, float angle);
     void setOrientation(Quat quat);

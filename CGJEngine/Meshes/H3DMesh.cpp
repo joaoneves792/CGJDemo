@@ -102,9 +102,9 @@ void H3DMesh::unload() {
         }
 
     }
-    /*for(unsigned int i=0; i< _mesh->materials.size(); i++){
-        glDeleteTextures(1, (GLuint *)&_mesh->materials[i]->textureId);
-    }*/
+    for(int i=0; i< _materialCount; i++){
+        glDeleteTextures(1, (GLuint *)&_materials[i].textureId);
+    }
 
     Clear();
 }

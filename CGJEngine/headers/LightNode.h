@@ -27,7 +27,7 @@ public:
     void setColor(float r, float g, float b);
     void setAttenuation(float k, float kd, float kdd, float range);
 
-    virtual Vec3 getPosition();
+    virtual Vec3 getPositionWorldspace();
 
     Vec4 getCone();
     Vec3 getColor();

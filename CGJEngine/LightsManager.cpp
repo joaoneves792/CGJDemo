@@ -32,7 +32,7 @@ void LightsManager::uploadLights() {
     for(auto it=_enabledLights.begin(); it!=_enabledLights.end(); it++){
         for(auto sit=_shaderUpdateCallback.begin(); sit!=_shaderUpdateCallback.end(); sit++){
             sit->first->use();
-            sit->second(it->first->getColor(), it->first->getPosition(),
+            sit->second(it->first->getColor(), it->first->getPositionWorldspace(),
                         it->first->getCone(), it->first->getAttenuation(), it->second, i);
         }
         i++;

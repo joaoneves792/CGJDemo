@@ -20,6 +20,7 @@
 #define TWO_D_SHADER "twoDShader"
 #define QUAD_SHADER "quad"
 #define SMOKE_SHADER "smoke"
+#define FIRE_SHADER "fire"
 
 /*Scenes*/
 #define SCENE "main"
@@ -45,6 +46,8 @@
 #define MAX_PARTICLES 1024
 #define POOL "pool"
 #define SMOKE_EMITTER "smoke"
+#define SMOKE_PARTICLE "res/smoke.png"
+#define FIRE_PARTICLE "res/fireAtlas.png"
 
 /*Initial window size*/
 #define WIN_X 1024
@@ -53,6 +56,8 @@
 /*Misc constants*/
 #define ROAD_SEGMENTS 12
 #define HEAT_HAZE_LEVEL 10
+#define LEFT_EXHAUST "exhaust_l"
+#define RIGHT_EXHAUST "exhaust_r"
 
 
 

@@ -70,6 +70,8 @@ void update(){
     int timeDelta = currentTime-lastTime;
     lastTime = currentTime;
 
+
+
 	scene->update(timeDelta);
 	particlePool->update(timeDelta);
 
@@ -123,6 +125,15 @@ void mouse(int x, int y) {
     InputManager::getInstance()->mouseMovement(x, y);
 }
 
+
+void flames(int value){
+	((ParticleEmitterNode*)ResourceManager::getInstance()->getScene(SCENE)->findNode(RIGHT_EXHAUST))->emmit();
+	((ParticleEmitterNode*)ResourceManager::getInstance()->getScene(SCENE)->findNode(LEFT_EXHAUST))->emmit();
+	unsigned int nextInterval = (unsigned int)(((float)std::rand()/(float)RAND_MAX)*5000);
+	std::cout << nextInterval << std::endl;
+	glutTimerFunc(nextInterval, flames, 0);
+}
+
 /////////////////////////////////////////////////////////////////////// SETUP
 
 void setupCallbacks() 
@@ -137,6 +148,7 @@ void setupCallbacks()
     glutKeyboardUpFunc(keyboardUp);
     glutSpecialFunc(specialKeyboard);
     glutSpecialUpFunc(specialKeyboardUp);
+	glutTimerFunc(5000, flames, 0);
 }
 
 void checkOpenGLInfo()

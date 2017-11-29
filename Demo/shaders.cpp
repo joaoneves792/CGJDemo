@@ -87,7 +87,7 @@ void loadShaders(){
     });
 
     /*Smoke shader*/
-    auto smokeShader = ResourceManager::Factory::createShader(SMOKE_SHADER, "res/shaders/particlev.glsl", "res/shaders/smokef.glsl");
+    auto smokeShader = ResourceManager::Factory::createShader(SMOKE_SHADER, "res/shaders/smokev.glsl", "res/shaders/particlef.glsl");
     smokeShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
     smokeShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
     smokeShader->link();
@@ -98,4 +98,15 @@ void loadShaders(){
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
     });
 
+    /*Fire shader*/
+    auto fireShader = ResourceManager::Factory::createShader(FIRE_SHADER, "res/shaders/firev.glsl", "res/shaders/particlef.glsl");
+    fireShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
+    fireShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
+    fireShader->link();
+    ViewLocation = fireShader->getUniformLocation("View");
+    ProjectionLocation = fireShader->getUniformLocation("Projection");
+    fireShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
+        glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
+        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
+    });
 }

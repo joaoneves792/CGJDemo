@@ -57,6 +57,9 @@ void setupActions() {
         }else {
             scene->findNode(ROAD)->setUpdateCallback(Road::deccelerate);
         }
+
+        ((ParticleEmitterNode*)ResourceManager::getInstance()->getScene(SCENE)->findNode(RIGHT_EXHAUST))->emmit();
+        ((ParticleEmitterNode*)ResourceManager::getInstance()->getScene(SCENE)->findNode(LEFT_EXHAUST))->emmit();
     });
     im->addKeyActionOnce('n', [=](){
         static bool night = false;

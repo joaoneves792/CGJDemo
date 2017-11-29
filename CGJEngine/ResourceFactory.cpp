@@ -2,6 +2,7 @@
 // Created by joao on 11/21/17.
 //
 #include <iostream>
+#include <Textures.h>
 #include "ResourceManager.h"
 #include "Mesh.h"
 #include "OBJMesh.h"
@@ -92,4 +93,15 @@ ParticleEmitterNode* ResourceManager::Factory::createParticleEmmiter(const std::
     emitter->setRate(rate);
     emitter->setRateDecay(rateDecay);
     return emitter;
+}
+
+GLuint ResourceManager::Factory::createTexture(const std::string &fileName) {
+    GLuint texture = ResourceManager::getInstance()->getTexture(fileName);
+    if(texture){
+        return texture;
+    }
+
+    texture = LoadGLTexture(fileName.c_str());
+    ResourceManager::getInstance()->addTexture(fileName, texture);
+    return texture;
 }

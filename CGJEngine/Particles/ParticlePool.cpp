@@ -84,25 +84,22 @@ unsigned int ParticlePool::getParticles(unsigned int count, std::list<Particle *
 
 
 void ParticlePool::update(int dt) {
+    //Clear out dead particles TODO only run this less frequently
+    _alive.erase(std::remove_if(_alive.begin(), _alive.end(), [&](Particle* p){
+        if(p->life <= 0.0f){
+            _dead.push_back(p);
+            return true;
+        }
+        return false;
+    }), _alive.end());
+
     //Sort all alive particles
     Vec3 cameraPosition = _scene->getCamera()->getPosition();
     std::sort(_alive.begin(), _alive.end(), [=](Particle* a, Particle* b){
-        if(b->life <= 0)
-            return true;
         Vec3 va = cameraPosition - a->position;
         Vec3 vb = cameraPosition - b->position;
         return (glm::dot(va, va) < glm::dot(vb, vb)); //Ignore the error in CLion
     });
-
-    //Clear out dead particles //If everything works correctly they will be the last elements in the vector
-    if(!_alive.empty()) {
-        auto it = _alive.rbegin();
-        while ((*it)->life <= 0.0f) {
-            _dead.push_back(*it);
-            _alive.pop_back();
-            it++;
-        }
-    }
 }
 
 void ParticlePool::__draw(ParticleEmitterNode* emitterNode, int drawCount, int level) {
@@ -140,6 +137,7 @@ void ParticlePool::draw(int level) {
         else{
             __draw(lastEmitter, instanceCount, level);
             instanceCount = 1;
+            lastEmitter = p->emitterNode;
         }
         //Update buffer info
         int statei = (instanceCount-1)*4;

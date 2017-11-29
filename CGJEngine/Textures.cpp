@@ -377,6 +377,8 @@ GLuint generateGLTexture(unsigned char* data, int height, int width, bool alpha,
                 glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, width, height, 0, length, data);
 #endif
             }
+            /*TODO one of these can be GL_NEAREST*/
+            /*The other can maybe use mipmaps?*/
         	/* enable linear filtering */
         	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

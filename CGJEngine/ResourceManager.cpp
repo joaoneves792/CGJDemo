@@ -2,6 +2,7 @@
 // Created by joao on 11/15/17.
 //
 
+#include "GL/glew.h"
 #include "SceneGraph.h"
 #include "Shader.h"
 #include "Mesh.h"
@@ -49,6 +50,10 @@ void ResourceManager::__destroyParticlePool(ParticlePool *pool) {
     delete pool;
 }
 
+void ResourceManager::__destroyTexture(GLuint texture) {
+    glDeleteTextures(1, &texture);
+}
+
 void ResourceManager::addMesh(const std::string& name, Mesh *mesh) {
     _meshes[name] = mesh;
 }
@@ -71,6 +76,10 @@ void ResourceManager::addFrameBuffer(const std::string& name, FrameBuffer *fbo) 
 
 void ResourceManager::addParticlePool(const std::string &name, ParticlePool *pool) {
     _pools[name] = pool;
+}
+
+void ResourceManager::addTexture(const std::string &name, GLuint texture) {
+    _textures[name] = texture;
 }
 
 Mesh* ResourceManager::getMesh(const std::string& name) {
@@ -117,6 +126,14 @@ ParticlePool* ResourceManager::getParticlePool(const std::string &name) {
     auto it = _pools.find(name);
     if(it == _pools.end()){
         return nullptr;
+    }
+    return it->second;
+}
+
+GLuint ResourceManager::getTexture(const std::string &name) {
+    auto it = _textures.find(name);
+    if(it == _textures.end()){
+        return 0;
     }
     return it->second;
 }
@@ -172,6 +189,14 @@ void ResourceManager::destroyParticlePool(const std::string &name) {
     }
 }
 
+void ResourceManager::destroyTexture(const std::string &name) {
+    auto it = _textures.find(name);
+    if(it != _textures.end()){
+        __destroyTexture(it->second);
+        _textures.erase(it);
+    }
+}
+
 void ResourceManager::destroyAllMeshes() {
     for(auto it: _meshes){
         __destroyMesh(it.second);
@@ -211,6 +236,14 @@ void ResourceManager::destroyAllParticlePools() {
     for(auto it : _pools){
         __destroyParticlePool(it.second);
     }
+    _pools.clear();
+}
+
+void ResourceManager::destroyAllTextures() {
+    for(auto it : _textures){
+        __destroyTexture(it.second);
+    }
+    _textures.clear();
 }
 
 void ResourceManager::destroyEverything() {
@@ -220,5 +253,6 @@ void ResourceManager::destroyEverything() {
     destroyAllCameras();
     destroyAllFrameBuffers();
     destroyAllParticlePools();
+    destroyAllTextures();
 }
 

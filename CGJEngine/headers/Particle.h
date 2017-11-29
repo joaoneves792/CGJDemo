@@ -13,6 +13,7 @@
 class ParticleEmitterNode;
 
 struct Particle {
+    Vec3 acceleration;
     Vec3 position;
     Vec3 velocity;
     float life;

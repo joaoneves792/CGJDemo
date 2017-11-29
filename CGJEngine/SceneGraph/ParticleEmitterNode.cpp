@@ -2,6 +2,7 @@
 // Created by joao on 11/28/17.
 //
 
+#include <climits>
 #include <iostream>
 #include "ParticleEmitterNode.h"
 #include "ParticlePool.h"
@@ -50,12 +51,29 @@ void ParticleEmitterNode::emmit() {
     _currentRate = _rate;
 }
 
+
+float randomFloat(){ //xorshift96
+    static unsigned long x=123456789, y=362436069, z=521288629;
+    unsigned long t;
+    x ^= x << 16;
+    x ^= x >> 5;
+    x ^= x << 1;
+
+    t = x;
+    x = y;
+    y = z;
+    z = t ^ x ^ y;
+
+    return (long)z/(float)LONG_MAX;
+}
+
+
 void ParticleEmitterNode::update(int dt) {
     if(_updateCallback != nullptr)
         _updateCallback(dt);
 
     if(_currentRate > 0) {
-        Vec3 position = getPosition();
+        Vec3 position = getPositionWorldspace();
 
         /*Calculate how many new particles we need*/
         static float leftOverParticles = 0.0f;
@@ -78,6 +96,7 @@ void ParticleEmitterNode::update(int dt) {
             p->life = 1.0f;
             p->position = position;
             p->velocity = _velocity;
+            p->acceleration = _acceleration + _acceleration*Vec3(_randomness[0]*randomFloat(), _randomness[1]*randomFloat(), _randomness[2]*randomFloat());
             rit++;
         }
     }
@@ -86,7 +105,7 @@ void ParticleEmitterNode::update(int dt) {
     auto it = _particles.begin();
     while(it!=_particles.end()){
         Particle *p = (*it);
-        p->velocity += (_acceleration * (float)dt);
+        p->velocity += (p->acceleration * (float)dt);
         p->position += (p->velocity * (float) dt);
         p->life -= _lifeDecayRate * dt;
         if(p->life <= 0){

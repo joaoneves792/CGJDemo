@@ -45,6 +45,6 @@ Vec4 LightNode::getAttenuation(){
     return _attenuation;
 }
 
-Vec3 LightNode::getPosition(){
+Vec3 LightNode::getPositionWorldspace(){
     return Vec3(getTranslation()*Vec4(_position, 1.0f));
 }
