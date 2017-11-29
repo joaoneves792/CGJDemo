@@ -77,7 +77,7 @@ public:
 
 
     virtual void update(int dt);
-    virtual void draw(int level);
+    virtual void draw(int level,const Mat4& parentTranslate, const Quat& parentOrientation, const Mat4& parentScale);
 
     Mat4 getModelMatrix();
 

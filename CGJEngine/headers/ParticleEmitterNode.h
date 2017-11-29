@@ -40,10 +40,8 @@ public:
     void setParticleLifeDecayRate(float lifeDecay);
     void emmit();
 
-    /*These methods should be called from the particle pool
-     * however they should not misbehave if called from somewhere else*/
-    virtual void draw(int level);
-    void postDraw(int level);
+    void particlePreDraw(int level);
+    void particlePostDraw(int level);
 
     virtual void update(int dt);
 };

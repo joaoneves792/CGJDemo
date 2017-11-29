@@ -39,7 +39,6 @@ void display()
 
     LightsManager::getInstance()->uploadLights();
 
-    std::cout <<"new frame" << std::endl;
     /*Draw scene to fbo*/
 	mainFBO->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

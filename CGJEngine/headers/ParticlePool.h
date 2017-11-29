@@ -22,11 +22,9 @@ private:
 
     GLuint _particlesVAO;
     GLuint _vertVBO;
-    GLuint _posVBO;
-    GLuint _lifeVBO;
+    GLuint _stateVBO;
 
-    GLfloat* _positionBuffer;
-    GLfloat* _lifeBuffer;
+    GLfloat* _stateBuffer;
 
 private:
     void __draw(ParticleEmitterNode* emitter, int drawCount, int level);
@@ -34,7 +32,7 @@ private:
 public:
     ParticlePool(int particleCount, SceneGraph* scene);
     ~ParticlePool();
-    Particle* getParticle();
+    unsigned int getParticles(unsigned int count, std::list<Particle*>& list);
 
 
     void update(int dt);

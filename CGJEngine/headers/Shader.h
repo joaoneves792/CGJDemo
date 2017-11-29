@@ -13,7 +13,7 @@ private:
 	GLuint _vertexShader;
 	GLuint _fragmentShader;
 
-    std::function<void(Mat4, Mat4, Mat4)> _uploadMVPCallback;
+    std::function<void(const Mat4&, const Mat4&, const Mat4&)> _uploadMVPCallback;
 
 public:
 	Shader(const char* path_vert_shader, const char* path_frag_shader);
@@ -28,8 +28,8 @@ public:
 	void setAttribLocation(const char* name, GLuint position);
 	void setFragOutputLocation(const char* name, GLuint position);
 	void create_program(const char *path_vert_shader, const char *path_frag_shader);
-    void setMVPFunction(std::function<void(Mat4, Mat4, Mat4)> callback);
-    void uploadMVP(Mat4 M, Mat4 V, Mat4 P);
+    void setMVPFunction(std::function<void(const Mat4&, const Mat4&, const Mat4&)> callback);
+    void uploadMVP(const Mat4& M, const Mat4& V, const Mat4& P);
 private:
 	GLuint load_and_compile_shader(const char *fname, GLenum shaderType);
 	void read_shader_src(const char *fname, std::vector<char> &buffer);

@@ -1,14 +1,17 @@
 #version 330 core
 in vec3 vertex;
-in vec3 position;
-in float life;
+in vec4 state;
 
 out vec2 uv;
+out float life;
 
 uniform mat4 View;
 uniform mat4 Projection;
 
 void main() {
+    vec3 position = state.xyz;
+    life = state.w;
+
     mat3 rotMat = mat3(View);
     vec3 d = vec3(View[3]);
 

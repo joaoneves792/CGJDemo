@@ -69,16 +69,16 @@ void ParticleEmitterNode::update(int dt) {
         _currentRate -= _rateDecay * dt;
 
         /*Add new particles*/
-        for (int i = 0; i < (int) newParticlesCount; i++) {
-            Particle *p = _pool->getParticle();
-            if (p != nullptr) {
-                p->emitterNode = this;
-                p->level = _processingLevel;
-                p->life = 1.0f;
-                p->position = position;
-                p->velocity = _velocity;
-                _particles.push_back(p);
-            }
+        unsigned int returnedParticlesCount = _pool->getParticles((unsigned int)newParticlesCount, _particles);
+        auto rit = _particles.rbegin();
+        for (unsigned int i = 0; i < returnedParticlesCount; i++) {
+            Particle *p = (*rit);
+            p->emitterNode = this;
+            p->level = _processingLevel;
+            p->life = 1.0f;
+            p->position = position;
+            p->velocity = _velocity;
+            rit++;
         }
     }
     /*Update particles*/
@@ -100,7 +100,7 @@ void ParticleEmitterNode::update(int dt) {
         n->update(dt);
 }
 
-void ParticleEmitterNode::draw(int level) {
+void ParticleEmitterNode::particlePreDraw(int level) {
     if(!_visible)
         return;
 
@@ -120,16 +120,13 @@ void ParticleEmitterNode::draw(int level) {
     }
 }
 
-void ParticleEmitterNode::postDraw(int level) {
+void ParticleEmitterNode::particlePostDraw(int level) {
     glUseProgram(0);
 
     //Call post draw
     if (_postDraw != nullptr)
         _postDraw();
 
-    //Draw the childs
-    for(SceneNode* n : _childs)
-        n->draw(level);
 }
 
 ParticleEmitterNode::~ParticleEmitterNode() {

@@ -33,7 +33,7 @@ void loadShaders(){
     ModelLocation = h3dShader->getUniformLocation("Model");
     ViewLocation = h3dShader->getUniformLocation("View");
     NormalLocation = h3dShader->getUniformLocation("NormalMatrix");
-    h3dShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P){
+    h3dShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P*V*M));
         glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, glm::value_ptr(M));
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
@@ -64,7 +64,7 @@ void loadShaders(){
     skyShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
     skyShader->link();
     MVPLocation = skyShader->getUniformLocation("MVP");
-    skyShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
+    skyShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
@@ -73,7 +73,7 @@ void loadShaders(){
     quadShader->setAttribLocation("inPosition", VERTICES__ATTR);
     quadShader->link();
     MVPLocation = quadShader->getUniformLocation("MVP");
-    quadShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
+    quadShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
@@ -82,19 +82,18 @@ void loadShaders(){
     twoDShader->setAttribLocation("inPosition", VERTICES__ATTR);
     twoDShader->link();
     MVPLocation = twoDShader->getUniformLocation("MVP");
-    twoDShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P) {
+    twoDShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
     /*Smoke shader*/
-    auto smokeShader = ResourceManager::Factory::createShader(SMOKE_SHADER, "res/shaders/smokev.glsl", "res/shaders/smokef.glsl");
+    auto smokeShader = ResourceManager::Factory::createShader(SMOKE_SHADER, "res/shaders/particlev.glsl", "res/shaders/smokef.glsl");
     smokeShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
-    smokeShader->setAttribLocation("position", PARTICLE_POS_ATTR);
-    smokeShader->setAttribLocation("life", PARTICLE_LIFE_ATTR);
+    smokeShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
     smokeShader->link();
     ViewLocation = smokeShader->getUniformLocation("View");
     ProjectionLocation = smokeShader->getUniformLocation("Projection");
-    smokeShader->setMVPFunction([=](Mat4 M, Mat4 V, Mat4 P){
+    smokeShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
         glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
     });

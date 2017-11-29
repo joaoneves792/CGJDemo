@@ -23,26 +23,17 @@ void ParticlePool::init(int maxParticles) {
     glBindBuffer(GL_ARRAY_BUFFER, _vertVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData), vertexBufferData, GL_STATIC_DRAW);
 
-    glGenBuffers(1, &_posVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, _posVBO);
-    glBufferData(GL_ARRAY_BUFFER, maxParticles * 3 * sizeof(GLfloat), 0, GL_STREAM_DRAW);
-
-    glGenBuffers(1, &_lifeVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, _lifeVBO);
-    glBufferData(GL_ARRAY_BUFFER, maxParticles * sizeof(GLfloat), 0, GL_STREAM_DRAW);
-
+    glGenBuffers(1, &_stateVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, _stateVBO);
+    glBufferData(GL_ARRAY_BUFFER, maxParticles * 4 * sizeof(GLfloat), 0, GL_STREAM_DRAW);
 
     glEnableVertexAttribArray(PARTICLE_VERT_ATTR);
     glBindBuffer(GL_ARRAY_BUFFER, _vertVBO);
     glVertexAttribPointer(PARTICLE_VERT_ATTR, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-    glEnableVertexAttribArray(PARTICLE_POS_ATTR);
-    glBindBuffer(GL_ARRAY_BUFFER, _posVBO);
-    glVertexAttribPointer(PARTICLE_POS_ATTR, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    glEnableVertexAttribArray(PARTICLE_LIFE_ATTR);
-    glBindBuffer(GL_ARRAY_BUFFER, _lifeVBO);
-    glVertexAttribPointer(PARTICLE_LIFE_ATTR, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(PARTICLE_STATE_ATTR);
+    glBindBuffer(GL_ARRAY_BUFFER, _stateVBO);
+    glVertexAttribPointer(PARTICLE_STATE_ATTR, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -54,8 +45,7 @@ ParticlePool::ParticlePool(int particleCount, SceneGraph* scene) {
     _dead.reserve((unsigned long)particleCount);
     for(int i=0; i<particleCount; i++)
         _dead.push_back(new Particle);
-    _positionBuffer = new GLfloat[particleCount*3];
-    _lifeBuffer = new GLfloat[particleCount*1];
+    _stateBuffer = new GLfloat[particleCount*4];
     init(particleCount);
     _scene = scene;
 }
@@ -69,20 +59,27 @@ ParticlePool::~ParticlePool() {
     }
     _alive.clear();
     _dead.clear();
-    delete[] _positionBuffer;
-    delete[] _lifeBuffer;
+    delete[] _stateBuffer;
 }
 
-Particle* ParticlePool::getParticle() {
+unsigned int ParticlePool::getParticles(unsigned int count, std::list<Particle *> &list) {
     Particle *p = nullptr;
-    if(!_dead.empty()) {
+    unsigned int returnCount = 0;
+    if(_dead.size() >= count)
+        returnCount = count;
+    else {
+        returnCount = (int) _dead.size();
+        std::cerr << "Active particle limit exceeded!" << std::endl;
+    }
+
+    for(unsigned int i=0;i<returnCount;i++) {
         p = _dead.back();
         _dead.pop_back();
         _alive.push_back(p);
-    }else{
-        std::cerr << "Active particle limit exceeded!" << std::endl;
+        list.push_back(p);
     }
-    return p;
+
+    return returnCount;
 }
 
 
@@ -109,28 +106,23 @@ void ParticlePool::update(int dt) {
 }
 
 void ParticlePool::__draw(ParticleEmitterNode* emitterNode, int drawCount, int level) {
-    emitterNode->draw(level);
+    emitterNode->particlePreDraw(level);
 
     glBindVertexArray(_particlesVAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, _posVBO);
-    glBufferData(GL_ARRAY_BUFFER, _particleCount * 3 * sizeof(GLfloat), 0, GL_STREAM_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, drawCount * sizeof(GLfloat) * 3, _positionBuffer);
-
-    glBindBuffer(GL_ARRAY_BUFFER, _lifeVBO);
-    glBufferData(GL_ARRAY_BUFFER, _particleCount * sizeof(GLfloat), 0, GL_STREAM_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, drawCount * sizeof(GLfloat), _lifeBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _stateVBO);
+    glBufferData(GL_ARRAY_BUFFER, _particleCount * 4 * sizeof(GLfloat), 0, GL_STREAM_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, drawCount * sizeof(GLfloat) * 4, _stateBuffer);
 
     glVertexAttribDivisor(PARTICLE_VERT_ATTR, 0); // particles vertices : always reuse the same 4 vertices -> 0
-    glVertexAttribDivisor(PARTICLE_POS_ATTR, 1); // positions : one per quad (its center) -> 1
-    glVertexAttribDivisor(PARTICLE_LIFE_ATTR, 1); // color : one per quad -> 1
+    glVertexAttribDivisor(PARTICLE_STATE_ATTR, 1); // positions and life
 
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, drawCount);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    emitterNode->postDraw(level);
+    emitterNode->particlePostDraw(level);
 }
 
 void ParticlePool::draw(int level) {
@@ -150,11 +142,11 @@ void ParticlePool::draw(int level) {
             instanceCount = 1;
         }
         //Update buffer info
-        int posi = (instanceCount-1)*3;
-        _positionBuffer[posi++] = p->position[0];
-        _positionBuffer[posi++] = p->position[1];
-        _positionBuffer[posi] = p->position[2];
-        _lifeBuffer[instanceCount] = p->life;
+        int statei = (instanceCount-1)*4;
+        _stateBuffer[statei++] = p->position[0];
+        _stateBuffer[statei++] = p->position[1];
+        _stateBuffer[statei++] = p->position[2];
+        _stateBuffer[statei] = p->life;
     }
     if(instanceCount > 0)
         __draw(lastEmitter, instanceCount, level);

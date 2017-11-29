@@ -103,6 +103,7 @@ void setupScene(){
                                                                         Vec3(10.0f, 1.0f, -10.0f), 0.01, 0.0f);
     smokeEmitter->setVelocity(Vec3(0.0f, 0.01f, 0.0f));
     smokeEmitter->setAcceleration(Vec3(0.0f, 0.0f, 0.0f));
+    smokeEmitter->setRate(0.1f);
     smokeEmitter->emmit();
     root->addChild(smokeEmitter);
 

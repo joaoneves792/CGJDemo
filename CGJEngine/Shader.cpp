@@ -155,11 +155,11 @@ void Shader::use(){
         glUseProgram(_shaderProgram);
 }
 
-void Shader::setMVPFunction(std::function<void(Mat4, Mat4, Mat4)> callback) {
+void Shader::setMVPFunction(std::function<void(const Mat4&, const Mat4&, const Mat4&)> callback) {
     _uploadMVPCallback = callback;
 }
 
-void Shader::uploadMVP(Mat4 M, Mat4 V, Mat4 P) {
+void Shader::uploadMVP(const Mat4& M, const Mat4& V, const Mat4& P) {
     if(_uploadMVPCallback != nullptr)
         _uploadMVPCallback(M, V, P);
 }

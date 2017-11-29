@@ -207,9 +207,17 @@ SceneNode* SceneNode::findNode(const std::string &name) {
     return nullptr;
 }
 
-void SceneNode::draw(int level) {
+void SceneNode::draw(int level, const Mat4 &parentTranslate, const Quat &parentOrientation, const Mat4 &parentScale) {
     if(!_visible)
         return;
+
+    Mat4 translation = glm::translate(Mat4(1.0f), _position) * parentTranslate;
+    Mat4 scale = glm::scale(Mat4(1.0f), _size) * parentScale;
+    Quat orientation = _orientation;
+    if (_billboard)
+        orientation = _scene->getCamera()->getBillboardOrientation();
+    else
+        orientation =  orientation * parentOrientation;
 
     if(level == _processingLevel) {
 
@@ -244,7 +252,7 @@ void SceneNode::draw(int level) {
             //Upload MVP
             Mat4 P = _scene->getProjectionMatrix();
             Mat4 V = _scene->getViewMatrix();
-            Mat4 M = getModelMatrix();
+            Mat4 M = translation*glm::toMat4(orientation)*scale;
             _shader->uploadMVP(M, V, P);
 
             //Draw
@@ -258,5 +266,5 @@ void SceneNode::draw(int level) {
     }
     //Draw the childs
     for(SceneNode* n : _childs)
-        n->draw(level);
+        n->draw(level, translation, orientation, scale);
 }
