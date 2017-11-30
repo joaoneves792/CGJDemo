@@ -44,16 +44,15 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scene->draw();
 	particlePool->draw(DEFAULT_PARTICLES_LEVEL);
-	mainFBO->unbind();
 
 	/*Copy fbo to texture and use the copy for post-processing*/
 	helperFBO->copyFrameBuffer(mainFBO);
 	helperFBO->bindTexture();
 	mainFBO->bind();
-	scene->draw(HEAT_HAZE_LEVEL);
-	mainFBO->unbind();
+	particlePool->draw(HEAT_HAZE_LEVEL);
 
 	/*Bind the final result to a texture*/
+	mainFBO->unbind();
 	mainFBO->bindTexture();
 	viewPortScene->draw();
 
@@ -69,8 +68,6 @@ void update(){
     int currentTime = glutGet(GLUT_ELAPSED_TIME);
     int timeDelta = currentTime-lastTime;
     lastTime = currentTime;
-
-
 
 	scene->update(timeDelta);
 	particlePool->update(timeDelta);
@@ -130,7 +127,6 @@ void flames(int value){
 	((ParticleEmitterNode*)ResourceManager::getInstance()->getScene(SCENE)->findNode(RIGHT_EXHAUST))->emmit();
 	((ParticleEmitterNode*)ResourceManager::getInstance()->getScene(SCENE)->findNode(LEFT_EXHAUST))->emmit();
 	unsigned int nextInterval = (unsigned int)(((float)std::rand()/(float)RAND_MAX)*5000);
-	std::cout << nextInterval << std::endl;
 	glutTimerFunc(nextInterval, flames, 0);
 }
 

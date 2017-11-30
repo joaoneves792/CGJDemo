@@ -68,15 +68,6 @@ void loadShaders(){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
-    /*Quad shader*/
-    auto quadShader = ResourceManager::Factory::createShader(QUAD_SHADER, "res/shaders/quadv.glsl", "res/shaders/quadf.glsl");
-    quadShader->setAttribLocation("inPosition", VERTICES__ATTR);
-    quadShader->link();
-    MVPLocation = quadShader->getUniformLocation("MVP");
-    quadShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
-    });
-
     /*2D shader*/
     auto twoDShader = ResourceManager::Factory::createShader(TWO_D_SHADER, "res/shaders/2Dv.glsl", "res/shaders/2Df.glsl");
     twoDShader->setAttribLocation("inPosition", VERTICES__ATTR);
@@ -84,6 +75,18 @@ void loadShaders(){
     MVPLocation = twoDShader->getUniformLocation("MVP");
     twoDShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+    });
+
+    /*Quad shader*/
+    auto heatShader = ResourceManager::Factory::createShader(HEAT_SHADER, "res/shaders/hazev.glsl", "res/shaders/hazef.glsl");
+    heatShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
+    heatShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
+    heatShader->link();
+    ViewLocation = heatShader->getUniformLocation("View");
+    ProjectionLocation = heatShader->getUniformLocation("Projection");
+    heatShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
+        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
     });
 
     /*Smoke shader*/

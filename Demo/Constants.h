@@ -18,7 +18,7 @@
 #define H3D_SHADER "h3d"
 #define SKY_SHADER "sky"
 #define TWO_D_SHADER "twoDShader"
-#define QUAD_SHADER "quad"
+#define HEAT_SHADER "heat"
 #define SMOKE_SHADER "smoke"
 #define FIRE_SHADER "fire"
 
@@ -47,7 +47,10 @@
 #define POOL "pool"
 #define SMOKE_EMITTER "smoke"
 #define SMOKE_PARTICLE "res/smoke.png"
+#define LEFT_EXHAUST "exhaust_l"
+#define RIGHT_EXHAUST "exhaust_r"
 #define FIRE_PARTICLE "res/fireAtlas.png"
+#define HEAT_EMITTER "heatHaze"
 
 /*Initial window size*/
 #define WIN_X 1024
@@ -56,8 +59,6 @@
 /*Misc constants*/
 #define ROAD_SEGMENTS 12
 #define HEAT_HAZE_LEVEL 10
-#define LEFT_EXHAUST "exhaust_l"
-#define RIGHT_EXHAUST "exhaust_r"
 
 
 

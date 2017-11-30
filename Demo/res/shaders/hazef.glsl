@@ -16,4 +16,5 @@ void main() {
     color.a = 1.0f-length(position_modelspace);
 
     //color = vec4(texture(renderedTexture, (position_modelspace+1)/2).rgb, 1.0f);
+    color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 }

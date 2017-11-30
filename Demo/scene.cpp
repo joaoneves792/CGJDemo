@@ -97,8 +97,8 @@ void setupScene(){
                                                                        Vec3(0.8f, 0.4f, 5.9f), 0.3, 0.0012f);
     exhaustLeft->setParticleLifeDecayRate(0.006f);
     exhaustRight->setParticleLifeDecayRate(0.006f);
-    //exhaustLeft->setRandomness(Vec3(1.0f, 0.0f, 1.0f));
-    //exhaustRight->setRandomness(Vec3(0.0f, 0.0f, 0.0f));
+    //exhaustLeft->setRandomAcceleration(Vec3(1.0f, 0.0f, 1.0f));
+    //exhaustRight->setRandomAcceleration(Vec3(0.0f, 0.0f, 0.0f));
 
     carNode->addChild(exhaustLeft);
     carNode->addChild(exhaustRight);
@@ -112,8 +112,22 @@ void setupScene(){
     LightsManager::getInstance()->setEnabled(sun, true);
 
 
-    /*PROTOTYPE CODE*/
+    /*Heat haze*/
+    /*TODO Create Texture abstraction layer (H3D still uses a static load texture
+     * FBOs change the GLuint inside the texture keeping the same pointer*/
+    auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
+    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, 0,
+                                                                       Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
+                                                                       Vec3(0.0f, 0.7f, 6.1f), 0.001, 0.0f);
+    hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-20f));
+    hazeEmitter->setParticleLifeDecayRate(5e-5f);
+    hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
+    hazeEmitter->emmit();
+    carNode->addChild(hazeEmitter);
 
+
+
+    /*Prototype smoke*/
     GLuint smokeTexture = ResourceManager::Factory::createTexture(SMOKE_PARTICLE);
     auto smokeShader = ResourceManager::getInstance()->getShader(SMOKE_SHADER);
     auto smokeEmitter = ResourceManager::Factory::createParticleEmmiter(SMOKE_EMITTER, pool, smokeShader, smokeTexture,
@@ -125,32 +139,9 @@ void setupScene(){
     smokeEmitter->emmit();
     root->addChild(smokeEmitter);
 
-
-    auto particleRoot = new SceneNode("particleRoot");
-    particleRoot->translate(0.0f, 1.0f, 7.0f);
-    particleRoot->setBillboard(true);
-    particleRoot->setProcessingLevel(HEAT_HAZE_LEVEL);
-    carNode->addChild(particleRoot);
-
+    /*Setup Final result*/
     Mesh* quad = new QuadMesh();
     rm->addMesh("quad", quad);
-
-    float uniqueness = 0.0f;
-    for(int i=0; i<5; i++){
-        std::stringstream name;
-        name << "quad" << i;
-        SceneNode* quadNode = new SceneNode(name.str(), quad, rm->getShader("quad"));
-        uniqueness += i/5.0f;
-        quadNode->setPreDraw([=](){
-            Shader* shader = rm->getShader("quad");
-            glUniform1f(shader->getUniformLocation("offset"), (float)(glutGet(GLUT_ELAPSED_TIME)/ 1000.0 * 2*3.14159 * uniqueness));
-        });
-        quadNode->translate(i/5.0f, i/5.0f, i/5.0f);
-        quadNode->setProcessingLevel(HEAT_HAZE_LEVEL);
-        particleRoot->addChild(quadNode);
-    }
-
-    /*Setup Final result*/
     auto viewportCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1);
     SceneNode* final = ResourceManager::Factory::createScene(FINAL, viewportCamera);
     final->setMesh(quad);

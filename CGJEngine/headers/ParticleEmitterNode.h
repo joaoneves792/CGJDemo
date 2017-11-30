@@ -17,7 +17,7 @@ class ParticleEmitterNode : public SceneNode {
 private:
     Vec3 _acceleration;
     Vec3 _velocity;
-    Vec3 _randomness;
+    Vec3 _randomAcceleration;
     GLuint _texture;
 
     float _rate;
@@ -34,7 +34,7 @@ public:
     virtual ~ParticleEmitterNode();
     void setAcceleration(const Vec3& a);
     void setVelocity(const Vec3& v);
-    void setRandomness(const Vec3& r);
+    void setRandomAcceleration(const Vec3 &r);
     void setRate(float ppms);
     void setRateDecay(float rateDecay);
     void setParticleLifeDecayRate(float lifeDecay);

@@ -14,7 +14,7 @@ ParticleEmitterNode::ParticleEmitterNode(std::string name, ParticlePool* pool, S
     _processingLevel = DEFAULT_PARTICLES_LEVEL;
     _acceleration = Vec3(0.0f, 0.0f, 0.0f);
     _velocity = Vec3(0.0f, 0.0f, 0.0f);
-    _randomness = Vec3(0.0f, 0.0f, 0.0f);
+    _randomAcceleration = Vec3(0.0f, 0.0f, 0.0f);
     _rate = 1.0f;
     _rateDecay = 0.1f;
     _currentRate = 0;
@@ -31,8 +31,8 @@ void ParticleEmitterNode::setVelocity(const Vec3 &v) {
     _velocity = v;
 }
 
-void ParticleEmitterNode::setRandomness(const Vec3 &r) {
-    _randomness = r;
+void ParticleEmitterNode::setRandomAcceleration(const Vec3 &r) {
+    _randomAcceleration = r;
 }
 
 void ParticleEmitterNode::setParticleLifeDecayRate(float lifeDecay) {
@@ -96,12 +96,11 @@ void ParticleEmitterNode::update(int dt) {
             p->life = 1.0f;
             p->position = position;
             p->velocity = _velocity;
-            p->acceleration = _acceleration + _acceleration*Vec3(_randomness[0]*randomFloat(), _randomness[1]*randomFloat(), _randomness[2]*randomFloat());
+            p->acceleration = _acceleration + Vec3(_randomAcceleration[0]*randomFloat(), _randomAcceleration[1]*randomFloat(), _randomAcceleration[2]*randomFloat());
             rit++;
         }
     }
     /*Update particles*/
-    //TODO take randomness into consideration
     auto it = _particles.begin();
     while(it!=_particles.end()){
         Particle *p = (*it);
