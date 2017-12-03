@@ -77,7 +77,7 @@ void loadShaders(){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
-    /*Quad shader*/
+    /*Heat shader*/
     auto heatShader = ResourceManager::Factory::createShader(HEAT_SHADER, "res/shaders/hazev.glsl", "res/shaders/hazef.glsl");
     heatShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
     heatShader->setAttribLocation("state", PARTICLE_STATE_ATTR);

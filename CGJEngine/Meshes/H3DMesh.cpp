@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include <H3DMesh.h>
 #include "H3DMesh.h"
-#include "Textures.h"
+#include "Texture.h"
 
 H3DMesh::H3DMesh() {
     _vao = nullptr;
@@ -500,7 +500,7 @@ void H3DMesh::loadFromFile(const std::string& filename) {
             std::string texturePath("./");
             texturePath.assign(folderPath);
             texturePath.append(_materials[i].textureImage);
-            _materials[i].textureId = LoadGLTexture(texturePath.c_str());
+            _materials[i].textureId = Texture::LoadGLTexture(texturePath.c_str());
         }else {
             _materials[i].textureId = -1;
         }

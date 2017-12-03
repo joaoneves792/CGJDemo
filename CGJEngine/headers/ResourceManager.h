@@ -19,6 +19,7 @@
 #include "HUDCamera.h"
 #include "FrameBuffer.h"
 #include "ParticlePool.h"
+#include "Texture.h"
 
 class ResourceManager {
 private:
@@ -29,7 +30,7 @@ private:
     std::unordered_map<std::string, Camera*> _cameras;
     std::unordered_map<std::string, FrameBuffer*> _fbos;
     std::unordered_map<std::string, ParticlePool*> _pools;
-    std::unordered_map<std::string, GLuint> _textures;
+    std::unordered_map<std::string, Texture*> _textures;
 public:
     class Factory{
     public:
@@ -45,9 +46,9 @@ public:
                                           float left, float right, float top, float bottom, float near, float far);
         static ParticlePool* createParticlePool(const std::string& name, int particleCount, SceneGraph* scene);
         static ParticleEmitterNode* createParticleEmmiter(const std::string& name, ParticlePool* pool,
-                                                          Shader* shader, GLuint texture, Vec3 acceleration,
+                                                          Shader* shader, Texture* texture, Vec3 acceleration,
                                                           Vec3 velocity, Vec3 position, float rate, float rateDecay);
-        static GLuint createTexture(const std::string& fileName);
+        static Texture* createTexture(const std::string& fileName);
     };
 
 private:
@@ -59,7 +60,7 @@ private:
     void __destroyCamera(Camera* camera);
     void __destroyFrameBuffer(FrameBuffer* fbo);
     void __destroyParticlePool(ParticlePool* pool);
-    void __destroyTexture(GLuint texture);
+    void __destroyTexture(Texture* texture);
 public:
     static ResourceManager* getInstance();
     static void deleteInstance();
@@ -69,7 +70,7 @@ public:
     void addCamera(const std::string& name, Camera* camera);
     void addFrameBuffer(const std::string& name, FrameBuffer* fbo);
     void addParticlePool(const std::string& name, ParticlePool* pool);
-    void addTexture(const std::string& name, GLuint texture);
+    void addTexture(const std::string& name, Texture* texture);
 
     Shader* getShader(const std::string& name);
     Mesh* getMesh(const std::string& name);
@@ -77,7 +78,7 @@ public:
     Camera* getCamera(const std::string& name);
     FrameBuffer* getFrameBuffer(const std::string& name);
     ParticlePool* getParticlePool(const std::string& name);
-    GLuint getTexture(const std::string& name);
+    Texture* getTexture(const std::string& name);
 
     void destroyShader(const std::string& name);
     void destroyMesh(const std::string& name);

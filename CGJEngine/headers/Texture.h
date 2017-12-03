@@ -19,8 +19,20 @@ typedef struct {
     unsigned char *data;
 }textureImage;
 
+class Texture{
+private:
+    GLuint _texture;
+public:
+    Texture(std::string filename);
+    Texture();
+    Texture(GLuint texture);
 
-GLuint LoadGLTexture( const char *filename );                    // Load Bitmaps And Convert To Textures
-GLuint generateGLTexture(unsigned char* data, int height, int width, bool alpha, bool compressed, GLsizei lenght);
+    GLuint getTexture();
+    void changeTexture(GLuint texture);
+    void destroyTexture();
+    void bind();
 
+    static GLuint LoadGLTexture(const char *filename);
+
+};
 #endif /* TEXTURES_H_*/

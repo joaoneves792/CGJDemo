@@ -7,7 +7,7 @@
 #include "ParticleEmitterNode.h"
 #include "ParticlePool.h"
 
-ParticleEmitterNode::ParticleEmitterNode(std::string name, ParticlePool* pool, Shader *shader, GLuint texture) :SceneNode(name){
+ParticleEmitterNode::ParticleEmitterNode(std::string name, ParticlePool* pool, Shader *shader, Texture* texture) :SceneNode(name){
     _shader = shader;
     _texture = texture;
     _pool = pool;
@@ -134,7 +134,7 @@ void ParticleEmitterNode::particlePreDraw(int level) {
         Mat4 M = getModelMatrix();
         _shader->uploadMVP(M, V, P);
 
-        glBindTexture(GL_TEXTURE_2D, _texture);
+        _texture->bind();
     }
 }
 

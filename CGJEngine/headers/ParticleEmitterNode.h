@@ -10,6 +10,7 @@
 #include "Shader.h"
 #include "SceneNode.h"
 #include "Particle.h"
+#include "Texture.h"
 
 class ParticlePool;
 
@@ -18,7 +19,7 @@ private:
     Vec3 _acceleration;
     Vec3 _velocity;
     Vec3 _randomAcceleration;
-    GLuint _texture;
+    Texture* _texture;
 
     float _rate;
     float _rateDecay;
@@ -30,7 +31,7 @@ private:
     std::list<Particle*> _particles;
 
 public:
-    ParticleEmitterNode(std::string name, ParticlePool* pool, Shader* shader, GLuint texture);
+    ParticleEmitterNode(std::string name, ParticlePool* pool, Shader* shader, Texture* texture);
     virtual ~ParticleEmitterNode();
     void setAcceleration(const Vec3& a);
     void setVelocity(const Vec3& v);

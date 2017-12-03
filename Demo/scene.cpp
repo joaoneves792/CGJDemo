@@ -85,7 +85,7 @@ void setupScene(){
 
     /*Place the exhaust emmitters*/
 
-    GLuint fireTexture = ResourceManager::Factory::createTexture(FIRE_PARTICLE);
+    auto fireTexture = ResourceManager::Factory::createTexture(FIRE_PARTICLE);
     auto scene = ResourceManager::getInstance()->getScene(SCENE);
     auto pool = ResourceManager::Factory::createParticlePool(POOL, MAX_PARTICLES, scene);
     auto fireShader = ResourceManager::getInstance()->getShader(FIRE_SHADER);
@@ -113,10 +113,9 @@ void setupScene(){
 
 
     /*Heat haze*/
-    /*TODO Create Texture abstraction layer (H3D still uses a static load texture
-     * FBOs change the GLuint inside the texture keeping the same pointer*/
+    auto helperFBO = ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
-    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, 0,
+    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, helperFBO->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
                                                                        Vec3(0.0f, 0.7f, 6.1f), 0.001, 0.0f);
     hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-20f));
@@ -128,7 +127,7 @@ void setupScene(){
 
 
     /*Prototype smoke*/
-    GLuint smokeTexture = ResourceManager::Factory::createTexture(SMOKE_PARTICLE);
+    auto smokeTexture = ResourceManager::Factory::createTexture(SMOKE_PARTICLE);
     auto smokeShader = ResourceManager::getInstance()->getShader(SMOKE_SHADER);
     auto smokeEmitter = ResourceManager::Factory::createParticleEmmiter(SMOKE_EMITTER, pool, smokeShader, smokeTexture,
                                                                         Vec3(0.0f, 0.01f, 0.0f), Vec3(0.0f, 0.0f, 0.0f),

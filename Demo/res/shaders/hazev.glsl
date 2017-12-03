@@ -16,15 +16,14 @@ void main() {
     life = state.w;
 
     /*Billboarding*/
-    /*TODO fix scale when viewed from top*/
     mat3 rotMat = mat3(View);
     vec3 d = vec3(View[3]);
 
     vec3 eyePos = -d * rotMat;
     vec3 toEye = normalize(eyePos - position);
     vec3 up = vec3(0.0f, 1.0f, 0.0f);
-    vec3 right = cross(toEye, up);
-    up = cross(toEye, right);
+    vec3 right = normalize(cross(toEye, up));
+    up = normalize(cross(toEye, right));
 
     /*Vertex generation*/
     float scale = clamp(2.0f + 0.5f * log(life), 0, 2);

@@ -34,7 +34,7 @@ set(SOURCE_FILES
 	SceneGraph/ParticleEmitterNode.cpp
 	ResourceManager.cpp
 	InputManager.cpp
-    Textures.cpp
+        Texture.cpp
 	FrameBuffer.cpp
 	ResourceFactory.cpp
 	LightsManager.cpp
@@ -61,7 +61,7 @@ set(HEADER_FILES
         headers/Shader.h
         headers/Shader.h
         headers/SphereCamera.h
-        headers/Textures.h
+        headers/Texture.h
 		headers/ParticlePool.h
 		headers/Particle.h
 		headers/ParticleEmitterNode.h

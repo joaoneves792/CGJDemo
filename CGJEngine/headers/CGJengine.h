@@ -25,6 +25,6 @@
 #include "ParticlePool.h"
 #include "ParticleEmitterNode.h"
 #include "Particle.h"
-#include "Textures.h"
+#include "Texture.h"
 
 #endif //CGJM_CGJENGINE_H

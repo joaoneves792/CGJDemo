@@ -6,12 +6,13 @@
 #define CGJDEMO_FRAMEBUFFER_H
 
 #include <GL/glew.h>
+#include "Texture.h"
 
 class FrameBuffer {
 private:
     GLuint _frameBuffer;
     GLuint _depthRenderBuffer;
-    GLuint _texture;
+    Texture* _texture;
 
     int _width, _height;
 public:
@@ -22,6 +23,7 @@ public:
     void bind();
     void unbind();
     void bindTexture();
+    Texture* getTexture();
 
     void copyFrameBuffer(FrameBuffer* otherFrameBuffer);
 private:

@@ -2,7 +2,7 @@
 // Created by joao on 11/21/17.
 //
 #include <iostream>
-#include <Textures.h>
+#include <Texture.h>
 #include "ResourceManager.h"
 #include "Mesh.h"
 #include "OBJMesh.h"
@@ -83,7 +83,7 @@ ParticlePool* ResourceManager::Factory::createParticlePool(const std::string &na
 }
 
 ParticleEmitterNode* ResourceManager::Factory::createParticleEmmiter(const std::string &name, ParticlePool *pool,
-                                                                     Shader *shader, GLuint texture, Vec3 acceleration,
+                                                                     Shader *shader, Texture* texture, Vec3 acceleration,
                                                                      Vec3 velocity, Vec3 position, float rate,
                                                                      float rateDecay) {
     auto emitter = new ParticleEmitterNode(name, pool, shader, texture);
@@ -95,13 +95,13 @@ ParticleEmitterNode* ResourceManager::Factory::createParticleEmmiter(const std::
     return emitter;
 }
 
-GLuint ResourceManager::Factory::createTexture(const std::string &fileName) {
-    GLuint texture = ResourceManager::getInstance()->getTexture(fileName);
+Texture* ResourceManager::Factory::createTexture(const std::string &fileName) {
+    Texture* texture = ResourceManager::getInstance()->getTexture(fileName);
     if(texture){
         return texture;
     }
 
-    texture = LoadGLTexture(fileName.c_str());
+    texture = new Texture(fileName);
     ResourceManager::getInstance()->addTexture(fileName, texture);
     return texture;
 }

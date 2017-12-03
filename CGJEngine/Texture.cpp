@@ -10,18 +10,18 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+
 extern "C" {
-#include <stdio.h>
 #include <stdlib.h>
 #include <jpeglib.h>
 #include <png.h>
 }
 
-#include "Textures.h"
+#include "Texture.h"
 
 /*****************************************/
 /*  Load Bitmaps, Jpegs, Pngs And Convert To Textures */
-/*  Big mess of C and C++ code */
+/*  Also supports ETC1 when compiled with GLES */
 
 unsigned short bigE2littleE(unsigned short bigEndianShort){
     return (bigEndianShort << 8) + (bigEndianShort >> 8);
@@ -386,7 +386,35 @@ GLuint generateGLTexture(unsigned char* data, int height, int width, bool alpha,
 	return texID;
 }
 
-GLuint LoadGLTexture(const char* name){
+Texture::Texture() {
+    _texture = 0;
+}
+
+Texture::Texture(GLuint texture) {
+    _texture = texture;
+}
+
+Texture::Texture(std::string filename) {
+    _texture = LoadGLTexture(filename.c_str());
+}
+
+GLuint Texture::getTexture() {
+    return _texture;
+}
+
+void Texture::destroyTexture() {
+    glDeleteTextures(1, &_texture);
+}
+
+void Texture::bind() {
+    glBindTexture( GL_TEXTURE_2D, _texture);
+}
+
+void Texture::changeTexture(GLuint texture) {
+    _texture = texture;
+}
+
+GLuint Texture::LoadGLTexture(const char* name){
 	textureImage *texti;
 	std::string fn(name);
 	GLuint textureID = 0;

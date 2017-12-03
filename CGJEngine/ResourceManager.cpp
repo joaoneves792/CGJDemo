@@ -50,8 +50,9 @@ void ResourceManager::__destroyParticlePool(ParticlePool *pool) {
     delete pool;
 }
 
-void ResourceManager::__destroyTexture(GLuint texture) {
-    glDeleteTextures(1, &texture);
+void ResourceManager::__destroyTexture(Texture* texture) {
+    texture->destroyTexture();
+    delete texture;
 }
 
 void ResourceManager::addMesh(const std::string& name, Mesh *mesh) {
@@ -78,7 +79,7 @@ void ResourceManager::addParticlePool(const std::string &name, ParticlePool *poo
     _pools[name] = pool;
 }
 
-void ResourceManager::addTexture(const std::string &name, GLuint texture) {
+void ResourceManager::addTexture(const std::string &name, Texture* texture) {
     _textures[name] = texture;
 }
 
@@ -130,10 +131,10 @@ ParticlePool* ResourceManager::getParticlePool(const std::string &name) {
     return it->second;
 }
 
-GLuint ResourceManager::getTexture(const std::string &name) {
+Texture* ResourceManager::getTexture(const std::string &name) {
     auto it = _textures.find(name);
     if(it == _textures.end()){
-        return 0;
+        return nullptr;
     }
     return it->second;
 }
