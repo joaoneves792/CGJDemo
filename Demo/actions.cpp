@@ -82,5 +82,14 @@ void setupActions() {
             lm->setEnabled(l, true);
         }
     });
+    im->addKeyActionOnce('b', [=](){
+        static bool blackHazeParticles = false;
+        blackHazeParticles = !blackHazeParticles;
+        auto shader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
+        auto uniformLocation = shader->getUniformLocation("black");
+        shader->use();
+        glUniform1f(uniformLocation, (float)blackHazeParticles);
+        glUseProgram(0);
+    });
 
 }

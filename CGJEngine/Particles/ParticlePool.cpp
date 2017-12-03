@@ -93,6 +93,8 @@ void ParticlePool::update(int dt) {
         return false;
     }), _alive.end());
 
+
+    //TODO for some reason this is not working exactly like it should with heat haze!
     //Sort all alive particles
     Vec3 cameraPosition = _scene->getCamera()->getPosition();
     std::sort(_alive.begin(), _alive.end(), [=](Particle* a, Particle* b){

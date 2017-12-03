@@ -102,7 +102,7 @@ void loadShaders(){
     });
 
     /*Fire shader*/
-    auto fireShader = ResourceManager::Factory::createShader(FIRE_SHADER, "res/shaders/firev.glsl", "res/shaders/particlef.glsl");
+    auto fireShader = ResourceManager::Factory::createShader(FIRE_SHADER, "res/shaders/firev.glsl", "res/shaders/firef.glsl");
     fireShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
     fireShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
     fireShader->link();

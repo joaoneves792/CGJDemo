@@ -118,10 +118,11 @@ void setupScene(){
     auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, helperFBO->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
                                                                        Vec3(0.0f, 0.7f, 6.1f), 0.001, 0.0f);
-    hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-20f));
+    hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-18f));
     hazeEmitter->setParticleLifeDecayRate(5e-5f);
     hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
     hazeEmitter->emmit();
+    hazeEmitter->update(20000); //Hack to get things going faster
     carNode->addChild(hazeEmitter);
 
 

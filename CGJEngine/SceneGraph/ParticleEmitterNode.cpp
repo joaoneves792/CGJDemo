@@ -18,7 +18,7 @@ ParticleEmitterNode::ParticleEmitterNode(std::string name, ParticlePool* pool, S
     _rate = 1.0f;
     _rateDecay = 0.1f;
     _currentRate = 0;
-    _billboard = true;
+    _billboard = false;
 
     _lifeDecayRate = 0.001f;
 }
