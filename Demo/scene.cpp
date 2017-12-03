@@ -133,8 +133,17 @@ void setupScene(){
     auto viewportCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1);
     SceneNode* final = ResourceManager::Factory::createScene(FINAL, viewportCamera);
     final->setMesh(quad);
-    Shader* twoD = rm->getShader(TWO_D_SHADER);
+    Shader* twoD = rm->getShader(FINAL_SHADER);
     final->setShader(twoD);
     final->translate(0.0f, 0.0f, -0.1f);
+
+    SceneNode* credits = new SceneNode(CREDITS, quad, ResourceManager::getInstance()->getShader(QUAD_SHADER));
+    auto creditsTexture = ResourceManager::Factory::createTexture("res/credits.png");
+    credits->setPreDraw([=](){
+       creditsTexture->bind();
+    });
+    credits->scale(0.15f, 0.15f, 1.0f);
+    credits->translate(0.8f, -0.9f, 0.0f);
+    final->addChild(credits);
 }
 

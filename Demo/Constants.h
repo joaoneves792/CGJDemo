@@ -13,11 +13,13 @@
 #define CAR "car"
 #define ROAD "road"
 #define SKY "sky"
+#define CREDITS "credits"
 
 /*Shaders*/
 #define H3D_SHADER "h3d"
 #define SKY_SHADER "sky"
-#define TWO_D_SHADER "twoDShader"
+#define FINAL_SHADER "twoDShader"
+#define QUAD_SHADER "quadShader"
 #define HEAT_SHADER "heat"
 #define SMOKE_SHADER "smoke"
 #define FIRE_SHADER "fire"

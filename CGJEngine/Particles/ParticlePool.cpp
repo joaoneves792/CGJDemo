@@ -85,8 +85,6 @@ unsigned int ParticlePool::getParticles(unsigned int count, std::list<Particle *
 
 void ParticlePool::update(int dt) {
     //Clear out dead particles TODO only run this less frequently
-    std::cout << _alive.size() << " + " << _dead.size() << " = " << _alive.size() + _dead.size() << std::endl;
-
     _alive.erase(std::remove_if(_alive.begin(), _alive.end(), [&](Particle* p){
         if(p->life <= 0.0f){
             _dead.push_back(p);

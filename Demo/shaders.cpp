@@ -69,11 +69,20 @@ void loadShaders(){
     });
 
     /*2D shader*/
-    auto twoDShader = ResourceManager::Factory::createShader(TWO_D_SHADER, "res/shaders/2Dv.glsl", "res/shaders/2Df.glsl");
+    auto twoDShader = ResourceManager::Factory::createShader(FINAL_SHADER, "res/shaders/2Dv.glsl", "res/shaders/2Df.glsl");
     twoDShader->setAttribLocation("inPosition", VERTICES__ATTR);
     twoDShader->link();
     MVPLocation = twoDShader->getUniformLocation("MVP");
     twoDShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+    });
+
+    /*Quad shader*/
+    auto quadShader = ResourceManager::Factory::createShader(QUAD_SHADER, "res/shaders/quadv.glsl", "res/shaders/2Df.glsl");
+    quadShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    quadShader->link();
+    MVPLocation = quadShader->getUniformLocation("MVP");
+    quadShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
