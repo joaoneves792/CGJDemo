@@ -36,3 +36,4 @@ Quat Camera::getBillboardOrientation() {
 Vec3 Camera::getPosition() {
     return _position;
 }
+

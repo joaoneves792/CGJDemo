@@ -85,6 +85,8 @@ unsigned int ParticlePool::getParticles(unsigned int count, std::list<Particle *
 
 void ParticlePool::update(int dt) {
     //Clear out dead particles TODO only run this less frequently
+    std::cout << _alive.size() << " + " << _dead.size() << " = " << _alive.size() + _dead.size() << std::endl;
+
     _alive.erase(std::remove_if(_alive.begin(), _alive.end(), [&](Particle* p){
         if(p->life <= 0.0f){
             _dead.push_back(p);
@@ -94,13 +96,12 @@ void ParticlePool::update(int dt) {
     }), _alive.end());
 
 
-    //TODO for some reason this is not working exactly like it should with heat haze!
     //Sort all alive particles
-    Vec3 cameraPosition = _scene->getCamera()->getPosition();
-    std::sort(_alive.begin(), _alive.end(), [=](Particle* a, Particle* b){
-        Vec3 va = cameraPosition - a->position;
-        Vec3 vb = cameraPosition - b->position;
-        return (glm::dot(va, va) < glm::dot(vb, vb)); //Ignore the error in CLion
+    Mat4 ViewMatrix = _scene->getCamera()->getViewMatrix();
+    std::sort(_alive.begin(), _alive.end(), [&](Particle* a, Particle* b){
+        Vec3 pa = ViewMatrix*Vec4(a->position, 1.0f);
+        Vec3 pb = ViewMatrix*Vec4(b->position, 1.0f);
+        return (glm::dot(pa, pa) > glm::dot(pb, pb));
     });
 }
 

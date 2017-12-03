@@ -4,6 +4,7 @@
 
 #include <climits>
 #include <iostream>
+#include <random>
 #include "ParticleEmitterNode.h"
 #include "ParticlePool.h"
 
@@ -67,8 +68,16 @@ float randomFloat(){ //xorshift96
     return (long)z/(float)LONG_MAX;
 }
 
+/*float randomFloat(){
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<> dis(0, RAND_MAX);
+
+    return ((float)dis(gen))/((float)RAND_MAX);
+}*/
 
 void ParticleEmitterNode::update(int dt) {
+
     if(_updateCallback != nullptr)
         _updateCallback(dt);
 

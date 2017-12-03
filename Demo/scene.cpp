@@ -91,14 +91,14 @@ void setupScene(){
     auto fireShader = ResourceManager::getInstance()->getShader(FIRE_SHADER);
     auto exhaustLeft = ResourceManager::Factory::createParticleEmmiter(LEFT_EXHAUST, pool, fireShader, fireTexture,
                                                                        Vec3(0.0f, 0.000001f, -0.000003f), Vec3(0.0f, 0.0001f, 0.003f),
-                                                                       Vec3(-0.8f, 0.4f, 5.9f), 0.3, 0.0012f);
+                                                                       Vec3(-0.8f, 0.4f, 5.8f), 0.3, 0.0012f);
     auto exhaustRight = ResourceManager::Factory::createParticleEmmiter(RIGHT_EXHAUST, pool, fireShader, fireTexture,
                                                                        Vec3(0.0f, 0.00001f, 0.00003f), Vec3(0.0f, 0.0f, 0.0f),
-                                                                       Vec3(0.8f, 0.4f, 5.9f), 0.3, 0.0012f);
+                                                                       Vec3(0.8f, 0.4f, 5.8f), 0.3, 0.0012f);
     exhaustLeft->setParticleLifeDecayRate(0.006f);
     exhaustRight->setParticleLifeDecayRate(0.006f);
-    //exhaustLeft->setRandomAcceleration(Vec3(1.0f, 0.0f, 1.0f));
-    //exhaustRight->setRandomAcceleration(Vec3(0.0f, 0.0f, 0.0f));
+    exhaustLeft->setRandomAcceleration(Vec3(3e-10f, 3e-8f, 0.0f));
+    exhaustRight->setRandomAcceleration(Vec3(3e-10f, 3e-8f, 0.0f));
 
     carNode->addChild(exhaustLeft);
     carNode->addChild(exhaustRight);
@@ -126,18 +126,6 @@ void setupScene(){
     carNode->addChild(hazeEmitter);
 
 
-
-    /*Prototype smoke*/
-    auto smokeTexture = ResourceManager::Factory::createTexture(SMOKE_PARTICLE);
-    auto smokeShader = ResourceManager::getInstance()->getShader(SMOKE_SHADER);
-    auto smokeEmitter = ResourceManager::Factory::createParticleEmmiter(SMOKE_EMITTER, pool, smokeShader, smokeTexture,
-                                                                        Vec3(0.0f, 0.01f, 0.0f), Vec3(0.0f, 0.0f, 0.0f),
-                                                                        Vec3(10.0f, 1.0f, -10.0f), 0.01, 0.0f);
-    smokeEmitter->setVelocity(Vec3(0.0f, 0.01f, 0.0f));
-    smokeEmitter->setAcceleration(Vec3(0.0f, 0.0f, 0.0f));
-    smokeEmitter->setRate(0.1f);
-    smokeEmitter->emmit();
-    root->addChild(smokeEmitter);
 
     /*Setup Final result*/
     Mesh* quad = new QuadMesh();
