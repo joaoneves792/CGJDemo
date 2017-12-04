@@ -28,7 +28,6 @@ void main() {
         texcoord.y += (Y_AMPLITUDE*AMPLITUDE*sin(pow(HARMONICS_B, i)*FREQUENCY + life*PHASE))/pow(HARMONICS_A, i);
     }
     color.rgb = texture(renderedTexture, texcoord).rgb;
-
     color.a = 1.0f-length(position_modelspace)*2;
 
     //color = vec4(texture(renderedTexture, (position_modelspace+1)/2).rgb, 1.0f);

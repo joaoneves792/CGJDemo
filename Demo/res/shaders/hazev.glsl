@@ -29,10 +29,13 @@ void main() {
     float scale = clamp(2.0f + 0.5f * log(life), 0, 2);
     vec3 vPosition = (right*scale*vertex.x)+(up*scale*vertex.y);
     vec4 clip_position = Projection * View * vec4(vPosition+position, 1.0f);
-	gl_Position = clip_position;
 
     /*Texcoords generation*/
 	vec3 ndc = clip_position.xyz / clip_position.w;
-	uv = ndc.xy*0.5+0.5;
+	uv = clamp(ndc.xy*0.5+0.5, 0.0f, 1.0f);
+
+
+  	gl_Position = clip_position;
+
 	position_modelspace = vertex.xy;
 }
