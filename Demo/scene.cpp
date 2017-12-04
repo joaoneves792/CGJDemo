@@ -76,6 +76,14 @@ void setupScene(){
     sky->scale(350.0f, 350.0f, 350.0f);
     root->addChild(sky);
 
+    /*Place the sun*/
+    auto sun = ResourceManager::Factory::createLight(SUN);
+    sun->setColor(0.9f, 0.9f, 0.9f);
+    sun->setPoint(10.0f, 20.0f, 0.0f);
+    sun->setAttenuation(1.0f, 0.0f, 0.0f, -1.0f);
+    root->addChild(sun);
+    LightsManager::getInstance()->setEnabled(sun, true);
+
     /*Place the car (should be last because of transparency on glasses)*/
     H3DMesh* carModel = (H3DMesh*)rm->getMesh(CAR);
     auto carNode = new SceneNode(CAR, carModel, h3dShader);
@@ -84,7 +92,6 @@ void setupScene(){
     root->addChild(carNode);
 
     /*Place the exhaust emmitters*/
-
     auto fireTexture = ResourceManager::Factory::createTexture(FIRE_PARTICLE);
     auto scene = ResourceManager::getInstance()->getScene(SCENE);
     auto pool = ResourceManager::Factory::createParticlePool(POOL, MAX_PARTICLES, scene);
@@ -103,15 +110,6 @@ void setupScene(){
     carNode->addChild(exhaustLeft);
     carNode->addChild(exhaustRight);
 
-    /*Place the sun*/
-    auto sun = ResourceManager::Factory::createLight(SUN);
-    sun->setColor(0.9f, 0.9f, 0.9f);
-    sun->setPoint(10.0f, 20.0f, 0.0f);
-    sun->setAttenuation(1.0f, 0.0f, 0.0f, -1.0f);
-    root->addChild(sun);
-    LightsManager::getInstance()->setEnabled(sun, true);
-
-
     /*Heat haze*/
     auto helperFBO = ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
@@ -122,8 +120,10 @@ void setupScene(){
     hazeEmitter->setParticleLifeDecayRate(5e-5f);
     hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
     hazeEmitter->emmit();
-    hazeEmitter->update(20000); //Hack to get things going faster
     carNode->addChild(hazeEmitter);
+
+    for(int i=0;i<1000;i++)
+        hazeEmitter->update(20); //Hack to get things going faster
 
 
 

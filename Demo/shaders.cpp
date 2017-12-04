@@ -40,6 +40,7 @@ void loadShaders(){
         glUniformMatrix4fv(NormalLocation, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(V*M))));
     });
 
+
     lightPositionLocation = h3dShader->getUniformLocation("lightPosition_worldspace[0]");
     lightsEnabledLocation = h3dShader->getUniformLocation("lightsEnabled[0]");
     lightColorLocation = h3dShader->getUniformLocation("lightColor[0]");

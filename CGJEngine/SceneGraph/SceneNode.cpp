@@ -156,8 +156,8 @@ void SceneNode::update(int dt) {
     if(_updateCallback != nullptr)
         _updateCallback(dt);
 
-    for(SceneNode* n : _childs)
-        n->update(dt);
+    for(auto it = _childs.begin(); it!= _childs.end(); it++)
+        (*it)->update(dt);
 }
 
 Mat4 SceneNode::getTranslation() {

@@ -69,6 +69,7 @@ void update(){
     int timeDelta = currentTime-lastTime;
     lastTime = currentTime;
 
+
 	scene->update(timeDelta);
 	particlePool->update(timeDelta);
 
@@ -156,6 +157,13 @@ void checkOpenGLInfo()
 	std::cerr << "OpenGL Renderer: " << renderer << " (" << vendor << ")" << std::endl;
 	std::cerr << "OpenGL version " << version << std::endl;
 	std::cerr << "GLSL version " << glslVersion << std::endl;
+    if(GLEW_EXT_texture_filter_anisotropic) {
+		GLfloat largestAnisotropic;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largestAnisotropic);
+		std::cerr << "Using anisotropic x" << largestAnisotropic << std::endl;
+	}else{
+		std::cerr << "Using linear filtering" << std::endl;
+	}
 }
 
 void setupOpenGL()

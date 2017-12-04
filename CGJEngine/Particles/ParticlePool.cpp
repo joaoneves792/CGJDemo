@@ -84,15 +84,21 @@ unsigned int ParticlePool::getParticles(unsigned int count, std::list<Particle *
 
 
 void ParticlePool::update(int dt) {
-    //Clear out dead particles TODO only run this less frequently
-    _alive.erase(std::remove_if(_alive.begin(), _alive.end(), [&](Particle* p){
-        if(p->life <= 0.0f){
-            _dead.push_back(p);
-            return true;
-        }
-        return false;
-    }), _alive.end());
+    static int garbageCollectorInterval = 0;
 
+    //Only clean up dead particles once per second
+    garbageCollectorInterval += dt;
+    if(garbageCollectorInterval >= 1000) {
+        //Clear out dead particles
+        _alive.erase(std::remove_if(_alive.begin(), _alive.end(), [&](Particle *p) {
+            if (p->life <= 0.0f) {
+                _dead.push_back(p);
+                return true;
+            }
+            return false;
+        }), _alive.end());
+        garbageCollectorInterval = 0;
+    }
 
     //Sort all alive particles
     Mat4 ViewMatrix = _scene->getCamera()->getViewMatrix();
@@ -132,6 +138,9 @@ void ParticlePool::draw(int level) {
     for(auto p : _alive){
         if(p->level != level)
             continue;
+        if(p->life <= 0.0f)
+            continue;
+
         //Check for boundaries
         if(p->emitterNode == lastEmitter)
             ++instanceCount;
@@ -149,5 +158,6 @@ void ParticlePool::draw(int level) {
     }
     if(instanceCount > 0)
         __draw(lastEmitter, instanceCount, level);
+
 }
 
