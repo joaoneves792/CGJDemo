@@ -18,9 +18,8 @@ void setupScene(){
     loadMeshes();
     loadShaders();
 
-    ResourceManager::Factory::createFrameBuffer(MAIN_FBO, WIN_X, WIN_Y);
-    ResourceManager::Factory::createFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
-
+    ResourceManager::Factory::createMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
+    ResourceManager::Factory::createTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
 
     //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, 5.0f, 5.0f), Quat());
     auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0, 0.0, -20.0f), Quat());
@@ -113,7 +112,7 @@ void setupScene(){
     /*Heat haze*/
     auto helperFBO = ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
-    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, helperFBO->getTexture(),
+    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, ((TextureFrameBuffer*)helperFBO)->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
                                                                        Vec3(0.0f, 0.7f, 6.1f), 0.001, 0.0f);
     hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-18f));
@@ -127,15 +126,11 @@ void setupScene(){
 
 
 
-    /*Setup Final result*/
+    /*Setup HUD*/
     Mesh* quad = new QuadMesh();
     rm->addMesh("quad", quad);
     auto viewportCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1);
-    SceneNode* final = ResourceManager::Factory::createScene(FINAL, viewportCamera);
-    final->setMesh(quad);
-    Shader* twoD = rm->getShader(FINAL_SHADER);
-    final->setShader(twoD);
-    final->translate(0.0f, 0.0f, -0.1f);
+    SceneNode* final = ResourceManager::Factory::createScene(HUD, viewportCamera);
 
     SceneNode* credits = new SceneNode(CREDITS, quad, ResourceManager::getInstance()->getShader(QUAD_SHADER));
     auto creditsTexture = ResourceManager::Factory::createTexture("res/credits.png");

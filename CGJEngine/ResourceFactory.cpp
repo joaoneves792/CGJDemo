@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <Texture.h>
+#include <MSFrameBuffer.h>
 #include "ResourceManager.h"
 #include "Mesh.h"
 #include "OBJMesh.h"
@@ -69,8 +70,14 @@ HUDCamera* ResourceManager::Factory::createHUDCamera(const std::string &name, fl
     return camera;
 }
 
-FrameBuffer* ResourceManager::Factory::createFrameBuffer(const std::string &name, int x, int y) {
-    auto fbo = new FrameBuffer(x, y);
+MSFrameBuffer* ResourceManager::Factory::createMSAAFrameBuffer(const std::string &name, int x, int y, int msaaLevel) {
+    auto fbo = new MSFrameBuffer(x, y, msaaLevel);
+    ResourceManager::getInstance()->addFrameBuffer(name, fbo);
+    return fbo;
+}
+
+TextureFrameBuffer* ResourceManager::Factory::createTextureFrameBuffer(const std::string &name, int x, int y) {
+    auto fbo = new TextureFrameBuffer(x, y);
     ResourceManager::getInstance()->addFrameBuffer(name, fbo);
     return fbo;
 }

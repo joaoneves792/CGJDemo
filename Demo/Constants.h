@@ -27,7 +27,7 @@
 /*Scenes*/
 #define SCENE "main"
 #define POST "post"
-#define FINAL "final"
+#define HUD "hud"
 
 /*Lights*/
 #define SUN "sun"
@@ -54,9 +54,10 @@
 #define FIRE_PARTICLE "res/fireAtlas.png"
 #define HEAT_EMITTER "heatHaze"
 
-/*Initial window size*/
+/*Window properties*/
 #define WIN_X 1024
-#define WIN_Y 1024
+#define WIN_Y 988
+#define MSAA 4
 
 /*Misc constants*/
 #define ROAD_SEGMENTS 12

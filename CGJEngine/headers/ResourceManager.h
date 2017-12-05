@@ -18,6 +18,8 @@
 #include "SphereCamera.h"
 #include "HUDCamera.h"
 #include "FrameBuffer.h"
+#include "TextureFrameBuffer.h"
+#include "MSFrameBuffer.h"
 #include "ParticlePool.h"
 #include "Texture.h"
 
@@ -39,7 +41,8 @@ public:
                                     const std::string& fragmentShader);
         static SceneNode* createScene(const std::string& name, Camera* camera);
         static LightNode* createLight(const std::string& name);
-        static FrameBuffer* createFrameBuffer(const std::string& name, int x, int y);
+        static TextureFrameBuffer* createTextureFrameBuffer(const std::string& name, int x, int y);
+        static MSFrameBuffer* createMSAAFrameBuffer(const std::string& name, int x, int y, int msaaLevel);
         static FreeCamera* createFreeCamera(const std::string& name, Vec3 position, Quat orientation);
         static SphereCamera* createSphereCamera(const std::string& name, float distance, Vec3 center, Quat orientation);
         static HUDCamera* createHUDCamera(const std::string& name,

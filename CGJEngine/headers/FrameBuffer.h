@@ -8,28 +8,20 @@
 #include <GL/glew.h>
 #include "Texture.h"
 
-class FrameBuffer {
-private:
+class FrameBuffer{
+protected:
     GLuint _frameBuffer;
-    GLuint _depthRenderBuffer;
-    Texture* _texture;
-
-    int _width, _height;
+    int _width;
+    int _height;
 public:
-    FrameBuffer(int x, int y);
-    FrameBuffer(FrameBuffer* otherFrameBuffer);
-    ~FrameBuffer();
-    void resize(int x, int y);
     void bind();
     void unbind();
-    void bindTexture();
-    Texture* getTexture();
-
-    void copyFrameBuffer(FrameBuffer* otherFrameBuffer);
-private:
-    void initializeNewFrameBuffer(int x, int y);
-    void destroy();
+    virtual void blit();
+    virtual void resize(int x, int y) = 0;
+    virtual ~FrameBuffer() = default;
 };
+
+
 
 
 #endif //CGJDEMO_FRAMEBUFFER_H

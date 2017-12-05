@@ -35,11 +35,11 @@ set(SOURCE_FILES
 	ResourceManager.cpp
 	InputManager.cpp
         Texture.cpp
-	FrameBuffer.cpp
+        FBOs/FrameBuffer.cpp
 	ResourceFactory.cpp
 	LightsManager.cpp
 	Particles/ParticlePool.cpp
-	)
+        FBOs/MSFrameBuffer.cpp headers/MSFrameBuffer.h FBOs/TextureFrameBuffer.cpp headers/TextureFrameBuffer.h)
 
 set(HEADER_FILES
 		headers/Camera.h
@@ -65,7 +65,7 @@ set(HEADER_FILES
 		headers/ParticlePool.h
 		headers/Particle.h
 		headers/ParticleEmitterNode.h
-		)
+        FBOs/MSFrameBuffer.cpp headers/MSFrameBuffer.h FBOs/TextureFrameBuffer.cpp headers/TextureFrameBuffer.h)
 
 
 add_library(jpeg_lib STATIC IMPORTED)

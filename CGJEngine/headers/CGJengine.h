@@ -19,6 +19,8 @@
 #include "SceneGraph.h"
 #include "SceneNode.h"
 #include "FrameBuffer.h"
+#include "MSFrameBuffer.h"
+#include "TextureFrameBuffer.h"
 #include "ResourceManager.h"
 #include "InputManager.h"
 #include "LightsManager.h"

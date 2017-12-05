@@ -29,9 +29,9 @@ void cleanup()
 void display()
 {
 	static SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
-	static SceneGraph* viewPortScene = ResourceManager::getInstance()->getScene(FINAL);
-    static FrameBuffer* mainFBO = ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
-    static FrameBuffer* helperFBO = ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
+	static SceneGraph* HUDScene = ResourceManager::getInstance()->getScene(HUD);
+    static MSFrameBuffer* mainFBO = (MSFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
+    static TextureFrameBuffer* helperFBO = (TextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
 	static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
 
 	++FrameCount;
@@ -41,20 +41,20 @@ void display()
 
     /*Draw scene to fbo*/
 	mainFBO->bind();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scene->draw();
 	particlePool->draw(DEFAULT_PARTICLES_LEVEL);
 
 	/*Copy fbo to texture and use the copy for post-processing*/
-	helperFBO->copyFrameBuffer(mainFBO);
+	mainFBO->blit(helperFBO);
 	helperFBO->bindTexture();
 	mainFBO->bind();
 	particlePool->draw(HEAT_HAZE_LEVEL);
 
-	/*Bind the final result to a texture*/
+	/*Blit the final result to the window fbo and draw the HUD*/
 	mainFBO->unbind();
-	mainFBO->bindTexture();
-	viewPortScene->draw();
+    mainFBO->blit();
+	HUDScene->draw();
 
 	checkOpenGLError("ERROR: Could not draw scene.");
 	glutSwapBuffers();
@@ -180,6 +180,7 @@ void setupOpenGL()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
+	glEnable(GL_MULTISAMPLE);
 }
 
 void setupGLEW() 
