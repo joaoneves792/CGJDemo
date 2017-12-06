@@ -29,13 +29,17 @@ void setupScene(){
 
     /*Setup material handling for H3D models*/
     Shader* h3dShader = rm->getShader(H3D_SHADER);
+    GLint ambientLoc = glGetUniformLocation(h3dShader->getShader(), "ambient");
+    GLint diffuseLoc = glGetUniformLocation(h3dShader->getShader(), "diffuse");
+    GLint specularLoc = glGetUniformLocation(h3dShader->getShader(), "specular");
+    GLint emissiveLoc = glGetUniformLocation(h3dShader->getShader(), "emissive");
+    GLint shininessLoc = glGetUniformLocation(h3dShader->getShader(), "shininess");
+    GLint transparencyLoc = glGetUniformLocation(h3dShader->getShader(), "transparency");
+    GLint textureLoc = glGetUniformLocation(h3dShader->getShader(), "texture_sampler");
+    GLint environmentLoc = glGetUniformLocation(h3dShader->getShader(), "environment");
     auto materialUploadCallback = [=](float* ambient, float* diffuse, float* specular, float* emissive, float shininess, float transparency) {
-        GLint ambientLoc = glGetUniformLocation(h3dShader->getShader(), "ambient");
-        GLint diffuseLoc = glGetUniformLocation(h3dShader->getShader(), "diffuse");
-        GLint specularLoc = glGetUniformLocation(h3dShader->getShader(), "specular");
-        GLint emissiveLoc = glGetUniformLocation(h3dShader->getShader(), "emissive");
-        GLint shininessLoc = glGetUniformLocation(h3dShader->getShader(), "shininess");
-        GLint transparencyLoc = glGetUniformLocation(h3dShader->getShader(), "transparency");
+        glUniform1i(textureLoc, TEXTURE_SLOT);
+        glUniform1i(environmentLoc, ENVIRONMENT_SLOT);
 
         glUniform4fv(ambientLoc, 1, ambient);
         glUniform4fv(diffuseLoc, 1, diffuse);
@@ -99,6 +103,11 @@ void setupScene(){
     auto carNode = new SceneNode(CAR, carModel, h3dShader);
     carModel->setMaterialUploadCallback(materialUploadCallback);
     carNode->translate(20.0f, 0.0f, -20.0f);
+    carNode->setPreDraw([=](){
+        glActiveTexture(GL_TEXTURE0+ENVIRONMENT_SLOT);
+        skyCubeMap->bindCubeMap();
+        glActiveTexture(GL_TEXTURE0);
+    });
     root->addChild(carNode);
 
     /*Place the exhaust emmitters*/

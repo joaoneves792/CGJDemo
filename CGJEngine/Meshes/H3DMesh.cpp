@@ -393,7 +393,7 @@ void H3DMesh::setMaterial(h3d_material *material){
     }
 
     if( material->textureId >= 0){
-        //glActiveTexture((GLuint)material->textureId);
+        glActiveTexture(GL_TEXTURE0+TEXTURE_SLOT);
         glBindTexture( GL_TEXTURE_2D, (GLuint)material->textureId);
     }
 }

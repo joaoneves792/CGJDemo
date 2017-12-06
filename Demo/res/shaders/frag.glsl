@@ -4,15 +4,17 @@
 
 in vec3 position_worldspace;
 in vec3 eyeDirection_cameraspace;
+in vec3 eyeDirection_worldspace;
 in vec2 texture_coord_from_vshader;
 in vec3 normal_cameraspace;
+in vec3 normal_worldspace;
 in vec3 lightDirection_cameraspace[MAX_LIGHTS];
 
 out vec4 out_color;
 
-
 /*Material Properties*/
 uniform sampler2D texture_sampler;
+uniform samplerCube environment;
 uniform vec4 ambient;
 uniform vec4 diffuse;
 uniform vec4 specular;
@@ -33,6 +35,9 @@ void main() {
 	vec3 matDiffuse = (texture(texture_sampler, texture_coord_from_vshader).rgb * diffuse.xyz);
 
 	out_color.rgb = vec3(0,0,0);//start with black;
+	vec3 N = normalize(normal_cameraspace);
+	vec3 E = normalize(eyeDirection_cameraspace);
+
 	for(int i=0; i<MAX_LIGHTS; i++){
 	    if(lightsEnabled[i] == 0){
 	        continue;
@@ -50,8 +55,6 @@ void main() {
 	    vec3 lightContribution = vec3(0,0,0);
 
 	    vec3 L = normalize(lightDirection_cameraspace[i]);
-	    vec3 N = normalize(normal_cameraspace);
-	    vec3 E = normalize(eyeDirection_cameraspace);
 
 	    float lightSpecular;
 
@@ -70,6 +73,15 @@ void main() {
         out_color.rgb += lightContribution;
 	}
 
+    float alpha = texture(texture_sampler, texture_coord_from_vshader).a - transparency;
+
+    if(shininess >= 65.0f){
+	    N = normalize(normal_worldspace);
+        E = normalize(eyeDirection_worldspace);
+        vec3 R = reflect(E, N);
+        out_color.rgb += texture(environment, R).rgb*(shininess/128.0f)*0.1f*(1/alpha);
+    }
+
     out_color.rgb += ambient.rgb*matDiffuse;
-	out_color.a = texture(texture_sampler, texture_coord_from_vshader).a - transparency;
+    out_color.a = alpha;
 }

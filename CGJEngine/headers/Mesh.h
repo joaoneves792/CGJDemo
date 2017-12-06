@@ -21,6 +21,10 @@
 #define TEXCOORDS_VBO 1
 #define NORMALS_VBO 2
 
+
+#define TEXTURE_SLOT 0
+#define ENVIRONMENT_SLOT 1
+
 class Mesh{
 public:
     virtual ~Mesh() = default;
