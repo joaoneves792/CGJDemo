@@ -22,9 +22,10 @@ void setupScene(){
     ResourceManager::Factory::createTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
 
     //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, 5.0f, 5.0f), Quat());
-    auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0, 0.0, -20.0f), Quat());
+    auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, -100.0f, -20.0f), Quat());
     camera->perspective((float)M_PI/4.0f, 0, 0.1f, 550.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
+    root->translate(0.0f, -100.0f, 0.0f);
 
     /*Setup material handling for H3D models*/
     Shader* h3dShader = rm->getShader(H3D_SHADER);
@@ -71,9 +72,19 @@ void setupScene(){
     }
 
     /*Place the sky*/
-    auto sky = new SceneNode(SKY, rm->getMesh(SKY), rm->getShader(SKY_SHADER));
-    sky->scale(350.0f, 350.0f, 350.0f);
+    auto skyCubeMap = ResourceManager::Factory::createCubeMap(SKY_CUBE_MAP,
+                                                              "res/skybox/posx.jpg", "res/skybox/negx.jpg",
+                                                              "res/skybox/posy.jpg", "res/skybox/negy.jpg",
+                                                              "res/skybox/posz.jpg", "res/skybox/negz.jpg");
+    auto skyShader = rm->getShader(SKY_SHADER);
+    skyShader->use();
+    glUniform1f(skyShader->getUniformLocation("brightness"), 1.0f);
+    auto sky = new SceneNode(SKY, rm->getMesh(SKY), skyShader);
+    sky->setPreDraw([=](){
+       skyCubeMap->bindCubeMap();
+    });
     root->addChild(sky);
+
 
     /*Place the sun*/
     auto sun = ResourceManager::Factory::createLight(SUN);

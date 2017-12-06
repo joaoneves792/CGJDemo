@@ -1,14 +1,12 @@
 #version 330 core
+in vec3 aPos;
 
-in vec4 inPosition;
-in vec2 inTexCoord;
-
-out vec2 texture_coord_from_vshader;
+out vec3 TexCoords;
 
 uniform mat4 MVP;
 
-void main(void){
-	gl_Position = MVP * inPosition;
-    texture_coord_from_vshader = inTexCoord;
+void main()
+{
+    TexCoords = aPos;
+    gl_Position = (MVP * vec4(aPos, 1.0f)).xyww;
 }
-

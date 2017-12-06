@@ -61,12 +61,15 @@ void loadShaders(){
 
     /*Sky Shader*/
     auto skyShader = ResourceManager::Factory::createShader(SKY_SHADER, "res/shaders/skyv.glsl", "res/shaders/skyf.glsl");
-    skyShader->setAttribLocation("inPosition", VERTICES__ATTR);
-    skyShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
+    skyShader->setAttribLocation("aPos", VERTICES__ATTR);
     skyShader->link();
     MVPLocation = skyShader->getUniformLocation("MVP");
     skyShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+        Mat4 rotOnlyMV = V*M;
+        rotOnlyMV[3][0] = 0.0f;
+        rotOnlyMV[3][1] = 0.0f;
+        rotOnlyMV[3][2] = 0.0f;
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * rotOnlyMV));
     });
 
     /*2D shader*/

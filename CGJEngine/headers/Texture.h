@@ -24,6 +24,8 @@ private:
     GLuint _texture;
 public:
     Texture(std::string filename);
+    Texture(const std::string& right, const std::string& left, const std::string& top,
+            const std::string& bottom, const std::string& back, const std::string& front);
     Texture();
     Texture(GLuint texture);
 
@@ -31,8 +33,11 @@ public:
     void changeTexture(GLuint texture);
     void destroyTexture();
     void bind();
+    void bindCubeMap();
 
     static GLuint LoadGLTexture(const char *filename);
+private:
+    static textureImage* LoadFromFile(const char* name);
 
 };
 #endif /* TEXTURES_H_*/

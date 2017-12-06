@@ -10,6 +10,8 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <vector>
+#include <Texture.h>
 
 extern "C" {
 #include <stdlib.h>
@@ -424,31 +426,76 @@ void Texture::changeTexture(GLuint texture) {
     _texture = texture;
 }
 
-GLuint Texture::LoadGLTexture(const char* name){
-	textureImage *texti;
-	std::string fn(name);
-	GLuint textureID = 0;
+textureImage* Texture::LoadFromFile(const char* name) {
+    textureImage *texti;
+    std::string fn(name);
 
-	texti = (textureImage *)malloc(sizeof(textureImage));
+    texti = (textureImage *) malloc(sizeof(textureImage));
 
-	if(fn.substr(fn.find_last_of('.')+1) == "bmp")
-		loadBMP(name, texti);
-	else if(fn.substr(fn.find_last_of('.')+1) == "jpg" || fn.substr(fn.find_last_of('.')+1) == "jpeg" )
-		loadJPEG(name, texti);
-	else if(fn.substr(fn.find_last_of('.')+1) == "png")
-		loadPNG(name, texti);
-    else if(fn.substr(fn.find_last_of('.')+1) == "etc1")
+    if (fn.substr(fn.find_last_of('.') + 1) == "bmp")
+        loadBMP(name, texti);
+    else if (fn.substr(fn.find_last_of('.') + 1) == "jpg" || fn.substr(fn.find_last_of('.') + 1) == "jpeg")
+        loadJPEG(name, texti);
+    else if (fn.substr(fn.find_last_of('.') + 1) == "png")
+        loadPNG(name, texti);
+    else if (fn.substr(fn.find_last_of('.') + 1) == "etc1")
         loadETC1(name, texti);
-	else
-		return 0;
-	
-	if(texti)
-		textureID = generateGLTexture(texti->data, texti->height, texti->width, texti->alpha, texti->compressed, texti->data_lenght);
+    else
+        return nullptr;
+    return texti;
+}
 
-	/* free the ram we used in our texture generation process */
+GLuint Texture::LoadGLTexture(const char* name){
+    textureImage* texti = LoadFromFile(name);
+    GLuint textureID = 0;
+
+	if(texti) {
+        textureID = generateGLTexture(texti->data, texti->height, texti->width, texti->alpha, texti->compressed,
+                                      texti->data_lenght);
+
+        /* free the ram we used in our texture generation process */
         if (texti->data)
-        	free(texti->data);
+            free(texti->data);
         free(texti);
+    }
 
 	return textureID;
+}
+
+Texture::Texture(const std::string &right, const std::string &left, const std::string &top, const std::string &bottom,
+                 const std::string &back, const std::string &front) {
+    textureImage* texti;
+    GLuint textureID = 0;
+    std::vector<std::string> faces = {right, left, top, bottom, back, front};
+
+
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+    for (unsigned int i = 0; i < faces.size(); i++)
+    {
+        texti = LoadFromFile(faces[i].c_str());
+        if (texti){
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                         0, (texti->alpha)? GL_RGBA : GL_RGB,
+                         texti->width, texti->height, 0,
+                         (texti->alpha)? GL_RGBA: GL_RGB,
+                         GL_UNSIGNED_BYTE, texti->data);
+            free(texti->data);
+            free(texti);
+        }else{
+            std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+        }
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    _texture = textureID;
+}
+
+void Texture::bindCubeMap() {
+    glBindTexture(GL_TEXTURE_CUBE_MAP, _texture);
 }

@@ -112,3 +112,12 @@ Texture* ResourceManager::Factory::createTexture(const std::string &fileName) {
     ResourceManager::getInstance()->addTexture(fileName, texture);
     return texture;
 }
+
+Texture* ResourceManager::Factory::createCubeMap(const std::string &name, const std::string &right,
+                                                 const std::string &left, const std::string &top,
+                                                 const std::string &bottom, const std::string &back,
+                                                 const std::string &front) {
+    Texture* texture = new Texture(right, left, top, bottom, back, front);
+    ResourceManager::getInstance()->addTexture(name, texture);
+    return texture;
+}

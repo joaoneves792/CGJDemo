@@ -13,6 +13,9 @@
 #define CAR "car"
 #define ROAD "road"
 #define SKY "sky"
+
+/*Textures*/
+#define SKY_CUBE_MAP "skycubemap"
 #define CREDITS "credits"
 
 /*Shaders*/

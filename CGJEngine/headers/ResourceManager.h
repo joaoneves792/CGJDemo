@@ -52,6 +52,9 @@ public:
                                                           Shader* shader, Texture* texture, Vec3 acceleration,
                                                           Vec3 velocity, Vec3 position, float rate, float rateDecay);
         static Texture* createTexture(const std::string& fileName);
+        static Texture* createCubeMap(const std::string& name, const std::string &right, const std::string &left,
+                                      const std::string &top, const std::string &bottom,
+                                      const std::string &back, const std::string &front);
     };
 
 private:

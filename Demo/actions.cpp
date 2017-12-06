@@ -62,6 +62,8 @@ void setupActions() {
         static bool night = false;
         night = !night;
         auto lm = LightsManager::getInstance();
+        auto skyShader = ResourceManager::getInstance()->getShader(SKY_SHADER);
+        GLint brightnessLoc = skyShader->getUniformLocation("brightness");
         if(night){
             for(int i=0; i<ROAD_SEGMENTS; i++) {
                 std::stringstream lightName;
@@ -71,6 +73,8 @@ void setupActions() {
             }
             LightNode* l = (LightNode*)scene->findNode(SUN);
             lm->setEnabled(l, false);
+            skyShader->use();
+            glUniform1f(brightnessLoc, 0.5f);
         }else {
             for(int i=0; i<ROAD_SEGMENTS; i++) {
                 std::stringstream lightName;
@@ -80,6 +84,8 @@ void setupActions() {
             }
             LightNode* l = (LightNode*)scene->findNode(SUN);
             lm->setEnabled(l, true);
+            skyShader->use();
+            glUniform1f(brightnessLoc, 1.0f);
         }
     });
     im->addKeyActionOnce('b', [=](){
