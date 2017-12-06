@@ -16,6 +16,7 @@
 
 /*Textures*/
 #define SKY_CUBE_MAP "skycubemap"
+#define ENVIRONMENT "environment"
 #define CREDITS "credits"
 
 /*Shaders*/

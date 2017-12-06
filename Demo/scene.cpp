@@ -103,9 +103,14 @@ void setupScene(){
     auto carNode = new SceneNode(CAR, carModel, h3dShader);
     carModel->setMaterialUploadCallback(materialUploadCallback);
     carNode->translate(20.0f, 0.0f, -20.0f);
+    auto environment = ResourceManager::Factory::createCubeMap(ENVIRONMENT,
+                                                               "res/environment/right.png", "res/environment/left.png",
+                                                               "res/environment/top.png", "res/environment/bottom.png",
+                                                               "res/environment/back.png", "res/environment/front.png");
+
     carNode->setPreDraw([=](){
         glActiveTexture(GL_TEXTURE0+ENVIRONMENT_SLOT);
-        skyCubeMap->bindCubeMap();
+        environment->bindCubeMap();
         glActiveTexture(GL_TEXTURE0);
     });
     root->addChild(carNode);
