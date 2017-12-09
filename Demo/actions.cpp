@@ -6,7 +6,7 @@
 #include "CGJengine.h"
 #include "actions.h"
 #include "Constants.h"
-#include "Road.h"
+#include "Movement.h"
 #include "SceneNode.h"
 
 #define ESCAPE 27
@@ -53,9 +53,9 @@ void setupActions() {
         static bool accelerating = false;
         accelerating = !accelerating;
         if(accelerating){
-            scene->findNode(ROAD)->setUpdateCallback(Road::accelerate);
+            scene->findNode(ROAD)->setUpdateCallback(Movement::accelerate);
         }else {
-            scene->findNode(ROAD)->setUpdateCallback(Road::deccelerate);
+            scene->findNode(ROAD)->setUpdateCallback(Movement::deccelerate);
         }
     });
     im->addKeyActionOnce('n', [=](){

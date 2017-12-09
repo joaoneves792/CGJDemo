@@ -5,12 +5,10 @@
 #ifndef CGJDEMO_CONSTANTS_H
 #define CGJDEMO_CONSTANTS_H
 
-#ifndef M_PI
-#define M_PI 3.14156
-#endif
 
 /*Meshes*/
 #define CAR "car"
+#define WHEEL "wheel"
 #define ROAD "road"
 #define SKY "sky"
 
@@ -63,7 +61,16 @@
 #define WIN_Y 988
 #define MSAA 4
 
+/*Important Nodes*/
+#define REAR_AXIS "rear_axis"
+#define FRONT_AXIS "front_axis"
+#define RRWHEEL "rr"
+#define RLWHEEL "rl"
+#define FRWHEEL "fr"
+#define FLWHEEL "fl"
+
 /*Misc constants*/
+#define PI 3.14159f
 #define ROAD_SEGMENTS 12
 #define HEAT_HAZE_LEVEL 10
 

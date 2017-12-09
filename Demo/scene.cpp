@@ -21,9 +21,9 @@ void setupScene(){
     ResourceManager::Factory::createMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
     ResourceManager::Factory::createTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
 
-    //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, 5.0f, 5.0f), Quat());
-    auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, -100.0f, -20.0f), Quat());
-    camera->perspective((float)M_PI/4.0f, 0, 0.1f, 550.0f);
+    auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, -100.0f, 0.0f), Quat());
+    //auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, -100.0f, -20.0f), Quat());
+    camera->perspective((float)PI/4.0f, 0, 0.1f, 550.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
     root->translate(0.0f, -100.0f, 0.0f);
 
@@ -68,7 +68,7 @@ void setupScene(){
         lightName << LAMP_POST << i;
         auto lamp = ResourceManager::Factory::createLight(lightName.str());
         lamp->setColor(0.8f, 0.8f, 0.3f);
-        lamp->setCone(-0.3f, -1.0f, 0.0f, (float)M_PI/4.0f);
+        lamp->setCone(-0.3f, -1.0f, 0.0f, (float)PI/4.0f);
         lamp->setAttenuation(1.0f, 0.0f, 0.0f, 30.0f);
         lamp->setPosition(20.0f, 10.0f, -16.0f);
         LightsManager::getInstance()->setEnabled(lamp, false);
@@ -98,22 +98,54 @@ void setupScene(){
     root->addChild(sun);
     LightsManager::getInstance()->setEnabled(sun, true);
 
+    /*Create environment map*/
+    auto environment = ResourceManager::Factory::createCubeMap(ENVIRONMENT,
+                                                               "res/environment/right.png", "res/environment/left.png",
+                                                               "res/environment/top.png", "res/environment/bottom.png",
+                                                               "res/environment/back.png", "res/environment/front.png");
+    auto bindEnvironment = [=](){
+        glActiveTexture(GL_TEXTURE0+ENVIRONMENT_SLOT);
+        environment->bindCubeMap();
+        glActiveTexture(GL_TEXTURE0);
+    };
+
     /*Place the car (should be last because of transparency on glasses)*/
     H3DMesh* carModel = (H3DMesh*)rm->getMesh(CAR);
     auto carNode = new SceneNode(CAR, carModel, h3dShader);
     carModel->setMaterialUploadCallback(materialUploadCallback);
     carNode->translate(20.0f, 0.0f, -20.0f);
-    auto environment = ResourceManager::Factory::createCubeMap(ENVIRONMENT,
-                                                               "res/environment/right.png", "res/environment/left.png",
-                                                               "res/environment/top.png", "res/environment/bottom.png",
-                                                               "res/environment/back.png", "res/environment/front.png");
-
-    carNode->setPreDraw([=](){
-        glActiveTexture(GL_TEXTURE0+ENVIRONMENT_SLOT);
-        environment->bindCubeMap();
-        glActiveTexture(GL_TEXTURE0);
-    });
+    carNode->setPreDraw(bindEnvironment);
     root->addChild(carNode);
+
+    /*Place the wheels*/
+    auto wheelMesh = (H3DMesh*)rm->getMesh(WHEEL);
+    wheelMesh->setMaterialUploadCallback(materialUploadCallback);
+
+    auto rearAxis = new SceneNode(REAR_AXIS);
+    rearAxis->translate(0.0f, 0.67f, 3.77f);
+    carNode->addChild(rearAxis);
+    auto rrWheel = new SceneNode(RRWHEEL,wheelMesh, h3dShader);
+    rrWheel->setPreDraw(bindEnvironment);
+    rrWheel->translate(2.05f, 0.0f, 0.0f);
+    rrWheel->rotate(0.0f, 1.0f, 0.0f, PI);
+    rearAxis->addChild(rrWheel);
+    auto rlWheel = new SceneNode(RLWHEEL,wheelMesh, h3dShader);
+    rlWheel->setPreDraw(bindEnvironment);
+    rlWheel->translate(-2.05f, 0.0f, 0.0f);
+    rearAxis->addChild(rlWheel);
+
+    auto frontAxis = new SceneNode(FRONT_AXIS);
+    frontAxis->translate(0.0f, 0.67f, -2.71f);
+    carNode->addChild(frontAxis);
+    auto frWheel = new SceneNode(FRWHEEL,wheelMesh, h3dShader);
+    frWheel->setPreDraw(bindEnvironment);
+    frWheel->translate(2.17f, 0.0f, 0.0f);
+    frWheel->rotate(0.0f, 1.0f, 0.0f, PI);
+    frontAxis->addChild(frWheel);
+    auto flWheel = new SceneNode(FLWHEEL, wheelMesh, h3dShader);
+    flWheel->setPreDraw(bindEnvironment);
+    flWheel->translate(-2.17f, 0.0f, 0.0f);
+    frontAxis->addChild(flWheel);
 
     /*Place the exhaust emmitters*/
     auto fireTexture = ResourceManager::Factory::createTexture(FIRE_PARTICLE);

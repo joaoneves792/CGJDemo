@@ -20,8 +20,8 @@ set(SOURCE_FILES
 		shaders.cpp
 		shaders.h
         Constants.h
-		Road.cpp
-		Road.h)
+        Movement.cpp
+        Movement.h)
 
 add_executable(demo ${SOURCE_FILES})
 target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} CGJEngine)
