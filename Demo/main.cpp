@@ -33,22 +33,33 @@ void display()
     static MSFrameBuffer* mainFBO = (MSFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
     static TextureFrameBuffer* helperFBO = (TextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
 	static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
+	static ParticleEmitterNode* hazeEmitter = (ParticleEmitterNode*)ResourceManager::getInstance()->getScene(SCENE)->findNode(HEAT_EMITTER);
+	static Shader* reflectionShader = ResourceManager::getInstance()->getShader(HEAT_REFLECTION_SHADER);
+	static Shader* distortionShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
+
 
 	++FrameCount;
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     LightsManager::getInstance()->uploadLights();
 
     /*Draw scene to fbo*/
 	mainFBO->bind();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	scene->draw();
-	particlePool->draw(DEFAULT_PARTICLES_LEVEL);
+	hazeEmitter->setShader(reflectionShader);
+    glStencilFunc(GL_NOTEQUAL, 0, 0x01);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	particlePool->draw(HEAT_HAZE_LEVEL);
+    glStencilFunc(GL_ALWAYS, 0, 0x00);
+    particlePool->draw(DEFAULT_PARTICLES_LEVEL);
+
 
 	/*Copy fbo to texture and use the copy for post-processing*/
 	mainFBO->blit(helperFBO);
 	helperFBO->bindTexture();
 	mainFBO->bind();
+	hazeEmitter->setShader(distortionShader);
 	particlePool->draw(HEAT_HAZE_LEVEL);
 
 	/*Blit the final result to the window fbo and draw the HUD*/
@@ -181,6 +192,9 @@ void setupOpenGL()
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_STENCIL_TEST);
+	glStencilMask(0xFF);
+	glClearStencil(0);
 }
 
 void setupGLEW() 

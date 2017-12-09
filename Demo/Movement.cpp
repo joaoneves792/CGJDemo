@@ -24,8 +24,8 @@ void Movement::accelerate(int dt){
     float dz = speed * dt;
 
     z += dz;
-    if(z >= 60.0f){
-        z -= 60.0f;
+    if(z >= ROAD_LENGTH){
+        z -= ROAD_LENGTH;
     }
     road->setPosition(0.0f, 0.0f, z);
 
@@ -34,7 +34,7 @@ void Movement::accelerate(int dt){
     rearAxis->rotate(-1.0f, 0.0f, 0.0f, wheelAngle);
 
     shader->use();
-    glUniform1f(loc, -z/60.0f);
+    glUniform1f(loc, -z/ROAD_LENGTH);
 }
 
 void Movement::deccelerate(int dt) {
@@ -52,8 +52,8 @@ void Movement::deccelerate(int dt) {
     float dz = speed * dt;
 
     z += dz;
-    if(z >= 60.0f){
-        z -= 60.0f;
+    if(z >= ROAD_LENGTH){
+        z -= ROAD_LENGTH;
     }
     road->setPosition(0.0f, 0.0f, z);
 
@@ -62,6 +62,6 @@ void Movement::deccelerate(int dt) {
     rearAxis->rotate(-1.0f, 0.0f, 0.0f, wheelAngle);
 
     shader->use();
-    glUniform1f(loc, -z/60.0f);
+    glUniform1f(loc, -z/ROAD_LENGTH);
 }
 

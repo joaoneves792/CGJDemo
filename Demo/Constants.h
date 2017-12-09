@@ -15,6 +15,7 @@
 /*Textures*/
 #define SKY_CUBE_MAP "skycubemap"
 #define ENVIRONMENT "environment"
+#define HAZE_ENVIRONMENT "hazeenvironment"
 #define CREDITS "credits"
 
 /*Shaders*/
@@ -23,6 +24,7 @@
 #define FINAL_SHADER "twoDShader"
 #define QUAD_SHADER "quadShader"
 #define HEAT_SHADER "heat"
+#define HEAT_REFLECTION_SHADER "heatReflection"
 #define SMOKE_SHADER "smoke"
 #define FIRE_SHADER "fire"
 
@@ -72,7 +74,10 @@
 /*Misc constants*/
 #define PI 3.14159f
 #define ROAD_SEGMENTS 12
+#define ROAD_LENGTH 60.0f
 #define HEAT_HAZE_LEVEL 10
+#define GROUND_LEVEL -100.0f
+#define ROAD_LEVEL 2
 
 
 

@@ -21,11 +21,15 @@ void setupScene(){
     ResourceManager::Factory::createMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
     ResourceManager::Factory::createTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
 
-    auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, -100.0f, 0.0f), Quat());
-    //auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, -100.0f, -20.0f), Quat());
+    //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
+    auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat());
     camera->perspective((float)PI/4.0f, 0, 0.1f, 550.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
-    root->translate(0.0f, -100.0f, 0.0f);
+    root->translate(0.0f, GROUND_LEVEL, 0.0f);
+    root->setPreDraw([](){
+        glStencilFunc(GL_ALWAYS, 0, 0xFF);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+    });
 
     /*Setup material handling for H3D models*/
     Shader* h3dShader = rm->getShader(H3D_SHADER);
@@ -60,9 +64,17 @@ void setupScene(){
         std::stringstream name;
         name << ROAD << i;
         auto roadPart = new SceneNode(name.str(), roadModel, h3dShader);
-        roadPart->translate(0.0f, 0.0f, 60.0f*(i-ROAD_SEGMENTS/2));
+        roadPart->translate(0.0f, 0.0f, ROAD_LENGTH*(i-ROAD_SEGMENTS/2));
         road->addChild(roadPart);
 
+        roadPart->setPreDraw([](){
+            glStencilFunc(GL_ALWAYS, 0, 0xFF);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_INVERT);
+        });
+        roadPart->setPostDraw([](){
+            glStencilFunc(GL_ALWAYS, 0, 0xFF);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+        });
         /*Create the lights*/
         std::stringstream lightName;
         lightName << LAMP_POST << i;
@@ -171,16 +183,27 @@ void setupScene(){
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
     auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, ((TextureFrameBuffer*)helperFBO)->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
-                                                                       Vec3(0.0f, 0.7f, 6.1f), 0.001, 0.0f);
-    hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-18f));
+                                                                       Vec3(0.0f, 0.7f, 6.1f), 0.002, 0.0f);
+    /*Create environment map*/
+    auto hazeEnvironment = ResourceManager::Factory::createCubeMap(HAZE_ENVIRONMENT,
+                                                               "res/environment/haze_environment/right.png", "res/environment/haze_environment/left.png",
+                                                               "res/environment/haze_environment/top.png", "res/environment/haze_environment/bottom.png",
+                                                               "res/environment/haze_environment/back.png", "res/environment/haze_environment/front.png");
+    auto bindHazeEnvironment = [=](){
+        hazeEnvironment->bindCubeMap();
+    };
+    sky->setPreDraw([=](){
+        hazeEnvironment->bindCubeMap();
+    });
+    hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-12f));
     hazeEmitter->setParticleLifeDecayRate(5e-5f);
     hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
+    hazeEmitter->setPreDraw(bindHazeEnvironment);
     hazeEmitter->emmit();
     carNode->addChild(hazeEmitter);
 
     for(int i=0;i<1000;i++)
         hazeEmitter->update(20); //Hack to get things going faster
-
 
 
     /*Setup HUD*/

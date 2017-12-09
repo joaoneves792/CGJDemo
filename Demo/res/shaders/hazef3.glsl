@@ -21,7 +21,7 @@ out vec4 color;
 #define HARMONICS_B 1.5f
 #define HARMONICS_N 6
 
-#define NEXT_TEXEL_STEP 0.005f
+#define NEXT_TEXEL_STEP 0.0025f
 #define BLUR_LINE_WIDTH 0.1f
 
 
@@ -62,18 +62,11 @@ void main() {
         noise.x += X_AMPLITUDE*hs;
         noise.y += Y_AMPLITUDE*hs;
     }
-    float y= 40.0f*noise.x;
-    if(pos.y < y + BLUR_LINE_WIDTH && pos.y > y - BLUR_LINE_WIDTH)
-        color.rgb = convolute(blur_kernel, uv+noise);
-    else
-        color.rgb = texture(renderedTexture, uv+noise).rgb;
 
+    color.rgb = convolute(blur_kernel, uv+noise);
     color.a = 1.0f-length(position_modelspace)*2;
 
     if(black > 0.0){
-        if(pos.y < y + BLUR_LINE_WIDTH && pos.y > y - BLUR_LINE_WIDTH)
-            color.rgb = vec3(1.0f, 1.0f, 1.0f);
-        else
             color.rgb = vec3(0.0f, 0.0f, 0.0f);
     }
 }
