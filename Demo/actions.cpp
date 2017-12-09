@@ -65,7 +65,7 @@ void setupActions() {
         auto skyShader = ResourceManager::getInstance()->getShader(SKY_SHADER);
         GLint brightnessLoc = skyShader->getUniformLocation("brightness");
         if(night){
-            for(int i=0; i<ROAD_SEGMENTS; i++) {
+            for(int i=0; i<ACTIVE_LAMPS; i++) {
                 std::stringstream lightName;
                 lightName << LAMP_POST << i;
                 LightNode* l = (LightNode*)scene->findNode(lightName.str());
@@ -76,7 +76,7 @@ void setupActions() {
             skyShader->use();
             glUniform1f(brightnessLoc, 0.5f);
         }else {
-            for(int i=0; i<ROAD_SEGMENTS; i++) {
+            for(int i=0; i<ACTIVE_LAMPS; i++) {
                 std::stringstream lightName;
                 lightName << LAMP_POST << i;
                 LightNode* l = (LightNode*)scene->findNode(lightName.str());

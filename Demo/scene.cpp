@@ -26,10 +26,6 @@ void setupScene(){
     camera->perspective((float)PI/4.0f, 0, 0.1f, 550.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
     root->translate(0.0f, GROUND_LEVEL, 0.0f);
-    root->setPreDraw([](){
-        glStencilFunc(GL_ALWAYS, 0, 0xFF);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
-    });
 
     /*Setup material handling for H3D models*/
     Shader* h3dShader = rm->getShader(H3D_SHADER);
@@ -60,6 +56,7 @@ void setupScene(){
     roadModel->setMaterialUploadCallback(materialUploadCallback);
     auto road = new SceneNode(ROAD);
     root->addChild(road);
+    int li = 0;
     for(int i=0; i<ROAD_SEGMENTS; i++){
         std::stringstream name;
         name << ROAD << i;
@@ -67,24 +64,19 @@ void setupScene(){
         roadPart->translate(0.0f, 0.0f, ROAD_LENGTH*(i-ROAD_SEGMENTS/2));
         road->addChild(roadPart);
 
-        roadPart->setPreDraw([](){
-            glStencilFunc(GL_ALWAYS, 0, 0xFF);
-            glStencilOp(GL_KEEP, GL_KEEP, GL_INVERT);
-        });
-        roadPart->setPostDraw([](){
-            glStencilFunc(GL_ALWAYS, 0, 0xFF);
-            glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
-        });
-        /*Create the lights*/
-        std::stringstream lightName;
-        lightName << LAMP_POST << i;
-        auto lamp = ResourceManager::Factory::createLight(lightName.str());
-        lamp->setColor(0.8f, 0.8f, 0.3f);
-        lamp->setCone(-0.3f, -1.0f, 0.0f, (float)PI/4.0f);
-        lamp->setAttenuation(1.0f, 0.0f, 0.0f, 30.0f);
-        lamp->setPosition(20.0f, 10.0f, -16.0f);
-        LightsManager::getInstance()->setEnabled(lamp, false);
-        roadPart->addChild(lamp);
+        if(std::abs(i-ROAD_SEGMENTS/2) <= ACTIVE_LAMPS/2) {
+            /*Create the lights*/
+            std::stringstream lightName;
+            lightName << LAMP_POST << li;
+            ++li;
+            auto lamp = ResourceManager::Factory::createLight(lightName.str());
+            lamp->setColor(0.8f, 0.8f, 0.3f);
+            lamp->setCone(-0.5f, -1.0f, 0.0f, (float) PI / 4.0f);
+            lamp->setAttenuation(1.0f, 0.0f, 0.0f, 30.0f);
+            lamp->setPosition(20.0f, 10.0f, -16.0f);
+            LightsManager::getInstance()->setEnabled(lamp, false);
+            roadPart->addChild(lamp);
+        }
     }
 
     /*Place the sky*/
@@ -184,21 +176,9 @@ void setupScene(){
     auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, ((TextureFrameBuffer*)helperFBO)->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
                                                                        Vec3(0.0f, 0.7f, 6.1f), 0.002, 0.0f);
-    /*Create environment map*/
-    auto hazeEnvironment = ResourceManager::Factory::createCubeMap(HAZE_ENVIRONMENT,
-                                                               "res/environment/haze_environment/right.png", "res/environment/haze_environment/left.png",
-                                                               "res/environment/haze_environment/top.png", "res/environment/haze_environment/bottom.png",
-                                                               "res/environment/haze_environment/back.png", "res/environment/haze_environment/front.png");
-    auto bindHazeEnvironment = [=](){
-        hazeEnvironment->bindCubeMap();
-    };
-    sky->setPreDraw([=](){
-        hazeEnvironment->bindCubeMap();
-    });
     hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-12f));
     hazeEmitter->setParticleLifeDecayRate(5e-5f);
     hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
-    hazeEmitter->setPreDraw(bindHazeEnvironment);
     hazeEmitter->emmit();
     carNode->addChild(hazeEmitter);
 

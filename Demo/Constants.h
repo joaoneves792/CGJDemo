@@ -73,7 +73,8 @@
 
 /*Misc constants*/
 #define PI 3.14159f
-#define ROAD_SEGMENTS 12
+#define ROAD_SEGMENTS 22
+#define ACTIVE_LAMPS 12
 #define ROAD_LENGTH 60.0f
 #define HEAT_HAZE_LEVEL 10
 #define GROUND_LEVEL -100.0f
