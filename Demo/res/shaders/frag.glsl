@@ -22,6 +22,8 @@ uniform vec4 emissive;
 uniform float shininess;
 uniform float transparency;
 
+uniform float movement; // get movement for the environment map
+
 /*Lights Properties*/
 uniform vec3 lightPosition_worldspace[MAX_LIGHTS];
 uniform int lightsEnabled[MAX_LIGHTS];
@@ -79,6 +81,7 @@ void main() {
 	    N = normalize(normal_worldspace);
         E = normalize(eyeDirection_worldspace);
         vec3 R = reflect(E, N);
+        R = R + vec3(0.0f, 0.0f, movement);
         out_color.rgb += texture(environment, R).rgb*(shininess/128.0f)*0.1f*(1/alpha);
     }
 
