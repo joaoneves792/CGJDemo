@@ -27,6 +27,7 @@
 #define HEAT_REFLECTION_SHADER "heatReflection"
 #define SMOKE_SHADER "smoke"
 #define FIRE_SHADER "fire"
+#define HEAT_SPOT_REFLECTION_SHADER "heatSpotShader"
 
 /*Scenes*/
 #define SCENE "main"
@@ -47,6 +48,7 @@
 /*FBOs*/
 #define MAIN_FBO "main"
 #define HELPER_FBO "helper"
+#define REFLECTION_FBO "reflection"
 
 /*Particles*/
 #define MAX_PARTICLES 1024
@@ -70,6 +72,7 @@
 #define RLWHEEL "rl"
 #define FRWHEEL "fr"
 #define FLWHEEL "fl"
+#define REFLECTION_SPOT "reflectionSpot"
 
 /*Misc constants*/
 #define PI 3.14159f
@@ -77,8 +80,10 @@
 #define ACTIVE_LAMPS 12
 #define ROAD_LENGTH 60.0f
 #define HEAT_HAZE_LEVEL 10
-#define GROUND_LEVEL -100.0f
+#define REFLECTIONS_LEVEL 9
+#define GROUND_LEVEL 0.0f
 #define ROAD_LEVEL 2
+#define REFLECTION_RESOLUTION 512
 
 
 

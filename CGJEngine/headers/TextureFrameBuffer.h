@@ -9,13 +9,11 @@
 #include "FrameBuffer.h"
 
 class TextureFrameBuffer : public FrameBuffer{
-private:
-    Texture* _texture;
 public:
     TextureFrameBuffer(int x, int y);
-    virtual ~TextureFrameBuffer();
+    ~TextureFrameBuffer() override ;
     void resize(int x, int y) override ;
-    void bindTexture();
+    void bindTexture() override;
     Texture* getTexture();
     using FrameBuffer::blit;
 private:

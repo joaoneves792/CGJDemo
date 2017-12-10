@@ -11,14 +11,23 @@
 class FrameBuffer{
 protected:
     GLuint _frameBuffer;
+    GLuint _depthStencilBuffer;
     int _width;
     int _height;
+    Texture* _texture;
 public:
+    FrameBuffer() = default;
+    FrameBuffer(int x, int y);
     void bind();
     void unbind();
+    virtual void bindTexture(); //This doesnt work with MSFramebuffers!
     virtual void blit();
-    virtual void resize(int x, int y) = 0;
-    virtual ~FrameBuffer() = default;
+    virtual void resize(int x, int y);
+    virtual ~FrameBuffer();
+
+private:
+    void initializeNewFrameBuffer(int x, int y);
+    void destroy();
 };
 
 

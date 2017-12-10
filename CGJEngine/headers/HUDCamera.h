@@ -12,7 +12,7 @@ class HUDCamera : public Camera{
 public:
     HUDCamera(float left, float right, float top, float bottom, float near, float far);
     virtual Mat4 getMatrix();
-    virtual Mat4 getViewMatrix();
+    virtual Mat4 produceViewMatrix();
     virtual void resize(int x, int y);
     virtual void move(float x, float y, float z);
     virtual void changeOrientation(float yaw, float pitch, float roll);

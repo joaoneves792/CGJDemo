@@ -13,10 +13,10 @@ FreeCamera::FreeCamera(Vec3 originalPosition, Quat originalOrientation) {
 
 }
 Mat4 FreeCamera::getMatrix() {
-    return _projection * getViewMatrix();
+    return _projection * produceViewMatrix();
 }
 
-Mat4 FreeCamera::getViewMatrix() {
+Mat4 FreeCamera::produceViewMatrix() {
     return glm::toMat4(_orientation) * glm::translate(Mat4(1.0f), Vec3(-_position[0], -_position[1], -_position[2]));
 }
 

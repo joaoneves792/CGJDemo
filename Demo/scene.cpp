@@ -18,8 +18,13 @@ void setupScene(){
     loadMeshes();
     loadShaders();
 
-    ResourceManager::Factory::createMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
-    ResourceManager::Factory::createTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
+    /*Generic quad mesh for multiple purposes*/
+    Mesh* quad = new QuadMesh();
+    rm->addMesh("quad", quad);
+
+    auto mainFBO = ResourceManager::Factory::createMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
+    auto helperFBO = ResourceManager::Factory::createTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
+    auto reflectionFBO = ResourceManager::Factory::createFrameBuffer(REFLECTION_FBO, REFLECTION_RESOLUTION, REFLECTION_RESOLUTION);
 
     //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
     auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat());
@@ -171,9 +176,8 @@ void setupScene(){
     carNode->addChild(exhaustRight);
 
     /*Heat haze*/
-    auto helperFBO = ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
-    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, ((TextureFrameBuffer*)helperFBO)->getTexture(),
+    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, helperFBO->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
                                                                        Vec3(0.0f, 0.7f, 6.1f), 0.002, 0.0f);
     hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-12f));
@@ -185,10 +189,24 @@ void setupScene(){
     for(int i=0;i<1000;i++)
         hazeEmitter->update(20); //Hack to get things going faster
 
+    /*Place the heat reflection (Car exhaust)*/
+    auto reflectionTexture = ResourceManager::Factory::createTexture("res/heatReflection.png");
+    auto reflectionNode = new SceneNode("reflection", quad, rm->getShader(HEAT_SPOT_REFLECTION_SHADER));
+    reflectionNode->setProcessingLevel(REFLECTIONS_LEVEL);
+    reflectionNode->translate(0.0f, -0.1f, 6.0f);
+    reflectionNode->rotate(1.0f, 0.0f, 0.0f, -PI/2.0f);
+    reflectionNode->scale(1.7f, 1.7f, 1.0f);
+    reflectionNode->setPreDraw([=](){
+        glActiveTexture(GL_TEXTURE0);
+        reflectionTexture->bind();
+        glActiveTexture(GL_TEXTURE1);
+        reflectionFBO->bindTexture();
+        glActiveTexture(GL_TEXTURE0);
+    });
+
+    carNode->addChild(reflectionNode);
 
     /*Setup HUD*/
-    Mesh* quad = new QuadMesh();
-    rm->addMesh("quad", quad);
     auto viewportCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1);
     SceneNode* final = ResourceManager::Factory::createScene(HUD, viewportCamera);
 
@@ -200,5 +218,6 @@ void setupScene(){
     credits->scale(0.15f, 0.15f, 1.0f);
     credits->translate(0.8f, -0.9f, 0.0f);
     final->addChild(credits);
+
 }
 

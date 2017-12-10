@@ -6,18 +6,18 @@
 #include "glm_wrapper.h"
 
 SphereCamera::SphereCamera(float distance, Vec3 center, Quat originalOrientation) {
-    _position = center;
+    _center = center;
     _distance = distance;
     _orientation = originalOrientation;
     calculateBillboard();
 }
 Mat4 SphereCamera::getMatrix() {
-    return _projection * getViewMatrix();
+    return _projection * produceViewMatrix();
 }
 
-Mat4 SphereCamera::getViewMatrix() {
+Mat4 SphereCamera::produceViewMatrix() {
     return glm::translate(Mat4(1.0f), Vec3(0, 0, -_distance))
-           * glm::translate(glm::toMat4(_orientation), Vec3(-_position[0], -_position[1], -_position[2]));
+           * glm::translate(glm::toMat4(_orientation), Vec3(-_center[0], -_center[1], -_center[2]));
 }
 
 void SphereCamera::move(float x, float y, float z){

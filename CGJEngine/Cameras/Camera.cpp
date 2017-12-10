@@ -1,6 +1,7 @@
 //
 // Created by joao on 11/12/17.
 //
+#include <iostream>
 #include "Camera.h"
 #include "glm_wrapper.h"
 
@@ -34,6 +35,54 @@ Quat Camera::getBillboardOrientation() {
 }
 
 Vec3 Camera::getPosition() {
-    return _position;
+    Mat4 View = produceViewMatrix();
+
+    Mat3 rotMat = Mat3(View);
+    Vec3 d = glm::column(View, 3);
+
+    return -d * rotMat;
 }
 
+Mat4 Camera::getViewMatrix() {
+    if(!_reflected)
+        return produceViewMatrix();
+    else{
+        Vec3 N = _reflectionPlaneN;
+        Vec3 P = _reflectionPlaneP;
+        float D = glm::dot(-P, N);
+        Mat4 reflectionM = getReflectionMatrix(N, D);
+        return produceViewMatrix()*reflectionM;
+    }
+}
+
+Mat4 Camera::getReflectionMatrix(const Vec3 &N, float D) const {
+    Mat4 r = Mat4(1.0f - 2.0f * N[0] * N[0],
+                -2.0f*N[0]*N[1],
+                -2.0f*N[0]*N[2],
+                -2.0f*N[0]*D,
+                //  1.0f,
+
+                -2.0f*N[0]*N[1],
+                1.0f-2.0f*N[1]*N[1],
+                -2.0f*N[1]*N[2],
+                -2.0f*N[1]*D,
+                //  1.0f,
+
+                -2.0f*N[0]*N[2],
+                -2.0f*N[1]*N[2],
+                1.0f-2.0f*N[2]*N[2],
+                -2.0f*N[2]*D,
+                //  1.0f,
+
+                0.0f,
+                0.0f,
+                0.0f,
+                1.0f);
+    return glm::transpose(r);
+}
+
+void Camera::setReflection(bool reflected, float nx, float ny, float nz, Vec3 p) {
+    _reflected = reflected;
+    _reflectionPlaneN = Vec3(nx, ny, nz);
+    _reflectionPlaneP = p;
+}

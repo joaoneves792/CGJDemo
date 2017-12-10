@@ -16,7 +16,7 @@ Mat4 HUDCamera::getMatrix() {
     return _projection;
 }
 
-Mat4 HUDCamera::getViewMatrix() {
+Mat4 HUDCamera::produceViewMatrix() {
     return Mat4(1.0f);
 }
 

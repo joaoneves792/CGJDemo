@@ -13,13 +13,10 @@
 
 class MSFrameBuffer : public FrameBuffer{
 private:
-    GLuint _depthBuffer;
     GLuint _samples;
-    Texture* _texture;
-
 public:
     MSFrameBuffer(int x, int y, int msaaLevel);
-    virtual ~MSFrameBuffer();
+    ~MSFrameBuffer() override;
     void resize(int x, int y) override ;
     using FrameBuffer::blit;
     void blit(TextureFrameBuffer* texFBO);

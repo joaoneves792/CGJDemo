@@ -14,8 +14,10 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/rotate_normalized_axis.hpp>
 #include <glm/gtx/matrix_interpolation.hpp>
+#include <glm/gtc/matrix_access.hpp>
 
 typedef glm::mat4 Mat4;
+typedef glm::mat3 Mat3;
 typedef glm::vec3 Vec3;
 typedef glm::vec4 Vec4;
 typedef glm::quat Quat;

@@ -41,6 +41,7 @@ public:
                                     const std::string& fragmentShader);
         static SceneNode* createScene(const std::string& name, Camera* camera);
         static LightNode* createLight(const std::string& name);
+        static FrameBuffer* createFrameBuffer(const std::string& name, int x, int y);
         static TextureFrameBuffer* createTextureFrameBuffer(const std::string& name, int x, int y);
         static MSFrameBuffer* createMSAAFrameBuffer(const std::string& name, int x, int y, int msaaLevel);
         static FreeCamera* createFreeCamera(const std::string& name, Vec3 position, Quat orientation);

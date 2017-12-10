@@ -114,6 +114,24 @@ void loadShaders(){
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
     });
 
+    /*Heat reflection shader*/
+    auto heatRShader = ResourceManager::Factory::createShader(HEAT_SPOT_REFLECTION_SHADER, "res/shaders/heatReflectionV.glsl", "res/shaders/heatReflectionF.glsl");
+    heatRShader->setAttribLocation("vertex", VERTICES__ATTR);
+    heatRShader->link();
+    ModelLocation = heatRShader->getUniformLocation("Model");
+    ViewLocation = heatRShader->getUniformLocation("View");
+    ProjectionLocation = heatRShader->getUniformLocation("Projection");
+    GLint textureLoc = glGetUniformLocation(heatRShader->getShader(), "map");
+    GLint environmentLoc = glGetUniformLocation(heatRShader->getShader(), "environment");
+    heatRShader->use();
+    glUniform1i(textureLoc, 0);
+    glUniform1i(environmentLoc, 1);
+    heatRShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, glm::value_ptr(M));
+        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
+        glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
+    });
+
     /*Smoke shader*/
     auto smokeShader = ResourceManager::Factory::createShader(SMOKE_SHADER, "res/shaders/smokev.glsl", "res/shaders/particlef.glsl");
     smokeShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);

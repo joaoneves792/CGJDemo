@@ -32,6 +32,7 @@ void display()
 	static SceneGraph* HUDScene = ResourceManager::getInstance()->getScene(HUD);
     static MSFrameBuffer* mainFBO = (MSFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
     static TextureFrameBuffer* helperFBO = (TextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
+	static FrameBuffer* reflectionFBO = ResourceManager::getInstance()->getFrameBuffer(REFLECTION_FBO);
 	static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
 
 
@@ -40,10 +41,21 @@ void display()
 
     LightsManager::getInstance()->uploadLights();
 
+	/*Draw Reflection*/
+	reflectionFBO->bind();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	scene->getCamera()->setReflection(true, 0.0f, 1.0f, 0.0f, scene->findNode("reflection")->getPositionWorldspace());//, GROUND_LEVEL);
+    glFrontFace(GL_CW);
+	scene->draw();
+    glFrontFace(GL_CCW);
+	reflectionFBO->unbind();
+    scene->getCamera()->setReflection(false, 0.0f, 1.0f, 0.0f, Vec3(0.0f, 0.0f, 0.0f));
+
     /*Draw scene to fbo*/
 	mainFBO->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	scene->draw();
+	scene->draw(REFLECTIONS_LEVEL);
     particlePool->draw(DEFAULT_PARTICLES_LEVEL);
 
 
