@@ -43,16 +43,19 @@ Vec3 Camera::getPosition() {
     return -d * rotMat;
 }
 
+Mat4 Camera::getReflectedViewMatrix() {
+    Vec3 N = _reflectionPlaneN;
+    Vec3 P = _reflectionPlaneP;
+    float D = glm::dot(-P, N);
+    Mat4 reflectionM = getReflectionMatrix(N, D);
+    return produceViewMatrix()*reflectionM;
+}
+
 Mat4 Camera::getViewMatrix() {
     if(!_reflected)
         return produceViewMatrix();
-    else{
-        Vec3 N = _reflectionPlaneN;
-        Vec3 P = _reflectionPlaneP;
-        float D = glm::dot(-P, N);
-        Mat4 reflectionM = getReflectionMatrix(N, D);
-        return produceViewMatrix()*reflectionM;
-    }
+    else
+        return getReflectedViewMatrix();
 }
 
 Mat4 Camera::getReflectionMatrix(const Vec3 &N, float D) const {

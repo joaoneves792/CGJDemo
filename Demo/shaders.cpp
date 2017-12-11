@@ -122,10 +122,10 @@ void loadShaders(){
     ViewLocation = heatRShader->getUniformLocation("View");
     ProjectionLocation = heatRShader->getUniformLocation("Projection");
     GLint textureLoc = glGetUniformLocation(heatRShader->getShader(), "map");
-    GLint environmentLoc = glGetUniformLocation(heatRShader->getShader(), "environment");
+    GLint mirrorLoc = glGetUniformLocation(heatRShader->getShader(), "mirror");
     heatRShader->use();
     glUniform1i(textureLoc, 0);
-    glUniform1i(environmentLoc, 1);
+    glUniform1i(mirrorLoc, 1);
     heatRShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, glm::value_ptr(M));
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));

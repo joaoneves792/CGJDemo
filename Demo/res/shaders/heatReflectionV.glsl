@@ -2,12 +2,14 @@
 
 in vec3 vertex;
 
-out vec2 uv;
+out vec2 mirror_uv;
+out vec2 standard_uv;
 out vec3 eyeDirection_worldspace;
 
 uniform mat4 Model;
 uniform mat4 View;
 uniform mat4 Projection;
+uniform mat4 reflectionView;
 
 
 void main() {
@@ -21,6 +23,9 @@ void main() {
 
   	gl_Position = Projection * View * position_worldspace;
 
-	uv.x = (vertex.x+1)/2;
-	uv.y = (vertex.y+1)/2;
+    vec4 vClipReflection = Projection * reflectionView * Model * vec4(vertex.xy, 0.0f , 1.0f);
+	vec2 vDeviceReflection = vClipReflection.st / vClipReflection.q;
+	mirror_uv = vec2(0.5, 0.5f) + 0.5f * vDeviceReflection;
+
+	standard_uv = (vertex.xy+1.0f)/2.0f;
 }

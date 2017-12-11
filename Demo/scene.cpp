@@ -5,7 +5,8 @@
 #include "scene.h"
 #include <string>
 #include <sstream>
-#include <math.h>
+#include <ctgmath>
+#include <cmath>
 #include <iostream>
 #include "CGJengine.h"
 #include "shaders.h"
@@ -179,7 +180,7 @@ void setupScene(){
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
     auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, helperFBO->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
-                                                                       Vec3(0.0f, 0.7f, 6.1f), 0.002, 0.0f);
+                                                                       Vec3(0.0f, 0.3f, 6.4f), 0.002, 0.0f);
     hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-12f));
     hazeEmitter->setParticleLifeDecayRate(5e-5f);
     hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
@@ -191,17 +192,29 @@ void setupScene(){
 
     /*Place the heat reflection (Car exhaust)*/
     auto reflectionTexture = ResourceManager::Factory::createTexture("res/heatReflection.png");
-    auto reflectionNode = new SceneNode("reflection", quad, rm->getShader(HEAT_SPOT_REFLECTION_SHADER));
+    auto mirrorShader = rm->getShader(HEAT_SPOT_REFLECTION_SHADER);
+    auto reflectionNode = new SceneNode("reflection", quad, mirrorShader);
     reflectionNode->setProcessingLevel(REFLECTIONS_LEVEL);
-    reflectionNode->translate(0.0f, -0.1f, 6.0f);
+    reflectionNode->translate(0.0f, -0.1f, 6.2f);
     reflectionNode->rotate(1.0f, 0.0f, 0.0f, -PI/2.0f);
-    reflectionNode->scale(1.7f, 1.7f, 1.0f);
+    reflectionNode->scale(2.0f, 2.0f, 1.0f);
+    GLint reflectedViewLoc = mirrorShader->getUniformLocation("reflectionView");
+    GLint timeLoc = mirrorShader->getUniformLocation("time");
     reflectionNode->setPreDraw([=](){
         glActiveTexture(GL_TEXTURE0);
         reflectionTexture->bind();
         glActiveTexture(GL_TEXTURE1);
         reflectionFBO->bindTexture();
         glActiveTexture(GL_TEXTURE0);
+        Mat4 rView = scene->getCamera()->getReflectedViewMatrix();
+        glUniformMatrix4fv(reflectedViewLoc, 1, GL_FALSE, glm::value_ptr(rView));
+    });
+    reflectionNode->setUpdateCallback([=](int dt){
+        static float time = 0.0f;
+        time = time + dt/20000.0f;
+        time = time - (int)time;
+        mirrorShader->use();
+        glUniform1f(timeLoc,time);
     });
 
     carNode->addChild(reflectionNode);
