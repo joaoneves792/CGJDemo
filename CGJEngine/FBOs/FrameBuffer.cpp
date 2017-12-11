@@ -90,5 +90,6 @@ FrameBuffer::~FrameBuffer() {
 
 void FrameBuffer::resize(int x, int y) {
     destroy();
+    _texture = new Texture();
     initializeNewFrameBuffer(x, y);
 }

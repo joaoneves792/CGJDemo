@@ -23,7 +23,8 @@ void setupScene(){
     Mesh* quad = new QuadMesh();
     rm->addMesh("quad", quad);
 
-    auto mainFBO = ResourceManager::Factory::createMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
+    /*Create the framebuffers*/
+    ResourceManager::Factory::createMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
     auto helperFBO = ResourceManager::Factory::createTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
     auto reflectionFBO = ResourceManager::Factory::createFrameBuffer(REFLECTION_FBO, REFLECTION_RESOLUTION, REFLECTION_RESOLUTION);
 
@@ -41,12 +42,7 @@ void setupScene(){
     GLint emissiveLoc = glGetUniformLocation(h3dShader->getShader(), "emissive");
     GLint shininessLoc = glGetUniformLocation(h3dShader->getShader(), "shininess");
     GLint transparencyLoc = glGetUniformLocation(h3dShader->getShader(), "transparency");
-    GLint textureLoc = glGetUniformLocation(h3dShader->getShader(), "texture_sampler");
-    GLint environmentLoc = glGetUniformLocation(h3dShader->getShader(), "environment");
     auto materialUploadCallback = [=](float* ambient, float* diffuse, float* specular, float* emissive, float shininess, float transparency) {
-        glUniform1i(textureLoc, TEXTURE_SLOT);
-        glUniform1i(environmentLoc, ENVIRONMENT_SLOT);
-
         glUniform4fv(ambientLoc, 1, ambient);
         glUniform4fv(diffuseLoc, 1, diffuse);
         glUniform4fv(specularLoc, 1, specular);
@@ -56,19 +52,57 @@ void setupScene(){
         glUniform1f(transparencyLoc, 1 - (transparency));
     };
 
+    /*Create environment map*/
+    auto environment = ResourceManager::Factory::createCubeMap(ENVIRONMENT,
+                                                               "res/environment/right.png", "res/environment/left.png",
+                                                               "res/environment/top.png", "res/environment/bottom.png",
+                                                               "res/environment/back.png", "res/environment/front.png");
+    auto bindEnvironment = [=](){
+        glActiveTexture(GL_TEXTURE0+ENVIRONMENT_SLOT);
+        environment->bindCubeMap();
+        glActiveTexture(GL_TEXTURE0);
+    };
+
+    /*Place the sky*/
+    auto skyCubeMap = ResourceManager::Factory::createCubeMap(SKY_CUBE_MAP,
+                                                              "res/skybox/posx.jpg", "res/skybox/negx.jpg",
+                                                              "res/skybox/posy.jpg", "res/skybox/negy.jpg",
+                                                              "res/skybox/posz.jpg", "res/skybox/negz.jpg");
+    auto skyShader = rm->getShader(SKY_SHADER);
+    skyShader->use();
+    glUniform1f(skyShader->getUniformLocation("brightness"), 1.0f);
+    auto sky = new SceneNode(SKY, rm->getMesh(SKY), skyShader);
+    auto bindSkyEnvironment = [=](){
+        glActiveTexture(GL_TEXTURE0+ENVIRONMENT_SLOT);
+        skyCubeMap->bindCubeMap();
+        glActiveTexture(GL_TEXTURE0);
+    };
+    sky->setPreDraw([=](){
+        skyCubeMap->bindCubeMap();
+    });
+    root->addChild(sky);
 
     /*Place the road*/
     H3DMesh* roadModel = (H3DMesh*)rm->getMesh(ROAD);
+    H3DMesh* asphaltModel = (H3DMesh*)rm->getMesh(ASPHALT);
+    Shader* asphaltShader = rm->getShader(ASPHALT_SHADER);
     roadModel->setMaterialUploadCallback(materialUploadCallback);
     auto road = new SceneNode(ROAD);
     root->addChild(road);
     int li = 0;
     for(int i=0; i<ROAD_SEGMENTS; i++){
-        std::stringstream name;
+        std::stringstream name, sceneryName, asphaltName;
         name << ROAD << i;
-        auto roadPart = new SceneNode(name.str(), roadModel, h3dShader);
+        sceneryName << ROAD << "scenery" << i;
+        asphaltName << ASPHALT << i;
+        auto roadPart = new SceneNode(name.str());
+        auto roadScenery = new SceneNode(sceneryName.str(), roadModel, h3dShader);
+        auto asphalt = new SceneNode(asphaltName.str(), asphaltModel, asphaltShader);
+        asphalt->setPreDraw(bindSkyEnvironment);
         roadPart->translate(0.0f, 0.0f, ROAD_LENGTH*(i-ROAD_SEGMENTS/2));
         road->addChild(roadPart);
+        roadPart->addChild(roadScenery);
+        roadPart->addChild(asphalt);
 
         if(std::abs(i-ROAD_SEGMENTS/2) <= ACTIVE_LAMPS/2) {
             /*Create the lights*/
@@ -85,19 +119,6 @@ void setupScene(){
         }
     }
 
-    /*Place the sky*/
-    auto skyCubeMap = ResourceManager::Factory::createCubeMap(SKY_CUBE_MAP,
-                                                              "res/skybox/posx.jpg", "res/skybox/negx.jpg",
-                                                              "res/skybox/posy.jpg", "res/skybox/negy.jpg",
-                                                              "res/skybox/posz.jpg", "res/skybox/negz.jpg");
-    auto skyShader = rm->getShader(SKY_SHADER);
-    skyShader->use();
-    glUniform1f(skyShader->getUniformLocation("brightness"), 1.0f);
-    auto sky = new SceneNode(SKY, rm->getMesh(SKY), skyShader);
-    sky->setPreDraw([=](){
-       skyCubeMap->bindCubeMap();
-    });
-    root->addChild(sky);
 
 
     /*Place the sun*/
@@ -108,16 +129,6 @@ void setupScene(){
     root->addChild(sun);
     LightsManager::getInstance()->setEnabled(sun, true);
 
-    /*Create environment map*/
-    auto environment = ResourceManager::Factory::createCubeMap(ENVIRONMENT,
-                                                               "res/environment/right.png", "res/environment/left.png",
-                                                               "res/environment/top.png", "res/environment/bottom.png",
-                                                               "res/environment/back.png", "res/environment/front.png");
-    auto bindEnvironment = [=](){
-        glActiveTexture(GL_TEXTURE0+ENVIRONMENT_SLOT);
-        environment->bindCubeMap();
-        glActiveTexture(GL_TEXTURE0);
-    };
 
     /*Place the car (should be last because of transparency on glasses)*/
     H3DMesh* carModel = (H3DMesh*)rm->getMesh(CAR);
@@ -216,7 +227,6 @@ void setupScene(){
         mirrorShader->use();
         glUniform1f(timeLoc,time);
     });
-
     carNode->addChild(reflectionNode);
 
     /*Setup HUD*/

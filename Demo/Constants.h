@@ -10,6 +10,7 @@
 #define CAR "car"
 #define WHEEL "wheel"
 #define ROAD "road"
+#define ASPHALT "asphalt"
 #define SKY "sky"
 
 /*Textures*/
@@ -20,6 +21,7 @@
 
 /*Shaders*/
 #define H3D_SHADER "h3d"
+#define ASPHALT_SHADER "asphalt"
 #define SKY_SHADER "sky"
 #define FINAL_SHADER "twoDShader"
 #define QUAD_SHADER "quadShader"

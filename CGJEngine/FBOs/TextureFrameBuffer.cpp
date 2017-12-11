@@ -93,5 +93,7 @@ Texture* TextureFrameBuffer::getTexture() {
 }
 
 TextureFrameBuffer::~TextureFrameBuffer() {
-    destroy();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    /*Parent destructor should take care of the rest*/
 }

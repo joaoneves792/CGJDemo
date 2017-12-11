@@ -114,5 +114,8 @@ void MSFrameBuffer::blit(TextureFrameBuffer *texFBO) {
 }
 
 MSFrameBuffer::~MSFrameBuffer() {
-    destroy();
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+    /*Parent destructor should take care of the rest*/
 }
