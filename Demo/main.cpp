@@ -63,6 +63,7 @@ void display()
 	mainFBO->blit(helperFBO);
 	helperFBO->bindTexture();
 	mainFBO->bind();
+    scene->draw(HEAT_HAZE_LEVEL);
 	particlePool->draw(HEAT_HAZE_LEVEL);
 
 	/*Blit the final result to the window fbo and draw the HUD*/

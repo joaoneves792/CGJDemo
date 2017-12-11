@@ -25,11 +25,11 @@
 #define SKY_SHADER "sky"
 #define FINAL_SHADER "twoDShader"
 #define QUAD_SHADER "quadShader"
-#define HEAT_SHADER "heat"
-#define HEAT_REFLECTION_SHADER "heatReflection"
 #define SMOKE_SHADER "smoke"
 #define FIRE_SHADER "fire"
+#define HEAT_SHADER "heat"
 #define HEAT_SPOT_REFLECTION_SHADER "heatSpotShader"
+#define HEAT_DISTANCE_SHADER "heatDistance"
 
 /*Scenes*/
 #define SCENE "main"
@@ -75,10 +75,13 @@
 #define FRWHEEL "fr"
 #define FLWHEEL "fl"
 #define REFLECTION_SPOT "reflectionSpot"
+#define DISTANCE_HEAT "distanceheat"
+#define FRONT_HEAT "frontheat"
+#define REAR_HEAT "rearheat"
 
 /*Misc constants*/
 #define PI 3.14159f
-#define ROAD_SEGMENTS 22
+#define ROAD_SEGMENTS 40
 #define ACTIVE_LAMPS 12
 #define ROAD_LENGTH 60.0f
 #define HEAT_HAZE_LEVEL 10
@@ -86,6 +89,7 @@
 #define GROUND_LEVEL 0.0f
 #define ROAD_LEVEL 2
 #define REFLECTION_RESOLUTION 512
+#define HEAT_HAZE_DISTANCE 300.0f
 
 
 

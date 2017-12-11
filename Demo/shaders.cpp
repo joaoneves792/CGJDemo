@@ -145,16 +145,13 @@ void loadShaders(){
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
     });
 
-    /*Heat shader*/
-    auto heatReflectionShader = ResourceManager::Factory::createShader(HEAT_REFLECTION_SHADER, "res/shaders/hazevReflection.glsl", "res/shaders/hazefReflection.glsl");
-    heatReflectionShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
-    heatReflectionShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
-    heatReflectionShader->link();
-    ViewLocation = heatReflectionShader->getUniformLocation("View");
-    ProjectionLocation = heatReflectionShader->getUniformLocation("Projection");
-    heatReflectionShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
-        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
+    /*Distant Heat shader*/
+    auto distanceShader = ResourceManager::Factory::createShader(HEAT_DISTANCE_SHADER, "res/shaders/distanceHazev.glsl", "res/shaders/distanceHazef.glsl");
+    distanceShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    distanceShader->link();
+    MVPLocation = distanceShader->getUniformLocation("MVP");
+    distanceShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
     /*Heat reflection shader*/

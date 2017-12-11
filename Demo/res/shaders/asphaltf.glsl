@@ -25,7 +25,6 @@ uniform vec4 lightAttenuation[MAX_LIGHTS]; //x->constant y->linear z->quadratic 
 
 
 void main() {
-	//Material properties
 	vec3 matDiffuse = (texture(texture_sampler, texture_coord_from_vshader).rgb);
 
 	out_color.rgb = vec3(0,0,0);//start with black;
@@ -62,7 +61,6 @@ void main() {
     N = normalize(normal_worldspace);
     E = normalize(eyeDirection_worldspace);
     vec3 R = reflect(E, N);
-    float angleCoef = 1.0f - abs(dot(E, N));
     float distanceCoef = clamp(abs(position_worldspace.z)/600.0f ,0.0f, 1.0f);
     distanceCoef *= smoothstep(0.1, 0.5, distanceCoef);
     vec3 ambient = texture(environment, R).rgb*distanceCoef;

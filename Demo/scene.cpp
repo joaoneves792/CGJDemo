@@ -30,7 +30,7 @@ void setupScene(){
 
     //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
     auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat());
-    camera->perspective((float)PI/4.0f, 0, 0.1f, 550.0f);
+    camera->perspective((float)PI/4.0f, 0, 0.1f, 1000.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
     root->translate(0.0f, GROUND_LEVEL, 0.0f);
 
@@ -118,8 +118,37 @@ void setupScene(){
             roadPart->addChild(lamp);
         }
     }
+    /*Quads for distance heat distortion*/
+    auto distanceHeatShader = rm->getShader(HEAT_DISTANCE_SHADER);
+    GLint timeLoc = distanceHeatShader->getUniformLocation("time");
+    auto distanceHeat = new SceneNode(DISTANCE_HEAT);
+    distanceHeat->scale(15.0f, 5.0f, 0.0f);
+    distanceHeat->translate(20.0f, 5.0f, 0.0);
+    distanceHeat->setBillboard(true);
+    distanceHeat->setUpdateCallback([=](int dt){
+        static float time = 0.0f;
+        time = time + dt/30000.0f;
+        time = time - (int)time;
+        distanceHeatShader->use();
+        glUniform1f(timeLoc,time);
+    });
+    root->addChild(distanceHeat);
 
+    auto frontHeat = new SceneNode(FRONT_HEAT, quad, distanceHeatShader);
+    frontHeat->setProcessingLevel(HEAT_HAZE_LEVEL);
+    frontHeat->translate(0.0f, 0.0f, -HEAT_HAZE_DISTANCE);
+    frontHeat->setPreDraw([=](){
+       helperFBO->bindTexture();
+    });
 
+    distanceHeat->addChild(frontHeat);
+    auto rearHeat = new SceneNode(REAR_HEAT, quad, distanceHeatShader);
+    rearHeat->setProcessingLevel(HEAT_HAZE_LEVEL);
+    rearHeat->translate(0.0f, 0.0f, HEAT_HAZE_DISTANCE);
+    rearHeat->setPreDraw([=](){
+        helperFBO->bindTexture();
+    });
+    distanceHeat->addChild(rearHeat);
 
     /*Place the sun*/
     auto sun = ResourceManager::Factory::createLight(SUN);
@@ -192,7 +221,7 @@ void setupScene(){
     auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, helperFBO->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
                                                                        Vec3(0.0f, 0.3f, 6.4f), 0.002, 0.0f);
-    hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-12f));
+    hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-8f));
     hazeEmitter->setParticleLifeDecayRate(5e-5f);
     hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
     hazeEmitter->emmit();
@@ -206,11 +235,11 @@ void setupScene(){
     auto mirrorShader = rm->getShader(HEAT_SPOT_REFLECTION_SHADER);
     auto reflectionNode = new SceneNode("reflection", quad, mirrorShader);
     reflectionNode->setProcessingLevel(REFLECTIONS_LEVEL);
-    reflectionNode->translate(0.0f, -0.1f, 6.2f);
+    reflectionNode->translate(0.0f, -0.1f, 6.0f);
     reflectionNode->rotate(1.0f, 0.0f, 0.0f, -PI/2.0f);
-    reflectionNode->scale(2.0f, 2.0f, 1.0f);
+    reflectionNode->scale(2.0f, 3.0f, 1.0f);
     GLint reflectedViewLoc = mirrorShader->getUniformLocation("reflectionView");
-    GLint timeLoc = mirrorShader->getUniformLocation("time");
+    timeLoc = mirrorShader->getUniformLocation("time");
     reflectionNode->setPreDraw([=](){
         glActiveTexture(GL_TEXTURE0);
         reflectionTexture->bind();
