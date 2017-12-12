@@ -261,7 +261,6 @@ void setupScene(){
     /*Setup HUD*/
     auto viewportCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1);
     SceneNode* final = ResourceManager::Factory::createScene(HUD, viewportCamera);
-
     SceneNode* credits = new SceneNode(CREDITS, quad, ResourceManager::getInstance()->getShader(QUAD_SHADER));
     auto creditsTexture = ResourceManager::Factory::createTexture("res/credits.png");
     credits->setPreDraw([=](){
@@ -270,6 +269,5 @@ void setupScene(){
     credits->scale(0.15f, 0.15f, 1.0f);
     credits->translate(0.8f, -0.9f, 0.0f);
     final->addChild(credits);
-
 }
 
