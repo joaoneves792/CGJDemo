@@ -57,9 +57,10 @@ void main() {
     timeFactor += harmonic_sin(2, time, 0.0f);
     timeFactor += harmonic_sin(4, time, 0.0f);
 
+    float coef = (1-abs(dot(normalize(eyeDirection_worldspace), vec3(0.0f, 1.0f, 0.0f))))*0.5f;
+
     vec2 map_uv = vec2(standard_uv.x, standard_uv.y - timeFactor*0.25f);
     float factor = texture(map, map_uv).r - abs(timeFactor)-0.1;
-    color.rgb = convolute(blur_kernel, mirror_uv)*factor;
-    color.a = factor;
-    //color.a = 1.0f;
+    color.rgb = convolute(blur_kernel, mirror_uv)*factor*0.5f;
+    color.a = factor*coef;
 }

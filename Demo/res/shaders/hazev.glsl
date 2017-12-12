@@ -26,7 +26,7 @@ void main() {
     up = normalize(cross(toEye, right));
 
     /*Vertex generation*/
-    float scale = clamp(2.0f + 0.5f * log(life), 0, 2);
+    float scale = clamp(3.0f + 0.5f * log(life), 0, 2);
     vec3 vPosition = (right*scale*vertex.x)+(up*scale*vertex.y);
     vec4 clip_position = Projection * View * vec4(vPosition+position, 1.0f);
 

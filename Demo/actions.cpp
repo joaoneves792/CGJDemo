@@ -89,12 +89,12 @@ void setupActions() {
         }
     });
     im->addKeyActionOnce('b', [=](){
-        static bool blackHazeParticles = false;
-        blackHazeParticles = !blackHazeParticles;
+        static int toggleHazeParticles = 0;
+        toggleHazeParticles = (toggleHazeParticles+1)%4;
         auto shader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
-        auto uniformLocation = shader->getUniformLocation("black");
+        auto uniformLocation = shader->getUniformLocation("noise_blur_black");
         shader->use();
-        glUniform1f(uniformLocation, (float)blackHazeParticles);
+        glUniform1f(uniformLocation, (float)toggleHazeParticles);
         glUseProgram(0);
     });
 

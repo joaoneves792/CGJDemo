@@ -22,8 +22,6 @@ out vec4 color;
 #define HARMONICS_N 6
 
 #define NEXT_TEXEL_STEP 0.0025f
-#define BLUR_LINE_WIDTH 0.1f
-
 
 float blur_kernel[9] = float[](0.05f, 0.15f, 0.05f,
                                0.15f, 0.15f, 0.15f,
@@ -51,7 +49,7 @@ vec3 convolute(float[9] kernel, vec2 pos){
 }
 
 float harmonic_sin(int i, float a, float f){
-         return (AMPLITUDE*sin(pow(HARMONICS_B, i)*FREQUENCY*a + f*PHASE))/pow(HARMONICS_A, i);
+         return (AMPLITUDE*sin(pow(HARMONICS_B, i)*FREQUENCY*a + PHASE*f))/pow(HARMONICS_A, i);
 }
 
 void main() {

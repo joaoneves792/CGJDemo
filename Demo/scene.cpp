@@ -219,9 +219,9 @@ void setupScene(){
     /*Heat haze*/
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
     auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, helperFBO->getTexture(),
-                                                                       Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 0.0f, 3e-5f),
+                                                                       Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 3e-5f, 3e-5f),
                                                                        Vec3(0.0f, 0.3f, 6.4f), 0.002, 0.0f);
-    hazeEmitter->setRandomAcceleration(Vec3(4e-8f, 3e-10f, 1e-8f));
+    hazeEmitter->setRandomAcceleration(Vec3(2e-8f, 3e-10f, 1e-8f));
     hazeEmitter->setParticleLifeDecayRate(5e-5f);
     hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
     hazeEmitter->emmit();
@@ -235,9 +235,9 @@ void setupScene(){
     auto mirrorShader = rm->getShader(HEAT_SPOT_REFLECTION_SHADER);
     auto reflectionNode = new SceneNode("reflection", quad, mirrorShader);
     reflectionNode->setProcessingLevel(REFLECTIONS_LEVEL);
-    reflectionNode->translate(0.0f, -0.1f, 6.0f);
+    reflectionNode->translate(0.0f, -0.1f, 6.5f);
     reflectionNode->rotate(1.0f, 0.0f, 0.0f, -PI/2.0f);
-    reflectionNode->scale(2.0f, 3.0f, 1.0f);
+    reflectionNode->scale(2.0f, 3.2f, 1.0f);
     GLint reflectedViewLoc = mirrorShader->getUniformLocation("reflectionView");
     timeLoc = mirrorShader->getUniformLocation("time");
     reflectionNode->setPreDraw([=](){
