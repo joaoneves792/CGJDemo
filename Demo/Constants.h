@@ -18,6 +18,7 @@
 #define ENVIRONMENT "environment"
 #define HAZE_ENVIRONMENT "hazeenvironment"
 #define CREDITS "credits"
+#define NOISE "noise"
 
 /*Shaders*/
 #define H3D_SHADER "h3d"

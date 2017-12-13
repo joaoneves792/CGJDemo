@@ -61,7 +61,6 @@ void display()
 
 	/*Copy fbo to texture and use the copy for post-processing*/
 	mainFBO->blit(helperFBO);
-	helperFBO->bindTexture();
 	mainFBO->bind();
     scene->draw(HEAT_HAZE_LEVEL);
 	particlePool->draw(HEAT_HAZE_LEVEL);

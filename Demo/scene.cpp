@@ -217,6 +217,7 @@ void setupScene(){
     carNode->addChild(exhaustRight);
 
     /*Heat haze*/
+    auto noise  = ResourceManager::Factory::createTexture("res/noise1.png");
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
     auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, helperFBO->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 3e-5f, 3e-5f),
@@ -225,8 +226,15 @@ void setupScene(){
     hazeEmitter->setParticleLifeDecayRate(5e-5f);
     hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
     hazeEmitter->emmit();
-    carNode->addChild(hazeEmitter);
+    hazeEmitter->setPreDraw([=](){
+        glActiveTexture(GL_TEXTURE0);
+        helperFBO->bindTexture();
+        glActiveTexture(GL_TEXTURE1);
+        noise->bind();
+        glActiveTexture(GL_TEXTURE0);
+    });
 
+        carNode->addChild(hazeEmitter);
     for(int i=0;i<1000;i++)
         hazeEmitter->update(20); //Hack to get things going faster
 
