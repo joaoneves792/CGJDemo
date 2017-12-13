@@ -115,15 +115,6 @@ void loadShaders(){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * rotOnlyMV));
     });
 
-    /*2D shader*/
-    auto twoDShader = ResourceManager::Factory::createShader(FINAL_SHADER, "res/shaders/2Dv.glsl", "res/shaders/2Df.glsl");
-    twoDShader->setAttribLocation("inPosition", VERTICES__ATTR);
-    twoDShader->link();
-    MVPLocation = twoDShader->getUniformLocation("MVP");
-    twoDShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
-    });
-
     /*Quad shader*/
     auto quadShader = ResourceManager::Factory::createShader(QUAD_SHADER, "res/shaders/quadv.glsl", "res/shaders/2Df.glsl");
     quadShader->setAttribLocation("inPosition", VERTICES__ATTR);
@@ -151,9 +142,14 @@ void loadShaders(){
     });
 
     /*Distant Heat shader*/
-    auto distanceShader = ResourceManager::Factory::createShader(HEAT_DISTANCE_SHADER, "res/shaders/distanceHazev.glsl", "res/shaders/distanceHazef.glsl");
+    auto distanceShader = ResourceManager::Factory::createShader(HEAT_DISTANCE_SHADER, "res/shaders/distanceHazev.glsl", "res/shaders/distanceHazef5.glsl");
     distanceShader->setAttribLocation("inPosition", VERTICES__ATTR);
     distanceShader->link();
+    distanceShader->use();
+    renderderTextureLoc = distanceShader->getUniformLocation("renderedTexture");
+    noiseLoc = distanceShader->getUniformLocation("noiseTexture");
+    glUniform1i(renderderTextureLoc, 0);
+    glUniform1i(noiseLoc, 1);
     MVPLocation = distanceShader->getUniformLocation("MVP");
     distanceShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
@@ -163,30 +159,18 @@ void loadShaders(){
     auto heatRShader = ResourceManager::Factory::createShader(HEAT_SPOT_REFLECTION_SHADER, "res/shaders/heatReflectionV.glsl", "res/shaders/heatReflectionF.glsl");
     heatRShader->setAttribLocation("vertex", VERTICES__ATTR);
     heatRShader->link();
+    heatRShader->use();
     ModelLocation = heatRShader->getUniformLocation("Model");
     ViewLocation = heatRShader->getUniformLocation("View");
     ProjectionLocation = heatRShader->getUniformLocation("Projection");
     textureLoc = glGetUniformLocation(heatRShader->getShader(), "map");
     GLint mirrorLoc = glGetUniformLocation(heatRShader->getShader(), "mirror");
-    heatRShader->use();
     glUniform1i(textureLoc, 0);
     glUniform1i(mirrorLoc, 1);
     heatRShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, glm::value_ptr(M));
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
         glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
-    });
-
-    /*Smoke shader*/
-    auto smokeShader = ResourceManager::Factory::createShader(SMOKE_SHADER, "res/shaders/smokev.glsl", "res/shaders/particlef.glsl");
-    smokeShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
-    smokeShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
-    smokeShader->link();
-    ViewLocation = smokeShader->getUniformLocation("View");
-    ProjectionLocation = smokeShader->getUniformLocation("Projection");
-    smokeShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
-        glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
-        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
     });
 
     /*Fire shader*/

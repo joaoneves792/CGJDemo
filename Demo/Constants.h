@@ -75,10 +75,11 @@
 #define RLWHEEL "rl"
 #define FRWHEEL "fr"
 #define FLWHEEL "fl"
-#define REFLECTION_SPOT "reflectionSpot"
+#define EXHAUST_REFLECTION "reflection"
 #define DISTANCE_HEAT "distanceheat"
 #define FRONT_HEAT "frontheat"
 #define REAR_HEAT "rearheat"
+
 
 /*Misc constants*/
 #define PI 3.14159f

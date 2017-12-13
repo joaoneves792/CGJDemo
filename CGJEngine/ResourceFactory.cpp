@@ -64,8 +64,8 @@ SphereCamera* ResourceManager::Factory::createSphereCamera(const std::string &na
 }
 
 HUDCamera* ResourceManager::Factory::createHUDCamera(const std::string &name, float left, float right, float top,
-                                                     float bottom, float near, float far) {
-    auto camera = new HUDCamera(left, right, top, bottom, near, far);
+                                                     float bottom, float near, float far, bool scale) {
+    auto camera = new HUDCamera(left, right, top, bottom, near, far, scale);
     ResourceManager::getInstance()->addCamera(name, camera);
     return camera;
 }

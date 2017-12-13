@@ -1,10 +1,12 @@
 #version 330 core
 
 in vec2 uv;
-in vec3 position_modelspace;
+in vec2 position_modelspace;
+in float life;
 
 uniform sampler2D renderedTexture;
-uniform float time;
+uniform sampler2D noiseTexture;
+uniform float noise_blur_black;
 
 out vec4 color;
 
@@ -18,16 +20,17 @@ out vec4 color;
 
 #define HARMONICS_A 1.2f
 #define HARMONICS_B 1.5f
-#define HARMONICS_N 6
+#define HARMONICS_N 4
 
 #define NEXT_TEXEL_STEP 0.0025f
-#define BLUR_LINE_WIDTH 0.1f
 
+#define NOISE_FREQUENCY 64.0f
+#define NOISE_PERIOD  40.0f
+#define NOISE_AMPLITUDE 0.7f
 
 float blur_kernel[9] = float[](0.05f, 0.15f, 0.05f,
                                0.15f, 0.15f, 0.15f,
                                0.05f, 0.15f, 0.05f);
-
 
 vec3 convolute(float[9] kernel, vec2 pos){
     vec3 t[9] = vec3[](
@@ -50,19 +53,32 @@ vec3 convolute(float[9] kernel, vec2 pos){
 }
 
 float harmonic_sin(int i, float a, float f){
-         return (AMPLITUDE*sin(pow(HARMONICS_B, i)*FREQUENCY*a + f*PHASE))/pow(HARMONICS_A, i);
+         return (AMPLITUDE*sin(pow(HARMONICS_B, i)*FREQUENCY*a + PHASE*f))/pow(HARMONICS_A, i);
 }
 
 void main() {
-    vec2 pos = position_modelspace.xy;
-    vec2 noise = vec2(0.0f, 0.0f);
+    vec2 pos = position_modelspace;
+    vec2 wave_offset = vec2(0.0f, 0.0f);
     for(int i=0; i<HARMONICS_N; i++){
-        float hs = harmonic_sin(i, pos.x, time);
-        noise.x += X_AMPLITUDE*hs;
-        noise.y += Y_AMPLITUDE*hs;
+        float hs = harmonic_sin(i, pos.x, life);
+        wave_offset.x += X_AMPLITUDE*hs;
+        wave_offset.y += Y_AMPLITUDE*hs;
     }
 
-    color.rgb = convolute(blur_kernel, uv+noise);
-    //color.rgb = vec3(0.0f, 0.0f, 0.0f);
+    float noise = texture(noiseTexture, vec2(pos.x+2*life, pos.y)).r-0.5f;
+    noise *= 60;
+    vec2 noise_offset = vec2(cos(noise), sin(noise)) * NOISE_AMPLITUDE * NEXT_TEXEL_STEP;
+    vec3 noise_component = texture(renderedTexture, uv+wave_offset+noise_offset).rgb;
+    vec3 blur_component = convolute(blur_kernel, uv+wave_offset);
+    if(noise_blur_black == 0.0){
+        color.rgb = 0.6f*noise_component+0.4*blur_component;
+    }else if(noise_blur_black == 1.0f){
+        color.rgb = noise_component;
+    }else if(noise_blur_black == 2.0f){
+        color.rgb = blur_component;
+    }else{
+            color.rgb = vec3(0.0f, 0.0f, 0.0f);
+    }
+
     color.a = 1.0f-smoothstep(0.7, 1.0f, length(pos));
 }

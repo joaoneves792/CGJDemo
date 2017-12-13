@@ -16,6 +16,8 @@ out vec4 out_color;
 uniform sampler2D texture_sampler;
 uniform samplerCube environment;
 
+uniform float night;
+
 /*Lights Properties*/
 uniform vec3 lightPosition_worldspace[MAX_LIGHTS];
 uniform int lightsEnabled[MAX_LIGHTS];
@@ -58,13 +60,17 @@ void main() {
         out_color.rgb += lightContribution;
 	}
 
-    N = normalize(normal_worldspace);
-    E = normalize(eyeDirection_worldspace);
-    vec3 R = reflect(E, N);
-    float distanceCoef = clamp(abs(position_worldspace.z)/600.0f ,0.0f, 1.0f);
-    distanceCoef *= smoothstep(0.1, 0.5, distanceCoef);
-    vec3 ambient = texture(environment, R).rgb*distanceCoef;
+    if(night < 1.0f){
+        N = normalize(normal_worldspace);
+        E = normalize(eyeDirection_worldspace);
+        vec3 R = reflect(E, N);
+        float distanceCoef = clamp(abs(position_worldspace.z)/600.0f ,0.0f, 1.0f);
+        distanceCoef *= smoothstep(0.1, 0.5, distanceCoef);
+        vec3 ambient = texture(environment, R).rgb*distanceCoef;
 
-    out_color.rgb += ambient.rgb+matDiffuse*0.1f;
+        out_color.rgb += ambient.rgb+matDiffuse*0.1f;
+    }else{
+        out_color.rgb += matDiffuse*0.1;
+    }
     out_color.a = 1.0f;
 }

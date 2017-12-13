@@ -34,7 +34,7 @@ void InputManager::update(int value) {
         return;
 
     //Call the callbacks
-    if(im->_mouseMovementCallback != nullptr && im->_mouseDirty) {
+    if(im->_mouseMovementCallback != nullptr && im->_mouseDirty && im->_grabMouse) {
         im->_mouseMovementCallback(im->_mouseX, im->_mouseY, timeDelta);
         im->_mouseDirty = false;
     }
@@ -107,5 +107,7 @@ void InputManager::setMouseAction(std::function<void(int x, int y, int dt)> call
     _mouseMovementCallback = callback;
 }
 
-
+void InputManager::grabMouse(bool grab) {
+    _grabMouse = grab;
+}
 

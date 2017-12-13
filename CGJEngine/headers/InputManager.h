@@ -24,6 +24,7 @@ private:
 
     int _mouseX, _mouseY;
     bool _mouseDirty = true;
+    bool _grabMouse = true;
 
     std::unordered_map<unsigned char, std::function<void(int dt)>> _keyCallbacks;//Call it until key is up
     std::unordered_map<int, std::function<void(int dt)>> _specialKeyCallbacks;
@@ -59,6 +60,7 @@ public:
     void specialKeyDown(int key);
     void specialKeyUp(int key);
     void mouseMovement(int x, int y);
+    void grabMouse(bool grab);
 
     static void update(int value);
 };

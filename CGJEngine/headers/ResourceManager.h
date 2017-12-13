@@ -47,7 +47,7 @@ public:
         static FreeCamera* createFreeCamera(const std::string& name, Vec3 position, Quat orientation);
         static SphereCamera* createSphereCamera(const std::string& name, float distance, Vec3 center, Quat orientation);
         static HUDCamera* createHUDCamera(const std::string& name,
-                                          float left, float right, float top, float bottom, float near, float far);
+                                          float left, float right, float top, float bottom, float near, float far, bool scale);
         static ParticlePool* createParticlePool(const std::string& name, int particleCount, SceneGraph* scene);
         static ParticleEmitterNode* createParticleEmmiter(const std::string& name, ParticlePool* pool,
                                                           Shader* shader, Texture* texture, Vec3 acceleration,

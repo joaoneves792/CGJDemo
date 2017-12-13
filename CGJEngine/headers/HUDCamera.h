@@ -9,8 +9,11 @@
 #include "glm_wrapper.h"
 
 class HUDCamera : public Camera{
+private:
+    float _left, _right, _top, _bottom;
+    bool _scale;
 public:
-    HUDCamera(float left, float right, float top, float bottom, float near, float far);
+    HUDCamera(float left, float right, float top, float bottom, float near, float far, bool scale);
     virtual Mat4 getMatrix();
     virtual Mat4 produceViewMatrix();
     virtual void resize(int x, int y);

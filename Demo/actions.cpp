@@ -28,6 +28,16 @@ void setupActions() {
         scene->getCamera()->changeOrientation(deltaX*cameraRate, deltaY*cameraRate, 0.0f);
     });
 
+    im->addKeyActionOnce('g', [=](){
+        static bool grabMouse = true;
+        grabMouse = !grabMouse;
+        im->grabMouse(grabMouse);
+        if(grabMouse)
+            glutSetCursor(GLUT_CURSOR_NONE);
+        else
+            glutSetCursor(GLUT_CURSOR_RIGHT_ARROW);
+    });
+
     im->addKeyAction('w', [=](int timeDelta){
         scene->getCamera()->move(0.0f, 0.0f, -(timeDelta * movementRate));
     });
@@ -63,7 +73,9 @@ void setupActions() {
         night = !night;
         auto lm = LightsManager::getInstance();
         auto skyShader = ResourceManager::getInstance()->getShader(SKY_SHADER);
+        auto asphaltShader = ResourceManager::getInstance()->getShader(ASPHALT_SHADER);
         GLint brightnessLoc = skyShader->getUniformLocation("brightness");
+        GLint asphaltNightLoc = asphaltShader->getUniformLocation("night");
         if(night){
             for(int i=0; i<ACTIVE_LAMPS; i++) {
                 std::stringstream lightName;
@@ -75,6 +87,10 @@ void setupActions() {
             lm->setEnabled(l, false);
             skyShader->use();
             glUniform1f(brightnessLoc, 0.5f);
+            asphaltShader->use();
+            glUniform1f(asphaltNightLoc, 1.0f);
+            scene->findNode(DISTANCE_HEAT)->hidden(true);
+            scene->findNode(EXHAUST_REFLECTION)->hidden(true);
         }else {
             for(int i=0; i<ACTIVE_LAMPS; i++) {
                 std::stringstream lightName;
@@ -86,6 +102,10 @@ void setupActions() {
             lm->setEnabled(l, true);
             skyShader->use();
             glUniform1f(brightnessLoc, 1.0f);
+            asphaltShader->use();
+            glUniform1f(asphaltNightLoc, 0.0f);
+            scene->findNode(DISTANCE_HEAT)->hidden(false);
+            scene->findNode(EXHAUST_REFLECTION)->hidden(false);
         }
     });
     im->addKeyActionOnce('b', [=](){

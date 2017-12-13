@@ -118,37 +118,6 @@ void setupScene(){
             roadPart->addChild(lamp);
         }
     }
-    /*Quads for distance heat distortion*/
-    auto distanceHeatShader = rm->getShader(HEAT_DISTANCE_SHADER);
-    GLint timeLoc = distanceHeatShader->getUniformLocation("time");
-    auto distanceHeat = new SceneNode(DISTANCE_HEAT);
-    distanceHeat->scale(15.0f, 5.0f, 0.0f);
-    distanceHeat->translate(20.0f, 5.0f, 0.0);
-    distanceHeat->setBillboard(true);
-    distanceHeat->setUpdateCallback([=](int dt){
-        static float time = 0.0f;
-        time = time + dt/30000.0f;
-        time = time - (int)time;
-        distanceHeatShader->use();
-        glUniform1f(timeLoc,time);
-    });
-    root->addChild(distanceHeat);
-
-    auto frontHeat = new SceneNode(FRONT_HEAT, quad, distanceHeatShader);
-    frontHeat->setProcessingLevel(HEAT_HAZE_LEVEL);
-    frontHeat->translate(0.0f, 0.0f, -HEAT_HAZE_DISTANCE);
-    frontHeat->setPreDraw([=](){
-       helperFBO->bindTexture();
-    });
-
-    distanceHeat->addChild(frontHeat);
-    auto rearHeat = new SceneNode(REAR_HEAT, quad, distanceHeatShader);
-    rearHeat->setProcessingLevel(HEAT_HAZE_LEVEL);
-    rearHeat->translate(0.0f, 0.0f, HEAT_HAZE_DISTANCE);
-    rearHeat->setPreDraw([=](){
-        helperFBO->bindTexture();
-    });
-    distanceHeat->addChild(rearHeat);
 
     /*Place the sun*/
     auto sun = ResourceManager::Factory::createLight(SUN);
@@ -238,10 +207,49 @@ void setupScene(){
     for(int i=0;i<1000;i++)
         hazeEmitter->update(20); //Hack to get things going faster
 
+    /*Quads for distance heat distortion*/
+    auto distanceHeatShader = rm->getShader(HEAT_DISTANCE_SHADER);
+    GLint timeLoc = distanceHeatShader->getUniformLocation("time");
+    auto distanceHeat = new SceneNode(DISTANCE_HEAT);
+    distanceHeat->scale(15.0f, 5.0f, 0.0f);
+    distanceHeat->translate(20.0f, 5.0f, 0.0);
+    distanceHeat->setBillboard(true);
+    distanceHeat->setUpdateCallback([=](int dt){
+        static float time = 0.0f;
+        time = time + dt/30000.0f;
+        time = time - (int)time;
+        distanceHeatShader->use();
+        glUniform1f(timeLoc,time);
+    });
+
+    root->addChild(distanceHeat);
+
+    auto frontHeat = new SceneNode(FRONT_HEAT, quad, distanceHeatShader);
+    frontHeat->setProcessingLevel(HEAT_HAZE_LEVEL);
+    frontHeat->translate(0.0f, 0.0f, -HEAT_HAZE_DISTANCE);
+    frontHeat->setPreDraw([=](){
+        glActiveTexture(GL_TEXTURE1);
+        noise->bind();
+        glActiveTexture(GL_TEXTURE0);
+        helperFBO->bindTexture();
+    });
+
+    distanceHeat->addChild(frontHeat);
+    auto rearHeat = new SceneNode(REAR_HEAT, quad, distanceHeatShader);
+    rearHeat->setProcessingLevel(HEAT_HAZE_LEVEL);
+    rearHeat->translate(0.0f, 0.0f, HEAT_HAZE_DISTANCE);
+    rearHeat->setPreDraw([=](){
+        glActiveTexture(GL_TEXTURE1);
+        noise->bind();
+        glActiveTexture(GL_TEXTURE0);
+        helperFBO->bindTexture();
+    });
+    distanceHeat->addChild(rearHeat);
+
     /*Place the heat reflection (Car exhaust)*/
     auto reflectionTexture = ResourceManager::Factory::createTexture("res/heatReflection.png");
     auto mirrorShader = rm->getShader(HEAT_SPOT_REFLECTION_SHADER);
-    auto reflectionNode = new SceneNode("reflection", quad, mirrorShader);
+    auto reflectionNode = new SceneNode(EXHAUST_REFLECTION, quad, mirrorShader);
     reflectionNode->setProcessingLevel(REFLECTIONS_LEVEL);
     reflectionNode->translate(0.0f, -0.1f, 6.5f);
     reflectionNode->rotate(1.0f, 0.0f, 0.0f, -PI/2.0f);
@@ -267,15 +275,15 @@ void setupScene(){
     carNode->addChild(reflectionNode);
 
     /*Setup HUD*/
-    auto viewportCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1);
-    SceneNode* final = ResourceManager::Factory::createScene(HUD, viewportCamera);
-    SceneNode* credits = new SceneNode(CREDITS, quad, ResourceManager::getInstance()->getShader(QUAD_SHADER));
+    auto viewportCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);
+    SceneNode* credits = ResourceManager::Factory::createScene(HUD, viewportCamera);
+    credits->setMesh(quad);
+    credits->setShader(rm->getShader(QUAD_SHADER));
     auto creditsTexture = ResourceManager::Factory::createTexture("res/credits.png");
     credits->setPreDraw([=](){
        creditsTexture->bind();
     });
-    credits->scale(0.15f, 0.15f, 1.0f);
-    credits->translate(0.8f, -0.9f, 0.0f);
-    final->addChild(credits);
+    credits->scale(-100.0f, 100.0f, -1.0f);
+    credits->translate(100.0f, 50.0f, -0.1f);
 }
 

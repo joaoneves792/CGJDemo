@@ -2,8 +2,10 @@
 
 in vec3 inPosition;
 out vec2 uv;
-out vec3 position_modelspace;
+out vec2 position_modelspace;
+out float life;
 
+uniform float time;
 uniform mat4 MVP;
 
 void main() {
@@ -12,5 +14,6 @@ void main() {
 	vec3 ndc = clip_position.xyz / clip_position.w;
 	uv = ndc.xy*0.5+0.5, 0.0f, 1.0f;
   	gl_Position = clip_position;
-  	position_modelspace = inPosition;
+  	position_modelspace = inPosition.xy;
+  	life = time;
 }
