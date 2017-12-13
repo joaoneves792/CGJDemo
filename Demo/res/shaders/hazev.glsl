@@ -32,7 +32,8 @@ void main() {
 
     /*Texcoords generation*/
 	vec3 ndc = clip_position.xyz / clip_position.w;
-	uv = clamp(ndc.xy*0.5+0.5, 0.0f, 1.0f);
+	//uv = clamp(ndc.xy, -1.0f, 1.0f)*0.5+0.5;
+	uv = ndc.xy*0.5+0.5;
 
 
   	gl_Position = clip_position;

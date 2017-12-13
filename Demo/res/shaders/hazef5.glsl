@@ -65,11 +65,17 @@ void main() {
         wave_offset.y += Y_AMPLITUDE*hs;
     }
 
+
+
     float noise = texture(noiseTexture, vec2(pos.x+life, pos.y)).r-0.5f;
     noise *= 30;
     vec2 noise_offset = vec2(cos(noise), sin(noise)) * NOISE_AMPLITUDE * NEXT_TEXEL_STEP;
-    vec3 noise_component = texture(renderedTexture, uv+wave_offset+noise_offset).rgb;
-    vec3 blur_component = convolute(blur_kernel, uv+wave_offset);
+
+    vec2 waved_uv = clamp(uv+wave_offset, NEXT_TEXEL_STEP, 1.0f-NEXT_TEXEL_STEP);
+    vec2 noise_uv = clamp(waved_uv+noise_offset, 0.0f, 1.0f);
+
+    vec3 noise_component = texture(renderedTexture, noise_uv).rgb;
+    vec3 blur_component = convolute(blur_kernel, waved_uv);
     if(noise_blur_black == 0.0){
         color.rgb = 0.6f*noise_component+0.4*blur_component;
     }else if(noise_blur_black == 1.0f){
