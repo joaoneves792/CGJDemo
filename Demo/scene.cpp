@@ -275,15 +275,16 @@ void setupScene(){
     carNode->addChild(reflectionNode);
 
     /*Setup HUD*/
-    auto viewportCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);
-    SceneNode* credits = ResourceManager::Factory::createScene(HUD, viewportCamera);
+    auto creditsCamera = ResourceManager::Factory::createHUDCamera(BOTTOM_RIGHT_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);
+    SceneNode* credits = ResourceManager::Factory::createScene(CREDITS_HUD, creditsCamera);
     credits->setMesh(quad);
     credits->setShader(rm->getShader(QUAD_SHADER));
-    auto creditsTexture = ResourceManager::Factory::createTexture("res/credits.png");
+    auto creditsTexture = ResourceManager::Factory::createTexture("res/credits2.png");
     credits->setPreDraw([=](){
        creditsTexture->bind();
     });
-    credits->scale(-100.0f, 100.0f, -1.0f);
+    credits->scale(-100.0f, 50.0f, -1.0f);
     credits->translate(100.0f, 50.0f, -0.1f);
+
 }
 

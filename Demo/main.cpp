@@ -29,7 +29,7 @@ void cleanup()
 void display()
 {
 	static SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
-	static SceneGraph* HUDScene = ResourceManager::getInstance()->getScene(HUD);
+	static SceneGraph* creditsHUD = ResourceManager::getInstance()->getScene(CREDITS_HUD);
     static MSFrameBuffer* mainFBO = (MSFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
     static TextureFrameBuffer* helperFBO = (TextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
 	static FrameBuffer* reflectionFBO = ResourceManager::getInstance()->getFrameBuffer(REFLECTION_FBO);
@@ -68,7 +68,7 @@ void display()
 	/*Blit the final result to the window fbo and draw the HUD*/
 	mainFBO->unbind();
     mainFBO->blit();
-	HUDScene->draw();
+	creditsHUD->draw();
 
 	checkOpenGLError("ERROR: Could not draw scene.");
 	glutSwapBuffers();
@@ -100,7 +100,7 @@ void reshape(int w, int h)
 	WinX = w;
 	WinY = h;
 	ResourceManager::getInstance()->getCamera(FREE_CAM)->resize(w, h);
-	ResourceManager::getInstance()->getCamera(ORTHO_CAM)->resize(w, h);
+	ResourceManager::getInstance()->getCamera(BOTTOM_RIGHT_CAM)->resize(w, h);
     ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
     ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO)->resize(w, h);
 	glViewport(0, 0, w, h);

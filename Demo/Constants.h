@@ -35,7 +35,8 @@
 /*Scenes*/
 #define SCENE "main"
 #define POST "post"
-#define HUD "hud"
+#define CREDITS_HUD "credits_hud"
+#define CONTROLS_HUD "controls_hud"
 
 /*Lights*/
 #define SUN "sun"
@@ -46,7 +47,8 @@
 /*Cameras*/
 #define FREE_CAM "freeCamera"
 #define SPHERE_CAM "sphereCamera"
-#define ORTHO_CAM "orthoCamera"
+#define BOTTOM_RIGHT_CAM "brCamera"
+#define TOP_RIGHT_CAM "trCamera"
 
 /*FBOs*/
 #define MAIN_FBO "main"
