@@ -24,9 +24,9 @@ out vec4 color;
 
 #define NEXT_TEXEL_STEP 0.0025f
 
-#define NOISE_FREQUENCY 64.0f
+#define NOISE_FREQUENCY 20.0f
 #define NOISE_PERIOD  40.0f
-#define NOISE_AMPLITUDE 0.7f
+#define NOISE_AMPLITUDE 0.9f
 
 float blur_kernel[9] = float[](0.05f, 0.15f, 0.05f,
                                0.15f, 0.15f, 0.15f,
@@ -68,8 +68,7 @@ void main() {
 
 
     float noise = texture(noiseTexture, vec2(pos.x+life, pos.y)).r-0.5f;
-    noise *= 30;
-    vec2 noise_offset = vec2(cos(noise), sin(noise)) * NOISE_AMPLITUDE * NEXT_TEXEL_STEP;
+    vec2 noise_offset = vec2(cos(noise*NOISE_FREQUENCY), sin(noise*NOISE_FREQUENCY)) * NOISE_AMPLITUDE * NEXT_TEXEL_STEP;
 
     vec2 waved_uv = clamp(uv+wave_offset, NEXT_TEXEL_STEP, 1.0f-NEXT_TEXEL_STEP);
     vec2 noise_uv = clamp(waved_uv+noise_offset, 0.0f, 1.0f);

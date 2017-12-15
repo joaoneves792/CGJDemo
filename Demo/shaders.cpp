@@ -125,7 +125,7 @@ void loadShaders(){
     });
 
     /*Heat shader*/
-    auto heatShader = ResourceManager::Factory::createShader(HEAT_SHADER, "res/shaders/hazev.glsl", "res/shaders/hazef5.glsl");
+    auto heatShader = ResourceManager::Factory::createShader(HEAT_SHADER, "res/shaders/hazev.glsl", "res/shaders/hazef6.glsl");
     heatShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
     heatShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
     heatShader->link();

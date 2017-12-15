@@ -15,8 +15,8 @@ out vec4 color;
 #define FREQUENCY PI/2.0f
 #define PHASE 100.0f
 
-#define X_AMPLITUDE 0.4f
-#define Y_AMPLITUDE 0.5f
+#define X_AMPLITUDE 0.1f
+#define Y_AMPLITUDE 0.2f
 
 #define HARMONICS_A 1.2f
 #define HARMONICS_B 1.5f
@@ -66,8 +66,7 @@ void main() {
     }
 
     float noise = texture(noiseTexture, vec2(pos.x+2*life, pos.y)).r-0.5f;
-    noise *= 60;
-    vec2 noise_offset = vec2(cos(noise), sin(noise)) * NOISE_AMPLITUDE * NEXT_TEXEL_STEP;
+    vec2 noise_offset = vec2(cos(noise*NOISE_FREQUENCY), sin(noise*NOISE_FREQUENCY)) * NOISE_AMPLITUDE * NEXT_TEXEL_STEP;
     vec3 noise_component = texture(renderedTexture, uv+wave_offset+noise_offset).rgb;
     vec3 blur_component = convolute(blur_kernel, uv+wave_offset);
     if(noise_blur_black == 0.0){
