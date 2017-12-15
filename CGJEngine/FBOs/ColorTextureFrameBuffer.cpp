@@ -3,16 +3,17 @@
 //
 
 #include <iostream>
-#include "TextureFrameBuffer.h"
+#include "ColorTextureFrameBuffer.h"
 
-TextureFrameBuffer::TextureFrameBuffer(int x, int y) {
+ColorTextureFrameBuffer::ColorTextureFrameBuffer(int x, int y) {
     _width = x;
     _height = y;
-    _texture = new Texture();
+    _colorBuffer = new Texture();
+    _depthStencilBuffer = nullptr;
     initializeNewFrameBuffer(x, y);
 }
 
-void TextureFrameBuffer::initializeNewFrameBuffer(int x, int y) {
+void ColorTextureFrameBuffer::initializeNewFrameBuffer(int x, int y) {
     _width = x;
     _height = y;
 
@@ -41,23 +42,23 @@ void TextureFrameBuffer::initializeNewFrameBuffer(int x, int y) {
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    _texture->changeTexture(texture);
+    _colorBuffer->changeTexture(texture);
 }
 
-void TextureFrameBuffer::destroy(){
+void ColorTextureFrameBuffer::destroy(){
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    _texture->destroyTexture();
-    delete _texture;
+    _colorBuffer->destroyTexture();
+    delete _colorBuffer;
     glDeleteFramebuffers(1, &_frameBuffer);
 }
 
-void TextureFrameBuffer::resize(int x, int y) {
+void ColorTextureFrameBuffer::resize(int x, int y) {
     _width = x;
     _height = y;
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    _texture->destroyTexture();
+    _colorBuffer->destroyTexture();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDeleteFramebuffers(1, &_frameBuffer);
 
@@ -81,18 +82,18 @@ void TextureFrameBuffer::resize(int x, int y) {
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    _texture->changeTexture(texture);
+    _colorBuffer->changeTexture(texture);
 }
 
-void TextureFrameBuffer::bindTexture() {
-    _texture->bind();
+void ColorTextureFrameBuffer::bindTexture() {
+    _colorBuffer->bind();
 }
 
-Texture* TextureFrameBuffer::getTexture() {
-    return _texture;
+Texture* ColorTextureFrameBuffer::getTexture() {
+    return _colorBuffer;
 }
 
-TextureFrameBuffer::~TextureFrameBuffer() {
+ColorTextureFrameBuffer::~ColorTextureFrameBuffer() {
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     /*Parent destructor should take care of the rest*/

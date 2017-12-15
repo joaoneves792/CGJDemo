@@ -10,7 +10,8 @@ MSFrameBuffer::MSFrameBuffer(int x, int y, int msaaLevel) {
     _width = x;
     _height = y;
     _samples = (GLuint)msaaLevel;
-    _texture = new Texture();
+    _colorBuffer = new Texture();
+    _depthStencilBuffer = new Texture();
     initializeNewFrameBuffer(x, y);
 }
 
@@ -21,16 +22,22 @@ void MSFrameBuffer::initializeNewFrameBuffer(int x, int y) {
     glGenFramebuffers(1, &_frameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
 
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture);
+    GLuint colorBuffer;
+    glGenTextures(1, &colorBuffer);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, colorBuffer);
     glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, GL_RGBA8, _width, _height, GL_TRUE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, texture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, colorBuffer, 0);
 
-    glGenRenderbuffers(1, &_depthStencilBuffer);
+    /*glGenRenderbuffers(1, &_depthStencilBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _depthStencilBuffer);
     glRenderbufferStorageMultisample(GL_RENDERBUFFER, _samples, GL_DEPTH24_STENCIL8, _width, _height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthStencilBuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthStencilBuffer);*/
+
+    GLuint depthBuffer;
+    glGenTextures(1, &depthBuffer);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depthBuffer);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, GL_DEPTH24_STENCIL8, _width, _height, GL_TRUE);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depthBuffer, 0);
 
     // Set the list of draw buffers.
     GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
@@ -43,61 +50,33 @@ void MSFrameBuffer::initializeNewFrameBuffer(int x, int y) {
     //glBindRenderbuffer(GL_RENDERBUFFER, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    _texture->changeTexture(texture);
+    _colorBuffer->changeTexture(colorBuffer);
+    _depthStencilBuffer->changeTexture(depthBuffer);
 }
 
 void MSFrameBuffer::resize(int x, int y) {
     _width = x;
     _height = y;
 
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-    _texture->destroyTexture();
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    glDeleteRenderbuffers(1, &_depthStencilBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDeleteFramebuffers(1, &_frameBuffer);
-
-    glGenFramebuffers(1, &_frameBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);
-
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture);
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, GL_RGBA8, _width, _height, GL_TRUE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, texture, 0);
-
-    glGenRenderbuffers(1, &_depthStencilBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, _depthStencilBuffer);
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, _samples, GL_DEPTH24_STENCIL8, _width, _height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthStencilBuffer);
-
-    // Set the list of draw buffers.
-    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-    glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-
-    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        std::cout << "Failed to create FrameBuffer" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    //glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    _texture->changeTexture(texture);
+    destroy();
+    _colorBuffer = new Texture();
+    _depthStencilBuffer = new Texture();
+    initializeNewFrameBuffer(_width, _height);
 
 }
 
 void MSFrameBuffer::destroy(){
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-    _texture->destroyTexture();
-    delete _texture;
-    glDeleteRenderbuffers(1, &_depthStencilBuffer);
+    _colorBuffer->destroyTexture();
+    delete _colorBuffer;
+    _depthStencilBuffer->destroyTexture();
+    delete _depthStencilBuffer;
     glDeleteFramebuffers(1, &_frameBuffer);
 }
 
 
-void MSFrameBuffer::blit(TextureFrameBuffer *texFBO) {
+void MSFrameBuffer::blit(ColorTextureFrameBuffer *texFBO) {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, _frameBuffer);
     glReadBuffer(GL_COLOR_ATTACHMENT0);
 
@@ -113,8 +92,21 @@ void MSFrameBuffer::blit(TextureFrameBuffer *texFBO) {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER,0);
 }
 
+void MSFrameBuffer::blitDepth(DepthTextureFrameBuffer *texFBO) {
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, _frameBuffer);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, texFBO->_frameBuffer);
+
+    //source and destination width and height must match on a MS FBO blit
+    glBlitFramebuffer(0, 0, _width, _height,
+                      0, 0, texFBO->_width, texFBO->_height,
+                      GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,0);
+
+}
+
 MSFrameBuffer::~MSFrameBuffer() {
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
     /*Parent destructor should take care of the rest*/

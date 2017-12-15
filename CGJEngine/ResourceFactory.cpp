@@ -82,8 +82,15 @@ MSFrameBuffer* ResourceManager::Factory::createMSAAFrameBuffer(const std::string
     return fbo;
 }
 
-TextureFrameBuffer* ResourceManager::Factory::createTextureFrameBuffer(const std::string &name, int x, int y) {
-    auto fbo = new TextureFrameBuffer(x, y);
+ColorTextureFrameBuffer* ResourceManager::Factory::createColorTextureFrameBuffer(const std::string &name, int x, int y) {
+    auto fbo = new ColorTextureFrameBuffer(x, y);
+    ResourceManager::getInstance()->addFrameBuffer(name, fbo);
+    return fbo;
+}
+
+DepthTextureFrameBuffer* ResourceManager::Factory::createDepthTextureFrameBuffer(const std::string &name, int x,
+                                                                                 int y) {
+    auto fbo = new DepthTextureFrameBuffer(x, y);
     ResourceManager::getInstance()->addFrameBuffer(name, fbo);
     return fbo;
 }

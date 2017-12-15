@@ -25,8 +25,9 @@ void setupScene(){
 
     /*Create the framebuffers*/
     ResourceManager::Factory::createMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
-    auto helperFBO = ResourceManager::Factory::createTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
+    auto helperFBO = ResourceManager::Factory::createColorTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
     auto reflectionFBO = ResourceManager::Factory::createFrameBuffer(REFLECTION_FBO, REFLECTION_RESOLUTION, REFLECTION_RESOLUTION);
+    auto depthFBO = ResourceManager::Factory::createDepthTextureFrameBuffer(DEPTH_FBO, WIN_X, WIN_Y);
 
     //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
     auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat());
@@ -281,10 +282,25 @@ void setupScene(){
     credits->setShader(rm->getShader(QUAD_SHADER));
     auto creditsTexture = ResourceManager::Factory::createTexture("res/credits2.png");
     credits->setPreDraw([=](){
-       creditsTexture->bind();
+        glDisable(GL_CULL_FACE);
+        creditsTexture->bind();
     });
-    credits->scale(-100.0f, 50.0f, -1.0f);
+    credits->setPostDraw([=](){
+        glEnable(GL_CULL_FACE);
+    });
+    credits->scale(-100.0f, -50.0f, 1.0f);
     credits->translate(100.0f, 50.0f, -0.1f);
+
+
+    /*Setup final result*/
+    auto finalCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1, true);
+    SceneNode* final = ResourceManager::Factory::createScene(FINAL, finalCamera);
+    final->setShader(rm->getShader(QUAD_SHADER));
+    final->setMesh(quad);
+    final->translate(0.0f, 0.0f, -0.2f);
+    final->setPreDraw([=](){
+        helperFBO->bindTexture();
+    });
 
 }
 

@@ -34,7 +34,7 @@
 
 /*Scenes*/
 #define SCENE "main"
-#define POST "post"
+#define FINAL "final"
 #define CREDITS_HUD "credits_hud"
 #define CONTROLS_HUD "controls_hud"
 
@@ -47,6 +47,7 @@
 /*Cameras*/
 #define FREE_CAM "freeCamera"
 #define SPHERE_CAM "sphereCamera"
+#define ORTHO_CAM "ortho"
 #define BOTTOM_RIGHT_CAM "brCamera"
 #define TOP_RIGHT_CAM "trCamera"
 
@@ -54,6 +55,7 @@
 #define MAIN_FBO "main"
 #define HELPER_FBO "helper"
 #define REFLECTION_FBO "reflection"
+#define DEPTH_FBO "depth"
 
 /*Particles*/
 #define MAX_PARTICLES 1024

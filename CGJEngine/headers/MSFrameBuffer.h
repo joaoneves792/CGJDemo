@@ -9,7 +9,8 @@
 #include <GL/glew.h>
 #include "FrameBuffer.h"
 #include "Texture.h"
-#include "TextureFrameBuffer.h"
+#include "ColorTextureFrameBuffer.h"
+#include "DepthTextureFrameBuffer.h"
 
 class MSFrameBuffer : public FrameBuffer{
 private:
@@ -19,7 +20,8 @@ public:
     ~MSFrameBuffer() override;
     void resize(int x, int y) override ;
     using FrameBuffer::blit;
-    void blit(TextureFrameBuffer* texFBO);
+    void blit(ColorTextureFrameBuffer* texFBO);
+    void blitDepth(DepthTextureFrameBuffer* texFBO);
 private:
     void initializeNewFrameBuffer(int x, int y);
     void destroy();

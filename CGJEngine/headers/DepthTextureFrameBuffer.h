@@ -2,20 +2,19 @@
 // Created by joao on 12/5/17.
 //
 
-#ifndef CGJDEMO_TEXTUREFRAMEBUFFER_H
-#define CGJDEMO_TEXTUREFRAMEBUFFER_H
+#ifndef CGJDEMO_DEPTHTEXTUREFRAMEBUFFER_H
+#define CGJDEMO_DEPTHTEXTUREFRAMEBUFFER_H
 
 #include "Texture.h"
 #include "FrameBuffer.h"
 
-class TextureFrameBuffer : public FrameBuffer{
+class DepthTextureFrameBuffer : public FrameBuffer{
 public:
-    TextureFrameBuffer(int x, int y);
-    ~TextureFrameBuffer() override ;
+    DepthTextureFrameBuffer(int x, int y);
+    ~DepthTextureFrameBuffer() override ;
     void resize(int x, int y) override ;
     void bindTexture() override;
     Texture* getTexture();
-    using FrameBuffer::blit;
 private:
     void initializeNewFrameBuffer(int x, int y);
     void destroy();

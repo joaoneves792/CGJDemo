@@ -30,11 +30,12 @@ void display()
 {
 	static SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
 	static SceneGraph* creditsHUD = ResourceManager::getInstance()->getScene(CREDITS_HUD);
+    static SceneGraph* final = ResourceManager::getInstance()->getScene(FINAL);
     static MSFrameBuffer* mainFBO = (MSFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
-    static TextureFrameBuffer* helperFBO = (TextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
+    static ColorTextureFrameBuffer* helperFBO = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
+    static DepthTextureFrameBuffer* depthFBO = (DepthTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(DEPTH_FBO);
 	static FrameBuffer* reflectionFBO = ResourceManager::getInstance()->getFrameBuffer(REFLECTION_FBO);
 	static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
-
 
 	++FrameCount;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -67,7 +68,10 @@ void display()
 
 	/*Blit the final result to the window fbo and draw the HUD*/
 	mainFBO->unbind();
-    mainFBO->blit();
+    mainFBO->blitDepth(depthFBO);
+    mainFBO->blit(helperFBO);
+	//mainFBO->blit();
+	final->draw();
 	creditsHUD->draw();
 
 	checkOpenGLError("ERROR: Could not draw scene.");
@@ -103,6 +107,7 @@ void reshape(int w, int h)
 	ResourceManager::getInstance()->getCamera(BOTTOM_RIGHT_CAM)->resize(w, h);
     ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
     ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(DEPTH_FBO)->resize(w, h);
 	glViewport(0, 0, w, h);
 }
 

@@ -18,29 +18,31 @@ set(PNG_INCLUDE_FILES
     ${PNG_INCLUDE_DIR}/pngstruct.h
     )
 set(SOURCE_FILES
-	Shader.cpp
-	glerror.cpp
-	Meshes/OBJMesh.cpp
-	Meshes/H3DMesh.cpp
-	Meshes/QuadMesh.cpp
-	Cameras/SphereCamera.cpp
-	Cameras/FreeCamera.cpp
-	Cameras/HUDCamera.cpp
-    Cameras/Camera.cpp
-	SceneGraph/SceneGraph.cpp
-	SceneGraph/SceneNode.cpp
-	SceneGraph/LightNode.cpp
-	SceneGraph/LightNode.cpp
-	SceneGraph/ParticleEmitterNode.cpp
-	ResourceManager.cpp
-	InputManager.cpp
+        Shader.cpp
+    	glerror.cpp
+	    Meshes/OBJMesh.cpp
+    	Meshes/H3DMesh.cpp
+	    Meshes/QuadMesh.cpp
+    	Cameras/SphereCamera.cpp
+	    Cameras/FreeCamera.cpp
+    	Cameras/HUDCamera.cpp
+        Cameras/Camera.cpp
+    	SceneGraph/SceneGraph.cpp
+	    SceneGraph/SceneNode.cpp
+    	SceneGraph/LightNode.cpp
+	    SceneGraph/LightNode.cpp
+    	SceneGraph/ParticleEmitterNode.cpp
+	    ResourceManager.cpp
+    	InputManager.cpp
         Texture.cpp
         FBOs/FrameBuffer.cpp
-	ResourceFactory.cpp
-	LightsManager.cpp
-	Particles/ParticlePool.cpp
-        FBOs/MSFrameBuffer.cpp headers/MSFrameBuffer.h FBOs/TextureFrameBuffer.cpp headers/TextureFrameBuffer.h)
-
+	    ResourceFactory.cpp
+    	LightsManager.cpp
+	    Particles/ParticlePool.cpp
+        FBOs/MSFrameBuffer.cpp
+        FBOs/ColorTextureFrameBuffer.cpp
+		FBOs/DepthTextureFrameBuffer.cpp
+		)
 set(HEADER_FILES
 		headers/Camera.h
         headers/CGJengine.h
@@ -65,7 +67,10 @@ set(HEADER_FILES
 		headers/ParticlePool.h
 		headers/Particle.h
 		headers/ParticleEmitterNode.h
-        FBOs/MSFrameBuffer.cpp headers/MSFrameBuffer.h FBOs/TextureFrameBuffer.cpp headers/TextureFrameBuffer.h)
+		headers/MSFrameBuffer.h
+		headers/ColorTextureFrameBuffer.h
+		headers/DepthTextureFrameBuffer.h
+		)
 
 
 add_library(jpeg_lib STATIC IMPORTED)

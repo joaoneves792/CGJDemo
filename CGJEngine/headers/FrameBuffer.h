@@ -11,10 +11,10 @@
 class FrameBuffer{
 protected:
     GLuint _frameBuffer;
-    GLuint _depthStencilBuffer;
+    Texture* _depthStencilBuffer;
     int _width;
     int _height;
-    Texture* _texture;
+    Texture* _colorBuffer;
 public:
     FrameBuffer() = default;
     FrameBuffer(int x, int y);
