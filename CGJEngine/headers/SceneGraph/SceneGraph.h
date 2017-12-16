@@ -12,8 +12,8 @@
 
 #include "glm_wrapper.h"
 #include "Shader.h"
-#include "Mesh.h"
-#include "Camera.h"
+#include "Meshes/Mesh.h"
+#include "Cameras/Camera.h"
 #include "SceneNode.h"
 
 #define ROOT "root"

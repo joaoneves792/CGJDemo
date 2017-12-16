@@ -4,7 +4,7 @@
 
 #include "Movement.h"
 #include "Constants.h"
-#include "SceneNode.h"
+#include "SceneGraph/SceneNode.h"
 
 float Movement::speed = 0;
 float Movement::z = 0;

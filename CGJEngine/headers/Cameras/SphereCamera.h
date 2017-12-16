@@ -5,7 +5,7 @@
 #ifndef CGJM_SPHERECAMERA_H
 #define CGJM_SPHERECAMERA_H
 
-#include "Camera.h"
+#include "Cameras/Camera.h"
 #include "glm_wrapper.h"
 
 class SphereCamera : public Camera{

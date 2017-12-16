@@ -7,7 +7,7 @@
 
 
 #include <map>
-#include "LightNode.h"
+#include "SceneGraph/LightNode.h"
 
 class LightsManager {
 private:

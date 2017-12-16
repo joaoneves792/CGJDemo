@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <Texture.h>
+#include <glm_wrapper.h>
 
 extern "C" {
 #include <stdlib.h>
@@ -495,6 +496,35 @@ Texture::Texture(const std::string &right, const std::string &left, const std::s
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     _texture = textureID;
+}
+
+void Texture::generateRandom(int width) {
+    if(_texture){
+        glDeleteTextures(1, &_texture);
+    }
+    int height = width;
+    int numElements = width*height;
+    auto texture = new float[numElements*3];
+    for(int i= 0;i<numElements; i++){
+        Vec3 random = Vec3( (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)),
+                            (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)),
+                            (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) );
+        random = glm::normalize(random);
+        texture[i*3+0] = random[0];
+        texture[i*3+1] = random[1];
+        texture[i*3+2] = random[2];
+    }
+
+    glGenTextures(1, &_texture);
+    glBindTexture(GL_TEXTURE_2D, _texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    delete[] texture;
+
 }
 
 void Texture::bindCubeMap() {

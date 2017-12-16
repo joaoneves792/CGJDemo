@@ -2,7 +2,7 @@
 // Created by joao on 11/11/17.
 //
 
-#include "QuadMesh.h"
+#include "Meshes/QuadMesh.h"
 
 QuadMesh::QuadMesh() {
     prepare();

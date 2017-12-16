@@ -184,4 +184,37 @@ void loadShaders(){
         glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
     });
+
+    /*SSAO shader*/
+    auto ssaoShader = ResourceManager::Factory::createShader(SSAO_SHADER, "res/shaders/ssaov.glsl", "res/shaders/ssaof.glsl");
+    ssaoShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    ssaoShader->link();
+    ssaoShader->use();
+    GLint colorBufferLoc = ssaoShader->getUniformLocation("colorBuffer");
+    GLint depthBufferLoc = ssaoShader->getUniformLocation("depthBuffer");
+    GLint normalsLoc = ssaoShader->getUniformLocation("normals");
+    noiseLoc = ssaoShader->getUniformLocation("noise");
+    MVPLocation = ssaoShader->getUniformLocation("MVP");
+    glUniform1i(colorBufferLoc, 0);
+    glUniform1i(depthBufferLoc, 1);
+    glUniform1i(noiseLoc, 2);
+    glUniform1i(normalsLoc, 3);
+    ssaoShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+
+    });
+
+    /*SSAO blur shader*/
+    auto ssaoApplyShader = ResourceManager::Factory::createShader(SSAO_APPLY_SHADER, "res/shaders/quadv.glsl", "res/shaders/ssaoApplyf.glsl");
+    ssaoApplyShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    ssaoApplyShader->link();
+    GLint ssaoLoc = ssaoApplyShader->getUniformLocation("ssaoTexture");
+    GLint renderedSceneLoc = ssaoApplyShader->getUniformLocation("renderedScene");
+    ssaoApplyShader->use();
+    glUniform1i(ssaoLoc, 0);
+    glUniform1i(renderedSceneLoc, 1);
+    ssaoApplyShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+
+    });
 }

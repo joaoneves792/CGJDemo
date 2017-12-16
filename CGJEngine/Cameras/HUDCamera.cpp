@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "HUDCamera.h"
+#include "Cameras/HUDCamera.h"
 #include "glm_wrapper.h"
 
 HUDCamera::HUDCamera(float left, float right, float top, float bottom, float near, float far, bool scale) {
@@ -15,6 +15,7 @@ HUDCamera::HUDCamera(float left, float right, float top, float bottom, float nea
     _bottom = bottom;
     _scale = scale;
     _projection = glm::ortho(left, right, bottom, top, near, far);
+    _inverseProjection = glm::inverse(_projection);
     _pseudoBillboard = Quat();//Identity quaternion
 }
 
@@ -40,6 +41,7 @@ void HUDCamera::resize(int x, int y) {
     _bottom = (_bottom)? _bottom*std::abs(y/_bottom)*bottomRatio : 0;
 
     _projection = glm::ortho(_left, _right, _bottom, _top, _near, _far);
+    _inverseProjection = glm::inverse(_projection);
 }
 
 void HUDCamera::move(float x, float y, float z) {

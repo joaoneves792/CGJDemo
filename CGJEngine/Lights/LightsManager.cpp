@@ -2,7 +2,7 @@
 // Created by joao on 11/23/17.
 //
 
-#include "LightsManager.h"
+#include "Lights/LightsManager.h"
 
 LightsManager* LightsManager::_ourInstance = nullptr;
 

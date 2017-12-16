@@ -2,14 +2,14 @@
 // Created by joao on 11/11/17.
 //
 
-#include "OBJMesh.h"
+#include "Meshes/OBJMesh.h"
 #include <iomanip> // setprecision
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <OBJMesh.h>
+#include <Meshes/OBJMesh.h>
 #include <unordered_map>
 #include <list>
 

@@ -6,7 +6,7 @@
 #define CGJDEMO_TEXTUREFRAMEBUFFER_H
 
 #include "Texture.h"
-#include "FrameBuffer.h"
+#include "FBOs/FrameBuffer.h"
 
 class ColorTextureFrameBuffer : public FrameBuffer{
 public:

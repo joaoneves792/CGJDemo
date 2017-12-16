@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "FreeCamera.h"
+#include "Cameras/FreeCamera.h"
 #include "glm_wrapper.h"
 
 FreeCamera::FreeCamera(Vec3 originalPosition, Quat originalOrientation) {

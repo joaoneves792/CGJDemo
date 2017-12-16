@@ -8,8 +8,8 @@
 #include <list>
 
 #include "Shader.h"
-#include "SceneNode.h"
-#include "Particle.h"
+#include "SceneGraph/SceneNode.h"
+#include "Particles/Particle.h"
 #include "Texture.h"
 
 class ParticlePool;

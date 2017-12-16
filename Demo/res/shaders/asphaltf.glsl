@@ -10,7 +10,7 @@ in vec3 normal_cameraspace;
 in vec3 normal_worldspace;
 in vec3 lightDirection_cameraspace[MAX_LIGHTS];
 
-out vec4 out_color;
+out vec4[2] out_color;
 
 /*Material Properties*/
 uniform sampler2D texture_sampler;
@@ -29,7 +29,7 @@ uniform vec4 lightAttenuation[MAX_LIGHTS]; //x->constant y->linear z->quadratic 
 void main() {
 	vec3 matDiffuse = (texture(texture_sampler, texture_coord_from_vshader).rgb);
 
-	out_color.rgb = vec3(0,0,0);//start with black;
+	vec3 color = vec3(0,0,0);//start with black;
 	vec3 N = normalize(normal_cameraspace);
 	vec3 E = normalize(eyeDirection_cameraspace);
 
@@ -57,7 +57,7 @@ void main() {
         lightContribution *= 1.0f/(lightAttenuation[i].x + lightAttenuation[i].y*distanceToLight +
                              lightAttenuation[i].z*distanceToLight*distanceToLight);
 
-        out_color.rgb += lightContribution;
+        color += lightContribution;
 	}
 
     if(night < 1.0f){
@@ -68,9 +68,11 @@ void main() {
         distanceCoef *= smoothstep(0.1, 0.5, distanceCoef);
         vec3 ambient = texture(environment, R).rgb*distanceCoef;
 
-        out_color.rgb += ambient.rgb+matDiffuse*0.1f;
+        color += ambient.rgb+matDiffuse*0.1f;
     }else{
-        out_color.rgb += matDiffuse*0.1;
+        color += matDiffuse*0.1;
     }
-    out_color.a = 1.0f;
+
+    out_color[0] = vec4(color, 1.0f);
+    out_color[1] = vec4(normal_cameraspace, 1.0f);
 }

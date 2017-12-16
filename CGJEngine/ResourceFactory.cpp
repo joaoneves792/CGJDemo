@@ -3,18 +3,18 @@
 //
 #include <iostream>
 #include <Texture.h>
-#include <MSFrameBuffer.h>
+#include <FBOs/MSFrameBuffer.h>
 #include "ResourceManager.h"
-#include "Mesh.h"
-#include "OBJMesh.h"
-#include "H3DMesh.h"
+#include "Meshes/Mesh.h"
+#include "Meshes/OBJMesh.h"
+#include "Meshes/H3DMesh.h"
 #include "Shader.h"
-#include "SceneGraph.h"
-#include "LightNode.h"
-#include "LightsManager.h"
-#include "Camera.h"
-#include "FreeCamera.h"
-#include "SphereCamera.h"
+#include "SceneGraph/SceneGraph.h"
+#include "SceneGraph/LightNode.h"
+#include "Lights/LightsManager.h"
+#include "Cameras/Camera.h"
+#include "Cameras/FreeCamera.h"
+#include "Cameras/SphereCamera.h"
 
 Mesh* ResourceManager::Factory::createMesh(const std::string &name, const std::string &filename) {
     if(filename.substr(filename.find_last_of('.')+1) == ("h3d")){
@@ -78,6 +78,13 @@ FrameBuffer* ResourceManager::Factory::createFrameBuffer(const std::string &name
 
 MSFrameBuffer* ResourceManager::Factory::createMSAAFrameBuffer(const std::string &name, int x, int y, int msaaLevel) {
     auto fbo = new MSFrameBuffer(x, y, msaaLevel);
+    ResourceManager::getInstance()->addFrameBuffer(name, fbo);
+    return fbo;
+}
+
+DoubleColorMSFrameBuffer* ResourceManager::Factory::createDoubleColorMSAAFrameBuffer(const std::string &name, int x,
+                                                                                     int y, int msaaLevel) {
+    auto fbo = new DoubleColorMSFrameBuffer(x, y, msaaLevel);
     ResourceManager::getInstance()->addFrameBuffer(name, fbo);
     return fbo;
 }

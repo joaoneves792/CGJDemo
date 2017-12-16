@@ -3,9 +3,9 @@
 //
 
 #include "GL/glew.h"
-#include "SceneGraph.h"
+#include "SceneGraph/SceneGraph.h"
 #include "Shader.h"
-#include "Mesh.h"
+#include "Meshes/Mesh.h"
 #include "ResourceManager.h"
 #include <unordered_map>
 

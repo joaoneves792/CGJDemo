@@ -3,10 +3,10 @@
 //
 
 #include <iostream>
-#include "SceneGraph.h"
-#include "Mesh.h"
+#include "SceneGraph/SceneGraph.h"
+#include "Meshes/Mesh.h"
 #include "Shader.h"
-#include "SceneNode.h"
+#include "SceneGraph/SceneNode.h"
 #include "glm_wrapper.h"
 
 SceneNode::SceneNode(const std::string& name) {

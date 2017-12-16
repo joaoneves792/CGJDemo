@@ -37,39 +37,41 @@ set(SOURCE_FILES
         Texture.cpp
         FBOs/FrameBuffer.cpp
 	    ResourceFactory.cpp
-    	LightsManager.cpp
+		Lights/LightsManager.cpp
 	    Particles/ParticlePool.cpp
         FBOs/MSFrameBuffer.cpp
         FBOs/ColorTextureFrameBuffer.cpp
 		FBOs/DepthTextureFrameBuffer.cpp
+		FBOs/DoubleColorMSFrameBuffer.cpp
 		)
 set(HEADER_FILES
-		headers/Camera.h
+        headers/Cameras/Camera.h
         headers/CGJengine.h
-        headers/FrameBuffer.h
+		headers/FBOs/FrameBuffer.h
         headers/glerrors.h
         headers/glm_wrapper.h
-        headers/H3DMesh.h
-        headers/HUDCamera.h
+		headers/Meshes/H3DMesh.h
+		headers/Cameras/HUDCamera.h
         headers/InputManager.h
-        headers/LightNode.h
-        headers/LightsManager.h
-        headers/Mesh.h
-        headers/OBJMesh.h
-        headers/QuadMesh.h
+		headers/SceneGraph/LightNode.h
+		headers/Lights/LightsManager.h
+		headers/Meshes/Mesh.h
+		headers/Meshes/OBJMesh.h
+		headers/Meshes/QuadMesh.h
         headers/ResourceManager.h
-        headers/SceneGraph.h
-        headers/SceneNode.h
+		headers/SceneGraph/SceneGraph.h
+		headers/SceneGraph/SceneNode.h
         headers/Shader.h
         headers/Shader.h
-        headers/SphereCamera.h
+		headers/Cameras/SphereCamera.h
         headers/Texture.h
-		headers/ParticlePool.h
-		headers/Particle.h
-		headers/ParticleEmitterNode.h
-		headers/MSFrameBuffer.h
-		headers/ColorTextureFrameBuffer.h
-		headers/DepthTextureFrameBuffer.h
+		headers/Particles/ParticlePool.h
+		headers/Particles/Particle.h
+		headers/SceneGraph/ParticleEmitterNode.h
+		headers/FBOs/MSFrameBuffer.h
+		headers/FBOs/ColorTextureFrameBuffer.h
+		headers/FBOs/DepthTextureFrameBuffer.h
+		headers/FBOs/DoubleColorMSFrameBuffer.h
 		)
 
 

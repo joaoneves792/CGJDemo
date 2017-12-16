@@ -4,10 +4,10 @@
 
 #include <iostream>
 #include <algorithm>
-#include "ParticlePool.h"
-#include "SceneGraph.h"
-#include "ParticleEmitterNode.h"
-#include "Particle.h"
+#include "Particles/ParticlePool.h"
+#include "SceneGraph/SceneGraph.h"
+#include "SceneGraph/ParticleEmitterNode.h"
+#include "Particles/Particle.h"
 
 void ParticlePool::init(int maxParticles) {
     static const GLfloat vertexBufferData[] = {

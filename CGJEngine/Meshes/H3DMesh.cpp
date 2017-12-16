@@ -4,8 +4,8 @@
 #include "glm_wrapper.h"
 
 #include <GL/glew.h>
-#include <H3DMesh.h>
-#include "H3DMesh.h"
+#include <Meshes/H3DMesh.h>
+#include "Meshes/H3DMesh.h"
 #include "Texture.h"
 
 H3DMesh::H3DMesh() {

@@ -6,9 +6,9 @@
 #define CGJDEMO_PARTICLEPOOL_H
 
 #include <list>
-#include "SceneGraph.h"
-#include "Particle.h"
-#include "ParticleEmitterNode.h"
+#include "SceneGraph/SceneGraph.h"
+#include "Particles/Particle.h"
+#include "SceneGraph/ParticleEmitterNode.h"
 
 
 #define PARTICLE_COUNT 1024;

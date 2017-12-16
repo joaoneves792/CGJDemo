@@ -3,6 +3,7 @@
 #define MAX_LIGHTS 20
 
 in vec3 position_worldspace;
+in float z_clipspace;
 in vec3 eyeDirection_cameraspace;
 in vec3 eyeDirection_worldspace;
 in vec2 texture_coord_from_vshader;
@@ -10,7 +11,7 @@ in vec3 normal_cameraspace;
 in vec3 normal_worldspace;
 in vec3 lightDirection_cameraspace[MAX_LIGHTS];
 
-out vec4 out_color;
+out vec4[2] out_color;
 
 /*Material Properties*/
 uniform sampler2D texture_sampler;
@@ -36,7 +37,7 @@ void main() {
 	//Material properties
 	vec3 matDiffuse = (texture(texture_sampler, texture_coord_from_vshader).rgb * diffuse.xyz);
 
-	out_color.rgb = vec3(0,0,0);//start with black;
+	vec3 color = vec3(0,0,0);//start with black;
 	vec3 N = normalize(normal_cameraspace);
 	vec3 E = normalize(eyeDirection_cameraspace);
 
@@ -72,7 +73,7 @@ void main() {
         lightContribution *= 1.0f/(lightAttenuation[i].x + lightAttenuation[i].y*distanceToLight +
                              lightAttenuation[i].z*distanceToLight*distanceToLight);
 
-        out_color.rgb += lightContribution;
+        color += lightContribution;
 	}
 
     float alpha = texture(texture_sampler, texture_coord_from_vshader).a - transparency;
@@ -82,9 +83,14 @@ void main() {
         E = normalize(eyeDirection_worldspace);
         vec3 R = reflect(E, N);
         R = R + vec3(0.0f, 0.0f, movement);
-        out_color.rgb += texture(environment, R).rgb*(shininess/128.0f)*0.1f*(1/alpha);
+        color += texture(environment, R).rgb*(shininess/128.0f)*0.1f*(1/alpha);
     }
 
-    out_color.rgb += ambient.rgb*matDiffuse;
-    out_color.a = alpha;
+    out_color[0].rgb = color + ambient.rgb*matDiffuse;
+    out_color[0].a = alpha;
+
+    out_color[1].rgb = normal_cameraspace;
+    out_color[1].a = z_clipspace;
+
+
 }

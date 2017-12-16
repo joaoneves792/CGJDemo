@@ -19,6 +19,7 @@ protected:
     Quat _pseudoBillboard;
 
     Mat4 _projection;
+    Mat4 _inverseProjection;
     float _fovy;
     float _near;
     float _far;
@@ -32,6 +33,7 @@ protected:
 public:
     virtual Mat4 getMatrix()=0;
     Mat4 getProjectionMatrix();
+    Mat4 getInverseProjection();
     Quat getBillboardOrientation();
     Mat4 getViewMatrix();
     Mat4 getReflectedViewMatrix();

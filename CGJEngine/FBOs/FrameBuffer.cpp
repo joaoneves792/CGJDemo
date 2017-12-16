@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "FrameBuffer.h"
+#include "FBOs/FrameBuffer.h"
 
 void FrameBuffer::bind() {
     glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer);

@@ -4,8 +4,8 @@
 #include <iostream>
 
 #include "Shader.h"
-#include "SceneGraph.h"
-#include "SceneNode.h"
+#include "SceneGraph/SceneGraph.h"
+#include "SceneGraph/SceneNode.h"
 #include "glm_wrapper.h"
 
 SceneGraph::SceneGraph(Camera *cam) {

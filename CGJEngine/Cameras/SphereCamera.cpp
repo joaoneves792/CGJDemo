@@ -2,7 +2,7 @@
 // Created by joao on 11/12/17.
 //
 
-#include "SphereCamera.h"
+#include "Cameras/SphereCamera.h"
 #include "glm_wrapper.h"
 
 SphereCamera::SphereCamera(float distance, Vec3 center, Quat originalOrientation) {

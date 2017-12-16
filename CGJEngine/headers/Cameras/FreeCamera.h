@@ -5,7 +5,7 @@
 #ifndef CGJM_FREECAMERA_H
 #define CGJM_FREECAMERA_H
 
-#include "Camera.h"
+#include "Cameras/Camera.h"
 #include "glm_wrapper.h"
 
 class FreeCamera : public Camera{

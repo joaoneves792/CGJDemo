@@ -15,6 +15,10 @@ protected:
     int _width;
     int _height;
     Texture* _colorBuffer;
+    friend class ColorTextureFrameBuffer;
+    friend class DepthTextureFrameBuffer;
+    friend class MSFrameBuffer;
+    friend class DoubleColorMSFrameBuffer;
 public:
     FrameBuffer() = default;
     FrameBuffer(int x, int y);

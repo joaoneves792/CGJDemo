@@ -12,7 +12,7 @@
 #include "shaders.h"
 #include "meshes.h"
 #include "Constants.h"
-#include "SceneNode.h"
+#include "SceneGraph/SceneNode.h"
 
 void setupScene(){
     auto rm = ResourceManager::getInstance();
@@ -24,14 +24,17 @@ void setupScene(){
     rm->addMesh("quad", quad);
 
     /*Create the framebuffers*/
-    ResourceManager::Factory::createMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
-    auto helperFBO = ResourceManager::Factory::createColorTextureFrameBuffer(HELPER_FBO, WIN_X, WIN_Y);
+    ResourceManager::Factory::createDoubleColorMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
+    auto sceneColorFBO = ResourceManager::Factory::createColorTextureFrameBuffer(SCENE_COLOR_FBO, WIN_X, WIN_Y);
     auto reflectionFBO = ResourceManager::Factory::createFrameBuffer(REFLECTION_FBO, REFLECTION_RESOLUTION, REFLECTION_RESOLUTION);
+    auto normalZFBO = ResourceManager::Factory::createColorTextureFrameBuffer(NORMALZ_FBO, WIN_X, WIN_Y);
     auto depthFBO = ResourceManager::Factory::createDepthTextureFrameBuffer(DEPTH_FBO, WIN_X, WIN_Y);
+    auto ssaoFBO = ResourceManager::Factory::createColorTextureFrameBuffer(SSAO_FBO, WIN_X, WIN_Y);
+    auto finalSceneFBO = ResourceManager::Factory::createColorTextureFrameBuffer(FINAL_FBO, WIN_X, WIN_Y);
 
     //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
     auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat());
-    camera->perspective((float)PI/4.0f, 0, 0.1f, 1000.0f);
+    camera->perspective((float)PI/4.0f, 0, 1.0f, 1000.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
     root->translate(0.0f, GROUND_LEVEL, 0.0f);
 
@@ -189,7 +192,7 @@ void setupScene(){
     /*Heat haze*/
     auto noise  = ResourceManager::Factory::createTexture("res/noise1.png");
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
-    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, helperFBO->getTexture(),
+    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, sceneColorFBO->getTexture(),
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 3e-5f, 3e-5f),
                                                                        Vec3(0.0f, 0.3f, 6.4f), 0.002, 0.0f);
     hazeEmitter->setRandomAcceleration(Vec3(2e-8f, 3e-10f, 1e-8f));
@@ -198,7 +201,7 @@ void setupScene(){
     hazeEmitter->emmit();
     hazeEmitter->setPreDraw([=](){
         glActiveTexture(GL_TEXTURE0);
-        helperFBO->bindTexture();
+        sceneColorFBO->bindTexture();
         glActiveTexture(GL_TEXTURE1);
         noise->bind();
         glActiveTexture(GL_TEXTURE0);
@@ -232,7 +235,7 @@ void setupScene(){
         glActiveTexture(GL_TEXTURE1);
         noise->bind();
         glActiveTexture(GL_TEXTURE0);
-        helperFBO->bindTexture();
+        sceneColorFBO->bindTexture();
     });
 
     distanceHeat->addChild(frontHeat);
@@ -243,7 +246,7 @@ void setupScene(){
         glActiveTexture(GL_TEXTURE1);
         noise->bind();
         glActiveTexture(GL_TEXTURE0);
-        helperFBO->bindTexture();
+        sceneColorFBO->bindTexture();
     });
     distanceHeat->addChild(rearHeat);
 
@@ -294,13 +297,67 @@ void setupScene(){
 
     /*Setup final result*/
     auto finalCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1, true);
-    SceneNode* final = ResourceManager::Factory::createScene(FINAL, finalCamera);
-    final->setShader(rm->getShader(QUAD_SHADER));
-    final->setMesh(quad);
-    final->translate(0.0f, 0.0f, -0.2f);
-    final->setPreDraw([=](){
-        helperFBO->bindTexture();
+
+    /*Setup SSAO*/
+    SceneNode* ssao = ResourceManager::Factory::createScene(SSAO, finalCamera);
+    auto ssaoNoise = new Texture();
+    ssaoNoise->generateRandom(4);
+    rm->addTexture("ssaoNoise", ssaoNoise);
+
+    auto ssaoShader = rm->getShader(SSAO_SHADER);
+    GLint kernelLoc = ssaoShader->getUniformLocation("kernel");
+    GLint PLoc = ssaoShader->getUniformLocation("P");
+    GLint inversePLoc = ssaoShader->getUniformLocation("inverseP");
+    ssao->setShader(ssaoShader);
+    ssao->setMesh(quad);
+    ssao->translate(0.0f, 0.0f, -0.2f);
+    srand(89328);
+    ssao->setPreDraw([=](){
+        glActiveTexture(GL_TEXTURE1);
+        depthFBO->bindTexture();
+        glActiveTexture(GL_TEXTURE2);
+        ssaoNoise->bind();
+        glActiveTexture(GL_TEXTURE3);
+        normalZFBO->bindTexture();
+        glActiveTexture(GL_TEXTURE0);
+        sceneColorFBO->bindTexture();
+
+        auto random = [](){
+            return (static_cast <float> (rand()) / static_cast <float> (RAND_MAX/2.0f))-1.0f;
+        };
+        auto lerp = [](float v1, float v2, float t){
+            return (1 - t) * v1 + t * v2;
+        };
+        const int kernelSize = 4*4;
+        float kernel[kernelSize*3];
+        for (int i = 0; i < kernelSize; ++i) {
+            Vec3 r = glm::normalize(Vec3(
+                    random(),
+                    random(),
+                    std::abs(random())));
+            float scale = float(i) / float(kernelSize);
+            scale = lerp(0.1f, 1.0f, scale * scale);
+            r = r*scale;
+            kernel[i*3] = r[0];
+            kernel[i*3+1] = r[1];
+            kernel[i*3+2] = r[2];
+        }
+        ssaoShader->use();
+        glUniform3fv(kernelLoc, kernelSize, kernel);
+        glUniformMatrix4fv(inversePLoc, 1, GL_FALSE, glm::value_ptr(scene->getCamera()->getInverseProjection()));
+        glUniformMatrix4fv(PLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
     });
 
+
+    /*Blur SSAO*/
+    SceneNode* blur = ResourceManager::Factory::createScene(SSAO_APPLY, finalCamera);
+    blur->setShader(rm->getShader(SSAO_APPLY_SHADER));
+    blur->setMesh(quad);
+    blur->setPreDraw([=](){
+        glActiveTexture(GL_TEXTURE1);
+        sceneColorFBO->bindTexture();
+        glActiveTexture(GL_TEXTURE0);
+        ssaoFBO->bindTexture();
+    });
 }
 

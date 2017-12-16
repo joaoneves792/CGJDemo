@@ -5,8 +5,8 @@
 #include <climits>
 #include <iostream>
 #include <random>
-#include "ParticleEmitterNode.h"
-#include "ParticlePool.h"
+#include "SceneGraph/ParticleEmitterNode.h"
+#include "Particles/ParticlePool.h"
 
 ParticleEmitterNode::ParticleEmitterNode(std::string name, ParticlePool* pool, Shader *shader, Texture* texture) :SceneNode(name){
     _shader = shader;

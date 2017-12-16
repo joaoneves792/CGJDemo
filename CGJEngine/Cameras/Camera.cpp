@@ -2,7 +2,7 @@
 // Created by joao on 11/12/17.
 //
 #include <iostream>
-#include "Camera.h"
+#include "Cameras/Camera.h"
 #include "glm_wrapper.h"
 
 void Camera::perspective(float fovy, float aspectRatio, float near, float far) {
@@ -10,10 +10,15 @@ void Camera::perspective(float fovy, float aspectRatio, float near, float far) {
     _near = near;
     _far = far;
     _projection = glm::perspective(fovy, aspectRatio, near, far);
+    _inverseProjection = glm::inverse(_projection);
 }
 
 Mat4 Camera::getProjectionMatrix() {
     return _projection;
+}
+
+Mat4 Camera::getInverseProjection() {
+    return _inverseProjection;
 }
 
 void Camera::resize(int x, int y) {

@@ -7,7 +7,7 @@
 #include "actions.h"
 #include "Constants.h"
 #include "Movement.h"
-#include "SceneNode.h"
+#include "SceneGraph/SceneNode.h"
 
 #define ESCAPE 27
 

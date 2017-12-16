@@ -11,8 +11,8 @@
 
 #include "glm_wrapper.h"
 #include "Shader.h"
-#include "Mesh.h"
-#include "Camera.h"
+#include "Meshes/Mesh.h"
+#include "Cameras/Camera.h"
 
 class SceneGraph;
 

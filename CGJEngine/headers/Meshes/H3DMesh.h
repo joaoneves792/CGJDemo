@@ -11,7 +11,7 @@
 #include <vector>
 #include <functional>
 
-#include "Mesh.h"
+#include "Meshes/Mesh.h"
 #include "glm_wrapper.h"
 
 #ifndef RC_INVOKED

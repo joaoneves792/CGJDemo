@@ -5,7 +5,7 @@
 #ifndef CGJM_HUDCAMERA_H
 #define CGJM_HUDCAMERA_H
 
-#include "Camera.h"
+#include "Cameras/Camera.h"
 #include "glm_wrapper.h"
 
 class HUDCamera : public Camera{

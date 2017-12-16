@@ -11,7 +11,7 @@
 
 #include "glm_wrapper.h"
 #include "Shader.h"
-#include "SceneNode.h"
+#include "SceneGraph/SceneNode.h"
 
 class LightNode : public SceneNode{
 private:

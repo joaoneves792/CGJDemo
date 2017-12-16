@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "ColorTextureFrameBuffer.h"
+#include "FBOs/ColorTextureFrameBuffer.h"
 
 ColorTextureFrameBuffer::ColorTextureFrameBuffer(int x, int y) {
     _width = x;
@@ -23,7 +23,7 @@ void ColorTextureFrameBuffer::initializeNewFrameBuffer(int x, int y) {
     glBindTexture(GL_TEXTURE_2D, texture);
 
     // Give an empty image to OpenGL
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -66,7 +66,7 @@ void ColorTextureFrameBuffer::resize(int x, int y) {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     // Give an empty image to OpenGL
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glGenFramebuffers(1, &_frameBuffer);

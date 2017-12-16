@@ -2,8 +2,8 @@
 // Created by joao on 11/23/17.
 //
 
-#include "LightNode.h"
-#include "SceneNode.h"
+#include "SceneGraph/LightNode.h"
+#include "SceneGraph/SceneNode.h"
 #include "glm_wrapper.h"
 #include <cmath>
 

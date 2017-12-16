@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "Mesh.h"
+#include "Meshes/Mesh.h"
 
 #ifndef CGJM_OBJMESH_H
 #define CGJM_OBJMESH_H

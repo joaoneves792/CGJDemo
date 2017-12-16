@@ -30,12 +30,19 @@ void display()
 {
 	static SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
 	static SceneGraph* creditsHUD = ResourceManager::getInstance()->getScene(CREDITS_HUD);
-    static SceneGraph* final = ResourceManager::getInstance()->getScene(FINAL);
-    static MSFrameBuffer* mainFBO = (MSFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
-    static ColorTextureFrameBuffer* helperFBO = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO);
+    static SceneGraph* ssao = ResourceManager::getInstance()->getScene(SSAO);
+	static SceneGraph* ssaoApply = ResourceManager::getInstance()->getScene(SSAO_APPLY);
+
+    static DoubleColorMSFrameBuffer* mainFBO = (DoubleColorMSFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
+    static ColorTextureFrameBuffer* SceneColorFBO = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SCENE_COLOR_FBO);
     static DepthTextureFrameBuffer* depthFBO = (DepthTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(DEPTH_FBO);
+    static ColorTextureFrameBuffer* normalZFBO = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(NORMALZ_FBO);
+	static ColorTextureFrameBuffer* ssaoFBO = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SSAO_FBO);
+    static ColorTextureFrameBuffer* finalFBO = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(FINAL_FBO);
 	static FrameBuffer* reflectionFBO = ResourceManager::getInstance()->getFrameBuffer(REFLECTION_FBO);
-	static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
+
+    static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
+
 
 	++FrameCount;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -56,23 +63,25 @@ void display()
 	mainFBO->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	scene->draw();
+    mainFBO->blitDepth(depthFBO); /*Blit depth before drawing particles*/
+    mainFBO->blitSecondColor(normalZFBO);
+    mainFBO->bind();
 	scene->draw(REFLECTIONS_LEVEL);
     particlePool->draw(DEFAULT_PARTICLES_LEVEL);
 
 
 	/*Copy fbo to texture and use the copy for post-processing*/
-	mainFBO->blit(helperFBO);
-	mainFBO->bind();
+	mainFBO->blit(SceneColorFBO);
+    mainFBO->bind();
     scene->draw(HEAT_HAZE_LEVEL);
 	particlePool->draw(HEAT_HAZE_LEVEL);
+    mainFBO->blit(SceneColorFBO);
 
-	/*Blit the final result to the window fbo and draw the HUD*/
-	mainFBO->unbind();
-    mainFBO->blitDepth(depthFBO);
-    mainFBO->blit(helperFBO);
-	//mainFBO->blit();
-	final->draw();
-	creditsHUD->draw();
+    ssaoFBO->bind();
+    ssao->draw();
+    ssaoFBO->unbind();
+    ssaoApply->draw();
+    creditsHUD->draw();
 
 	checkOpenGLError("ERROR: Could not draw scene.");
 	glutSwapBuffers();
@@ -105,9 +114,14 @@ void reshape(int w, int h)
 	WinY = h;
 	ResourceManager::getInstance()->getCamera(FREE_CAM)->resize(w, h);
 	ResourceManager::getInstance()->getCamera(BOTTOM_RIGHT_CAM)->resize(w, h);
+
     ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
-    ResourceManager::getInstance()->getFrameBuffer(HELPER_FBO)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(SCENE_COLOR_FBO)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(NORMALZ_FBO)->resize(w, h);
     ResourceManager::getInstance()->getFrameBuffer(DEPTH_FBO)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(SSAO_FBO)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(FINAL_FBO)->resize(w, h);
+
 	glViewport(0, 0, w, h);
 }
 

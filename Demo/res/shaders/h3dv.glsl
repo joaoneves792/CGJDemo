@@ -9,6 +9,7 @@ in vec3 inJointIndex;
 in vec3 inJointWeight;
 
 out vec3 position_worldspace;
+out float z_clipspace;
 out vec3 eyeDirection_cameraspace;
 out vec3 eyeDirection_worldspace;
 out vec2 texture_coord_from_vshader;
@@ -46,7 +47,9 @@ void main() {
 	/*Eye direction in cameraspace*/
 	eyeDirection_cameraspace = vec3(0,0,0) - position_cameraspace;
 
-	gl_Position = MVP * position;
+    vec4 position_clipspace = MVP * position;
+    z_clipspace = position_clipspace.z;
+	gl_Position = position_clipspace;
 
 	texture_coord_from_vshader = inTexCoord;
 	

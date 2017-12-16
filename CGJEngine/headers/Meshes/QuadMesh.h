@@ -4,7 +4,7 @@
 
 #include "GL/glew.h"
 
-#include "Mesh.h"
+#include "Meshes/Mesh.h"
 
 #ifndef CGJM_QUADMESH_H
 #define CGJM_QUADMESH_H

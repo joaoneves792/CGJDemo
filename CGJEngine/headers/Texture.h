@@ -34,6 +34,7 @@ public:
     void destroyTexture();
     void bind();
     void bindCubeMap();
+    void generateRandom(int width);
 
     static GLuint LoadGLTexture(const char *filename);
 private:

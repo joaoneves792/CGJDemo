@@ -31,9 +31,13 @@
 #define HEAT_SHADER "heat"
 #define HEAT_SPOT_REFLECTION_SHADER "heatSpotShader"
 #define HEAT_DISTANCE_SHADER "heatDistance"
+#define SSAO_SHADER "ssao"
+#define SSAO_APPLY_SHADER "ssaoBlur"
 
 /*Scenes*/
 #define SCENE "main"
+#define SSAO "ssao"
+#define SSAO_APPLY "ssaoBlur"
 #define FINAL "final"
 #define CREDITS_HUD "credits_hud"
 #define CONTROLS_HUD "controls_hud"
@@ -53,9 +57,12 @@
 
 /*FBOs*/
 #define MAIN_FBO "main"
-#define HELPER_FBO "helper"
+#define SCENE_COLOR_FBO "helper"
 #define REFLECTION_FBO "reflection"
 #define DEPTH_FBO "depth"
+#define NORMALZ_FBO "normalz"
+#define SSAO_FBO "ssaofbo"
+#define FINAL_FBO "final"
 
 /*Particles*/
 #define MAX_PARTICLES 1024
