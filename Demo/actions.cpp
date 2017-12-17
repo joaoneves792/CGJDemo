@@ -117,5 +117,14 @@ void setupActions() {
         glUniform1f(uniformLocation, (float)toggleHazeParticles);
         glUseProgram(0);
     });
+    im->addKeyActionOnce('o', [=](){
+        static int toggleSSAO = 0;
+        toggleSSAO = (toggleSSAO+1)%3;
+        auto shader = ResourceManager::getInstance()->getShader(SSAO_APPLY_SHADER);
+        auto uniformLocation = shader->getUniformLocation("toggle");
+        shader->use();
+        glUniform1f(uniformLocation, (float)toggleSSAO);
+        glUseProgram(0);
+    });
 
 }

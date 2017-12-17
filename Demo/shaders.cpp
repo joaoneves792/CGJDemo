@@ -190,15 +190,13 @@ void loadShaders(){
     ssaoShader->setAttribLocation("inPosition", VERTICES__ATTR);
     ssaoShader->link();
     ssaoShader->use();
-    GLint colorBufferLoc = ssaoShader->getUniformLocation("colorBuffer");
     GLint depthBufferLoc = ssaoShader->getUniformLocation("depthBuffer");
     GLint normalsLoc = ssaoShader->getUniformLocation("normals");
     noiseLoc = ssaoShader->getUniformLocation("noise");
     MVPLocation = ssaoShader->getUniformLocation("MVP");
-    glUniform1i(colorBufferLoc, 0);
-    glUniform1i(depthBufferLoc, 1);
-    glUniform1i(noiseLoc, 2);
-    glUniform1i(normalsLoc, 3);
+    glUniform1i(depthBufferLoc, 0);
+    glUniform1i(noiseLoc, 1);
+    glUniform1i(normalsLoc, 2);
     ssaoShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
 

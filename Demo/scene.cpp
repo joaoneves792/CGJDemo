@@ -305,7 +305,7 @@ void setupScene(){
     rm->addTexture("ssaoNoise", ssaoNoise);
 
     auto ssaoShader = rm->getShader(SSAO_SHADER);
-    GLint kernelLoc = ssaoShader->getUniformLocation("kernel");
+    //GLint kernelLoc = ssaoShader->getUniformLocation("kernel");
     GLint PLoc = ssaoShader->getUniformLocation("P");
     GLint inversePLoc = ssaoShader->getUniformLocation("inverseP");
     ssao->setShader(ssaoShader);
@@ -314,15 +314,16 @@ void setupScene(){
     srand(89328);
     ssao->setPreDraw([=](){
         glActiveTexture(GL_TEXTURE1);
-        depthFBO->bindTexture();
-        glActiveTexture(GL_TEXTURE2);
         ssaoNoise->bind();
-        glActiveTexture(GL_TEXTURE3);
+        glActiveTexture(GL_TEXTURE2);
         normalZFBO->bindTexture();
         glActiveTexture(GL_TEXTURE0);
-        sceneColorFBO->bindTexture();
+        depthFBO->bindTexture();
 
-        auto random = [](){
+        /*Code to generate a random kernel (commented out because of flickering
+         * instead we allways use a hardcoded kernel in the shader
+         * /
+        /*auto random = [](){
             return (static_cast <float> (rand()) / static_cast <float> (RAND_MAX/2.0f))-1.0f;
         };
         auto lerp = [](float v1, float v2, float t){
@@ -341,9 +342,11 @@ void setupScene(){
             kernel[i*3] = r[0];
             kernel[i*3+1] = r[1];
             kernel[i*3+2] = r[2];
+            std::cout << "vec3(" << kernel[i*3] << "f, " << kernel[i*3+1] << "f, " << kernel[i*3+2] << "f)," << std::endl;
         }
+        std::cout << std::endl;*/
         ssaoShader->use();
-        glUniform3fv(kernelLoc, kernelSize, kernel);
+        //glUniform3fv(kernelLoc, kernelSize, kernel);
         glUniformMatrix4fv(inversePLoc, 1, GL_FALSE, glm::value_ptr(scene->getCamera()->getInverseProjection()));
         glUniformMatrix4fv(PLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
     });
