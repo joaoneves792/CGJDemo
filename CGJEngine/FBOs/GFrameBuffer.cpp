@@ -4,19 +4,20 @@
 
 #include <cstdlib>
 #include <iostream>
-#include "FBOs/DoubleColorMSFrameBuffer.h"
+#include "FBOs/GFrameBuffer.h"
 
-DoubleColorMSFrameBuffer::DoubleColorMSFrameBuffer(int x, int y, int msaaLevel) {
+GFrameBuffer::GFrameBuffer(int x, int y) {
     _width = x;
     _height = y;
-    _samples = (GLuint)msaaLevel;
-    _colorBuffer = new Texture();
-    _depthStencilBuffer = new Texture();
-    _secondColorBuffer = new Texture();
+    _diffuseBuffer = new Texture();
+    _ambientBuffer = new Texture();
+    _normalBuffer = new Texture();
+    _depthBuffer = new Texture();
+    _specularBuffer = new Texture();
     initializeNewFrameBuffer(x, y);
 }
 
-void DoubleColorMSFrameBuffer::initializeNewFrameBuffer(int x, int y) {
+void GFrameBuffer::initializeNewFrameBuffer(int x, int y) {
     _width = x;
     _height = y;
 
@@ -25,92 +26,107 @@ void DoubleColorMSFrameBuffer::initializeNewFrameBuffer(int x, int y) {
 
     GLuint colorBuffer;
     glGenTextures(1, &colorBuffer);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, colorBuffer);
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, GL_RGBA8, _width, _height, GL_TRUE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, colorBuffer, 0);
+    glBindTexture(GL_TEXTURE_2D, colorBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
 
-    GLuint secondColorBuffer;
-    glGenTextures(1, &secondColorBuffer);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, secondColorBuffer);
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, GL_RGBA8, _width, _height, GL_TRUE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, secondColorBuffer, 0);
+    GLuint ambientBuffer;
+    glGenTextures(1, &ambientBuffer);
+    glBindTexture(GL_TEXTURE_2D, ambientBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, ambientBuffer, 0);
 
-    /*glGenRenderbuffers(1, &_depthStencilBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, _depthStencilBuffer);
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, _samples, GL_DEPTH24_STENCIL8, _width, _height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthStencilBuffer);*/
+    GLuint specularBuffer;
+    glGenTextures(1, &specularBuffer);
+    glBindTexture(GL_TEXTURE_2D, specularBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, specularBuffer, 0);
+
+    GLuint normalsBuffer;
+    glGenTextures(1, &normalsBuffer);
+    glBindTexture(GL_TEXTURE_2D, normalsBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _width, _height, 0, GL_RGBA, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, normalsBuffer, 0);
 
     GLuint depthBuffer;
     glGenTextures(1, &depthBuffer);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depthBuffer);
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, GL_DEPTH24_STENCIL8, _width, _height, GL_TRUE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depthBuffer, 0);
+    glBindTexture(GL_TEXTURE_2D, depthBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, _width, _height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthBuffer, 0);
 
     // Set the list of draw buffers.
-    GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
-    glDrawBuffers(2, DrawBuffers); // "1" is the size of DrawBuffers
+    GLenum DrawBuffers[4] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+    glDrawBuffers(4, DrawBuffers); // "1" is the size of DrawBuffers
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         std::cout << "Failed to create FrameBuffer" << std::endl;
         exit(EXIT_FAILURE);
     }
-    //glBindRenderbuffer(GL_RENDERBUFFER, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    _colorBuffer->changeTexture(colorBuffer);
-    _secondColorBuffer->changeTexture(secondColorBuffer);
-    _depthStencilBuffer->changeTexture(depthBuffer);
+    _diffuseBuffer->changeTexture(colorBuffer);
+    _ambientBuffer->changeTexture(ambientBuffer);
+    _specularBuffer->changeTexture(specularBuffer);
+    _normalBuffer->changeTexture(normalsBuffer);
+    _depthBuffer->changeTexture(depthBuffer);
 }
 
-void DoubleColorMSFrameBuffer::resize(int x, int y) {
+void GFrameBuffer::resize(int x, int y) {
+    destroy();
     _width = x;
     _height = y;
-
-    destroy();
-    _colorBuffer = new Texture();
-    _secondColorBuffer = new Texture();
-    _depthStencilBuffer = new Texture();
-    initializeNewFrameBuffer(_width, _height);
-
+    initializeNewFrameBuffer(x, y);
 }
 
-void DoubleColorMSFrameBuffer::destroy(){
+void GFrameBuffer::destroy(){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-    _colorBuffer->destroyTexture();
-    delete _colorBuffer;
-    _secondColorBuffer->destroyTexture();
-    delete _secondColorBuffer;
-    _depthStencilBuffer->destroyTexture();
-    delete _depthStencilBuffer;
+    glBindTexture(GL_TEXTURE_2D, 0);
+    _diffuseBuffer->destroyTexture();
+    _ambientBuffer->destroyTexture();
+    _specularBuffer->destroyTexture();
+    _normalBuffer->destroyTexture();
+    _depthBuffer->destroyTexture();
     glDeleteFramebuffers(1, &_frameBuffer);
 }
 
-
-void DoubleColorMSFrameBuffer::blit(FrameBuffer *destFBO) {
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, _frameBuffer);
-    glReadBuffer(GL_COLOR_ATTACHMENT0);
-
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFBO->_frameBuffer);
-    glDrawBuffer(GL_COLOR_ATTACHMENT0);
-
-    //source and destination width and height must match on a MS FBO blit
-    glBlitFramebuffer(0, 0, _width, _height,
-                      0, 0, destFBO->_width, destFBO->_height,
-                      GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
-
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,0);
+void GFrameBuffer::bindDiffuse() {
+    _diffuseBuffer->bind();
 }
 
-void DoubleColorMSFrameBuffer::blitColor(ColorTextureFrameBuffer *destFBO) {
+void GFrameBuffer::bindSpecular() {
+    _specularBuffer->bind();
+}
+
+void GFrameBuffer::bindNormals() {
+    _normalBuffer->bind();
+}
+
+void GFrameBuffer::bindDepth() {
+    _depthBuffer->bind();
+}
+
+void GFrameBuffer::bindAmbient() {
+    _ambientBuffer->bind();
+}
+
+
+void GFrameBuffer::blitDiffuse(ColorTextureFrameBuffer *destFBO) {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, _frameBuffer);
     glReadBuffer(GL_COLOR_ATTACHMENT0);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFBO->_frameBuffer);
     glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
-    //source and destination width and height must match on a MS FBO blit
     glBlitFramebuffer(0, 0, _width, _height,
                       0, 0, destFBO->_width, destFBO->_height,
                       GL_COLOR_BUFFER_BIT, GL_NEAREST);
@@ -119,15 +135,13 @@ void DoubleColorMSFrameBuffer::blitColor(ColorTextureFrameBuffer *destFBO) {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER,0);
 }
 
-
-void DoubleColorMSFrameBuffer::blitSecondColor(ColorTextureFrameBuffer *destFBO) {
+void GFrameBuffer::blitAmbient(ColorTextureFrameBuffer *destFBO) {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, _frameBuffer);
     glReadBuffer(GL_COLOR_ATTACHMENT1);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFBO->_frameBuffer);
     glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
-    //source and destination width and height must match on a MS FBO blit
     glBlitFramebuffer(0, 0, _width, _height,
                       0, 0, destFBO->_width, destFBO->_height,
                       GL_COLOR_BUFFER_BIT, GL_NEAREST);
@@ -137,12 +151,43 @@ void DoubleColorMSFrameBuffer::blitSecondColor(ColorTextureFrameBuffer *destFBO)
 
 }
 
-void DoubleColorMSFrameBuffer::blitDepth(DepthTextureFrameBuffer *destFBO) {
+void GFrameBuffer::blitSpecular(ColorTextureFrameBuffer *destFBO) {
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, _frameBuffer);
+    glReadBuffer(GL_COLOR_ATTACHMENT2);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFBO->_frameBuffer);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+    glBlitFramebuffer(0, 0, _width, _height,
+                      0, 0, destFBO->_width, destFBO->_height,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,0);
+
+}
+
+void GFrameBuffer::blitNormal(ColorTextureFrameBuffer *destFBO) {
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, _frameBuffer);
+    glReadBuffer(GL_COLOR_ATTACHMENT3);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFBO->_frameBuffer);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+    glBlitFramebuffer(0, 0, _width, _height,
+                      0, 0, destFBO->_width, destFBO->_height,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER,0);
+
+}
+
+void GFrameBuffer::blitDepth(DepthTextureFrameBuffer *destFBO) {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, _frameBuffer);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFBO->_frameBuffer);
 
-    //source and destination width and height must match on a MS FBO blit
     glBlitFramebuffer(0, 0, _width, _height,
                       0, 0, destFBO->_width, destFBO->_height,
                       GL_DEPTH_BUFFER_BIT, GL_NEAREST);
@@ -151,11 +196,12 @@ void DoubleColorMSFrameBuffer::blitDepth(DepthTextureFrameBuffer *destFBO) {
 
 }
 
-DoubleColorMSFrameBuffer::~DoubleColorMSFrameBuffer() {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-    _secondColorBuffer->destroyTexture();
-    delete _secondColorBuffer;
-    /*Parent destructor should take care of the rest*/
+GFrameBuffer::~GFrameBuffer() {
+    destroy();
+    delete _diffuseBuffer;
+    delete _specularBuffer;
+    delete _normalBuffer;
+    delete _depthBuffer;
+    delete _ambientBuffer;
 }
 

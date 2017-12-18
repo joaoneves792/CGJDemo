@@ -8,6 +8,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <FBOs/GFrameBuffer.h>
 #include "SceneGraph/SceneGraph.h"
 #include "Shader.h"
 #include "Meshes/Mesh.h"
@@ -46,6 +47,7 @@ public:
         static FrameBuffer* createFrameBuffer(const std::string& name, int x, int y);
         static ColorTextureFrameBuffer* createColorTextureFrameBuffer(const std::string &name, int x, int y);
         static DepthTextureFrameBuffer* createDepthTextureFrameBuffer(const std::string& name, int x, int y);
+        static GFrameBuffer* createGFrameBuffer(const std::string& name, int x, int y);
         static MSFrameBuffer* createMSAAFrameBuffer(const std::string& name, int x, int y, int msaaLevel);
         static DoubleColorMSFrameBuffer* createDoubleColorMSAAFrameBuffer(const std::string& name, int x, int y, int msaaLevel);
         static FreeCamera* createFreeCamera(const std::string& name, Vec3 position, Quat orientation);

@@ -76,6 +76,12 @@ FrameBuffer* ResourceManager::Factory::createFrameBuffer(const std::string &name
     return fbo;
 }
 
+GFrameBuffer* ResourceManager::Factory::createGFrameBuffer(const std::string &name, int x, int y) {
+    auto fbo = new GFrameBuffer(x, y);
+    ResourceManager::getInstance()->addFrameBuffer(name, fbo);
+    return fbo;
+}
+
 MSFrameBuffer* ResourceManager::Factory::createMSAAFrameBuffer(const std::string &name, int x, int y, int msaaLevel) {
     auto fbo = new MSFrameBuffer(x, y, msaaLevel);
     ResourceManager::getInstance()->addFrameBuffer(name, fbo);

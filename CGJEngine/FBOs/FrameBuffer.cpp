@@ -101,6 +101,11 @@ void FrameBuffer::destroy() {
     glDeleteFramebuffers(1, &_frameBuffer);
 }
 
+FrameBuffer::FrameBuffer() {
+    _colorBuffer = nullptr;
+    _depthStencilBuffer = nullptr;
+}
+
 FrameBuffer::~FrameBuffer() {
     destroy();
 }

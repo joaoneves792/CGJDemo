@@ -23,6 +23,7 @@
 #include "FBOs/ColorTextureFrameBuffer.h"
 #include "FBOs/DepthTextureFrameBuffer.h"
 #include "FBOs/DoubleColorMSFrameBuffer.h"
+#include "FBOs/GFrameBuffer.h"
 #include "ResourceManager.h"
 #include "InputManager.h"
 #include "Lights/LightsManager.h"

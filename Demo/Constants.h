@@ -22,22 +22,21 @@
 
 /*Shaders*/
 #define H3D_SHADER "h3d"
+#define GH3D_SHADER "gh3d"
 #define ASPHALT_SHADER "asphalt"
 #define SKY_SHADER "sky"
-#define FINAL_SHADER "twoDShader"
 #define QUAD_SHADER "quadShader"
-#define SMOKE_SHADER "smoke"
 #define FIRE_SHADER "fire"
 #define HEAT_SHADER "heat"
 #define HEAT_SPOT_REFLECTION_SHADER "heatSpotShader"
 #define HEAT_DISTANCE_SHADER "heatDistance"
 #define SSAO_SHADER "ssao"
-#define SSAO_APPLY_SHADER "ssaoBlur"
+#define SSAO_BLUR_SHADER "ssaoBlur"
+#define LIGHTING_SHADER "lightingshader"
 
 /*Scenes*/
 #define SCENE "main"
-#define SSAO "ssao"
-#define SSAO_APPLY "ssaoBlur"
+#define PIPELINE "pipeline"
 #define FINAL "final"
 #define CREDITS_HUD "credits_hud"
 #define CONTROLS_HUD "controls_hud"
@@ -63,6 +62,8 @@
 #define NORMALZ_FBO "normalz"
 #define SSAO_FBO "ssaofbo"
 #define FINAL_FBO "final"
+#define SIDE_FBO1 "sidefbo1"
+#define SIDE_FBO2 "sidefbo2"
 
 /*Particles*/
 #define MAX_PARTICLES 1024
@@ -91,6 +92,14 @@
 #define FRONT_HEAT "frontheat"
 #define REAR_HEAT "rearheat"
 
+
+/*Pipeline Levels*/
+#define SSAO_LEVEL (-3)
+#define SSAO "ssao"
+#define SSAO_BLUR_LEVEL (-2)
+#define SSAO_BLUR "ssaoBlur"
+#define LIGHTS_LEVEL (-1)
+#define LIGHTING "lighting"
 
 /*Misc constants*/
 #define PI 3.14159f

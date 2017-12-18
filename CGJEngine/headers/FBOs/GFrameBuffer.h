@@ -2,8 +2,8 @@
 // Created by joao on 12/5/17.
 //
 
-#ifndef CGJDEMO_DOUBLECOLORMSFRAMEBUFFER_H
-#define CGJDEMO_DOUBLECOLORMSFRAMEBUFFER_H
+#ifndef CGJDEMO_GFRAMEBUFFER_H
+#define CGJDEMO_GFRAMEBUFFER_H
 
 
 #include <GL/glew.h>
@@ -12,20 +12,27 @@
 #include "ColorTextureFrameBuffer.h"
 #include "DepthTextureFrameBuffer.h"
 
-class DoubleColorMSFrameBuffer : public FrameBuffer{
+class GFrameBuffer : public FrameBuffer{
 private:
-    Texture* _secondColorBuffer;
-    GLuint _samples;
+    Texture* _diffuseBuffer;
+    Texture* _normalBuffer;
+    Texture* _depthBuffer;
+    Texture* _specularBuffer;
+    Texture* _ambientBuffer;
 public:
-    DoubleColorMSFrameBuffer(int x, int y, int msaaLevel);
-    ~DoubleColorMSFrameBuffer() override;
+    GFrameBuffer(int x, int y);
+    ~GFrameBuffer() override;
     void resize(int x, int y) override ;
-    using FrameBuffer::blit;
-    void blit(FrameBuffer* destFBO);
-    //void blit(DoubleColorFrameBuffer* destFBO);
-    void blitColor(ColorTextureFrameBuffer* destFBO);
+    void blitDiffuse(ColorTextureFrameBuffer *destFBO);
     void blitDepth(DepthTextureFrameBuffer* destFBO);
-    void blitSecondColor(ColorTextureFrameBuffer* destFBO);
+    void blitNormal(ColorTextureFrameBuffer* destFBO);
+    void blitSpecular(ColorTextureFrameBuffer *destFBO);
+    void blitAmbient(ColorTextureFrameBuffer *destFBO);
+    void bindDiffuse();
+    void bindNormals();
+    void bindDepth();
+    void bindSpecular();
+    void bindAmbient();
 private:
     void initializeNewFrameBuffer(int x, int y);
     void destroy();
@@ -33,4 +40,4 @@ private:
 };
 
 
-#endif //CGJDEMO_MSFRAMEBUFFER_H
+#endif //CGJDEMO_GFRAMEBUFFER_H

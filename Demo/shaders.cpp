@@ -19,50 +19,35 @@ void loadShaders(){
     int lightConeLocation;
     int lightAttenuationLocation;
 
-    /*H3D Shader*/
-    auto h3dShader = ResourceManager::Factory::createShader(H3D_SHADER, "res/shaders/h3dv.glsl", "res/shaders/h3df.glsl");
-    h3dShader->setAttribLocation("inPositon", VERTICES__ATTR);
-    h3dShader->setAttribLocation("inNormal", NORMALS__ATTR);
-    h3dShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
-    h3dShader->setAttribLocation("inJointIndex", BONEINDICES__ATTR);
-    h3dShader->setAttribLocation("inJointWeight", BONEWEIGHTS__ATTR);
-    h3dShader->setFragOutputLocation("color", 0);
-    h3dShader->link();
 
-    MVPLocation = h3dShader->getUniformLocation("MVP");
-    ModelLocation = h3dShader->getUniformLocation("Model");
-    ViewLocation = h3dShader->getUniformLocation("View");
-    NormalLocation = h3dShader->getUniformLocation("NormalMatrix");
-    GLint textureLoc = glGetUniformLocation(h3dShader->getShader(), "texture_sampler");
-    GLint environmentLoc = glGetUniformLocation(h3dShader->getShader(), "environment");
-    h3dShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
+    /*G-Buffered H3D Shader*/
+    auto Gh3dShader = ResourceManager::Factory::createShader(GH3D_SHADER, "res/shaders/Gh3dv.glsl", "res/shaders/Gh3df.glsl");
+    Gh3dShader->setAttribLocation("inPositon", VERTICES__ATTR);
+    Gh3dShader->setAttribLocation("inNormal", NORMALS__ATTR);
+    Gh3dShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
+    Gh3dShader->setAttribLocation("inJointIndex", BONEINDICES__ATTR);
+    Gh3dShader->setAttribLocation("inJointWeight", BONEWEIGHTS__ATTR);
+    Gh3dShader->setFragOutputLocation("G_output", 0);
+    Gh3dShader->link();
+
+    MVPLocation = Gh3dShader->getUniformLocation("MVP");
+    ModelLocation = Gh3dShader->getUniformLocation("Model");
+    ViewLocation = Gh3dShader->getUniformLocation("View");
+    NormalLocation = Gh3dShader->getUniformLocation("NormalMatrix");
+    GLint textureLoc = Gh3dShader->getUniformLocation("texture_sampler");
+    GLint environmentLoc = Gh3dShader->getUniformLocation("environment");
+    Gh3dShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P*V*M));
         glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, glm::value_ptr(M));
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
         glUniformMatrix4fv(NormalLocation, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(V*M))));
     });
-    h3dShader->use();
+    Gh3dShader->use();
     glUniform1i(textureLoc, TEXTURE_SLOT);
     glUniform1i(environmentLoc, ENVIRONMENT_SLOT);
 
-    lightPositionLocation = h3dShader->getUniformLocation("lightPosition_worldspace[0]");
-    lightsEnabledLocation = h3dShader->getUniformLocation("lightsEnabled[0]");
-    lightColorLocation = h3dShader->getUniformLocation("lightColor[0]");
-    lightConeLocation = h3dShader->getUniformLocation("lightCone[0]");
-    lightAttenuationLocation = h3dShader->getUniformLocation("lightAttenuation[0]");
-    LightsManager::getInstance()->registerShader(h3dShader, [=](Vec3 color, Vec3 position, Vec4 cone,
-                                                                Vec4 attenuation, int enabled, int i){
-        glUniform1iv(lightsEnabledLocation+i, 1, &enabled);
-        if(enabled) {
-            glUniform3fv(lightColorLocation + i, 1, glm::value_ptr(color));
-            glUniform4fv(lightConeLocation + i, 1, glm::value_ptr(cone));
-            glUniform4fv(lightAttenuationLocation + i, 1, glm::value_ptr(attenuation));
-            glUniform3fv(lightPositionLocation + i, 1, glm::value_ptr(position));
-        }
-    });
-
     /*Asphalt Shader*/
-    auto asphaltShader = ResourceManager::Factory::createShader(ASPHALT_SHADER, "res/shaders/h3dv.glsl", "res/shaders/asphaltf.glsl");
+    auto asphaltShader = ResourceManager::Factory::createShader(ASPHALT_SHADER, "res/shaders/h3dv.glsl", "res/shaders/Gasphaltf.glsl");
     asphaltShader->setAttribLocation("inPositon", VERTICES__ATTR);
     asphaltShader->setAttribLocation("inNormal", NORMALS__ATTR);
     asphaltShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
@@ -84,23 +69,6 @@ void loadShaders(){
     asphaltShader->use();
     glUniform1i(textureLoc, TEXTURE_SLOT);
     glUniform1i(environmentLoc, ENVIRONMENT_SLOT);
-
-    lightPositionLocation = asphaltShader->getUniformLocation("lightPosition_worldspace[0]");
-    lightsEnabledLocation = asphaltShader->getUniformLocation("lightsEnabled[0]");
-    lightColorLocation = asphaltShader->getUniformLocation("lightColor[0]");
-    lightConeLocation = asphaltShader->getUniformLocation("lightCone[0]");
-    lightAttenuationLocation = asphaltShader->getUniformLocation("lightAttenuation[0]");
-    LightsManager::getInstance()->registerShader(asphaltShader, [=](Vec3 color, Vec3 position, Vec4 cone,
-                                                                Vec4 attenuation, int enabled, int i){
-        glUniform1iv(lightsEnabledLocation+i, 1, &enabled);
-        if(enabled) {
-            glUniform3fv(lightColorLocation + i, 1, glm::value_ptr(color));
-            glUniform4fv(lightConeLocation + i, 1, glm::value_ptr(cone));
-            glUniform4fv(lightAttenuationLocation + i, 1, glm::value_ptr(attenuation));
-            glUniform3fv(lightPositionLocation + i, 1, glm::value_ptr(position));
-        }
-    });
-
 
     /*Sky Shader*/
     auto skyShader = ResourceManager::Factory::createShader(SKY_SHADER, "res/shaders/skyv.glsl", "res/shaders/skyf.glsl");
@@ -186,7 +154,7 @@ void loadShaders(){
     });
 
     /*SSAO shader*/
-    auto ssaoShader = ResourceManager::Factory::createShader(SSAO_SHADER, "res/shaders/ssaov.glsl", "res/shaders/ssaof.glsl");
+    auto ssaoShader = ResourceManager::Factory::createShader(SSAO_SHADER, "res/shaders/quadViewRayv.glsl", "res/shaders/ssaof.glsl");
     ssaoShader->setAttribLocation("inPosition", VERTICES__ATTR);
     ssaoShader->link();
     ssaoShader->use();
@@ -203,16 +171,46 @@ void loadShaders(){
     });
 
     /*SSAO blur shader*/
-    auto ssaoApplyShader = ResourceManager::Factory::createShader(SSAO_APPLY_SHADER, "res/shaders/quadv.glsl", "res/shaders/ssaoApplyf.glsl");
-    ssaoApplyShader->setAttribLocation("inPosition", VERTICES__ATTR);
-    ssaoApplyShader->link();
-    GLint ssaoLoc = ssaoApplyShader->getUniformLocation("ssaoTexture");
-    GLint renderedSceneLoc = ssaoApplyShader->getUniformLocation("renderedScene");
-    ssaoApplyShader->use();
-    glUniform1i(ssaoLoc, 0);
-    glUniform1i(renderedSceneLoc, 1);
-    ssaoApplyShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+    auto ssaoBlurShader = ResourceManager::Factory::createShader(SSAO_BLUR_SHADER, "res/shaders/quadv.glsl", "res/shaders/ssaoBlurf.glsl");
+    ssaoBlurShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    ssaoBlurShader->link();
+    ssaoBlurShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+    });
+
+    /*Lighting Shader*/
+    auto lightingShader = ResourceManager::Factory::createShader(LIGHTING_SHADER, "res/shaders/quadViewRayv.glsl", "res/shaders/lightingf.glsl");
+    lightingShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    lightingShader->link();
+    lightingShader->use();
+    GLint diffuseLoc = lightingShader->getUniformLocation("diffuse");
+    GLint ambientLoc = lightingShader->getUniformLocation("ambient");
+    GLint specularLoc = lightingShader->getUniformLocation("specular");
+    GLint depthLoc = lightingShader->getUniformLocation("depth");
+    GLint normalLoc = lightingShader->getUniformLocation("normals");
+    MVPLocation = lightingShader->getUniformLocation("MVP");
+    glUniform1i(diffuseLoc, 0);
+    glUniform1i(ambientLoc, 1);
+    glUniform1i(specularLoc, 2);
+    glUniform1i(depthLoc, 3);
+    glUniform1i(normalLoc, 4);
+    lightingShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
 
+    });
+    lightPositionLocation = lightingShader->getUniformLocation("lightPosition_worldspace[0]");
+    lightsEnabledLocation = lightingShader->getUniformLocation("lightsEnabled[0]");
+    lightColorLocation = lightingShader->getUniformLocation("lightColor[0]");
+    lightConeLocation = lightingShader->getUniformLocation("lightCone[0]");
+    lightAttenuationLocation = lightingShader->getUniformLocation("lightAttenuation[0]");
+    LightsManager::getInstance()->registerShader(lightingShader, [=](Vec3 color, Vec3 position, Vec4 cone,
+                                                                Vec4 attenuation, int enabled, int i){
+        glUniform1iv(lightsEnabledLocation+i, 1, &enabled);
+        if(enabled) {
+            glUniform3fv(lightColorLocation + i, 1, glm::value_ptr(color));
+            glUniform4fv(lightConeLocation + i, 1, glm::value_ptr(cone));
+            glUniform4fv(lightAttenuationLocation + i, 1, glm::value_ptr(attenuation));
+            glUniform3fv(lightPositionLocation + i, 1, glm::value_ptr(position));
+        }
     });
 }

@@ -75,4 +75,6 @@ void main() {
 
     out_color[0] = vec4(color, 1.0f);
     out_color[1] = vec4(normal_cameraspace, 1.0f);
+
+
 }

@@ -2,28 +2,21 @@
 
 #define MAX_LIGHTS 20
 
-in vec3 position_worldspace;
-in float z_clipspace;
-in vec3 eyeDirection_cameraspace;
-in vec3 eyeDirection_worldspace;
-in vec2 texture_coord_from_vshader;
-in vec3 normal_cameraspace;
-in vec3 normal_worldspace;
-in vec3 lightDirection_cameraspace[MAX_LIGHTS];
+in vec2 uv;
+in vec3 frustumRay;
 
-out vec4[2] out_color;
+out vec4 out_color;
+
+/*Scene Properties*/
+uniform mat4 View;
+uniform mat4 Projection;
 
 /*Material Properties*/
-uniform sampler2D texture_sampler;
-uniform samplerCube environment;
-uniform vec4 ambient;
-uniform vec4 diffuse;
-uniform vec4 specular;
-uniform vec4 emissive;
-uniform float shininess;
-uniform float transparency;
-
-uniform float movement; // get movement for the environment map
+uniform sampler2D diffuse;
+uniform sampler2D ambient;
+uniform sampler2D normals;
+uniform sampler2D specular;
+uniform sampler2D depth;
 
 /*Lights Properties*/
 uniform vec3 lightPosition_worldspace[MAX_LIGHTS];
@@ -34,63 +27,59 @@ uniform vec4 lightAttenuation[MAX_LIGHTS]; //x->constant y->linear z->quadratic 
 
 
 void main() {
-	//Material properties
-	vec3 matDiffuse = (texture(texture_sampler, texture_coord_from_vshader).rgb * diffuse.xyz);
+    //Reconstruct the position from depth and view ray
+    float d = texture(depth, uv).r * 2.0f - 1.0f;
+    float z = -(Projection[3][2]/(d+Projection[2][2]));
+    vec3 position_viewspace = frustumRay*z;
+
+	vec3 matDiffuse = texture(diffuse, uv).rgb;
 
 	vec3 color = vec3(0,0,0);//start with black;
-	vec3 N = normalize(normal_cameraspace);
-	vec3 E = normalize(eyeDirection_cameraspace);
+	vec3 N = normalize(texture(normals, uv).xyz);
+
+	vec3 E = normalize(-position_viewspace);
 
 	for(int i=0; i<MAX_LIGHTS; i++){
 	    if(lightsEnabled[i] == 0){
 	        continue;
 	    }
-	    float distanceToLight = length(lightPosition_worldspace[i] - position_worldspace);
+	    vec3 lightPosition_viewspace = (View * vec4(lightPosition_worldspace[i], 1.0f)).xyz;
+		vec3 lightDirection_viewspace = lightPosition_viewspace - position_viewspace;
+
+	    float distanceToLight = length(lightDirection_viewspace);
 	    if(distanceToLight > lightAttenuation[i].w && lightAttenuation[i].w > 0.0f){
 	        continue;
 	    }
 
-		vec3 lightDirection_worldspace = lightPosition_worldspace[i].xyz - position_worldspace;
-		float cosCutOff = dot( normalize(lightCone[i].xyz), normalize(-lightDirection_worldspace) );
+		vec3 lightCone_viewspace = mat3(View) * lightCone[i].xyz;
+
+		float cosCutOff = dot( normalize(lightCone_viewspace), normalize(-lightDirection_viewspace) );
 		if(cosCutOff < lightCone[i].w && lightCone[i].w > -1.0f){
             continue;
         }
 	    vec3 lightContribution = vec3(0,0,0);
 
-	    vec3 L = normalize(lightDirection_cameraspace[i]);
+	    vec3 L = normalize(lightDirection_viewspace);
 
-	    float lightSpecular;
-
-        /*Blinn term*/
+        //Blinn term
         vec3 H = normalize(L+E);
-        lightSpecular = pow(clamp(dot(H, N), 0, 1), shininess*4.0f);
+        float shininess = texture(specular, uv).w;
+        float lightSpecular = pow(clamp(dot(H, N), 0, 1), shininess*4.0f);
 
-	    /*Diffuse component*/
+	    //Diffuse component
 	    lightContribution += matDiffuse*lightColor[i].xyz*clamp(dot(N, L), 0, 1);
-	    /*Specular component*/
-        lightContribution += specular.rgb*lightSpecular;
-        /*Attenuation*/
+	    //Specular component
+	    vec3 spec = texture(specular, uv).rgb;
+        lightContribution += spec*lightSpecular;
+        //Attenuation
         lightContribution *= 1.0f/(lightAttenuation[i].x + lightAttenuation[i].y*distanceToLight +
                              lightAttenuation[i].z*distanceToLight*distanceToLight);
 
         color += lightContribution;
 	}
 
-    float alpha = texture(texture_sampler, texture_coord_from_vshader).a - transparency;
-
-    if(shininess >= 65.0f){
-	    N = normalize(normal_worldspace);
-        E = normalize(eyeDirection_worldspace);
-        vec3 R = reflect(E, N);
-        R = R + vec3(0.0f, 0.0f, movement);
-        color += texture(environment, R).rgb*(shininess/128.0f)*0.1f*(1/alpha);
-    }
-
-    out_color[0].rgb = color + ambient.rgb*matDiffuse;
-    out_color[0].a = alpha;
-
-    out_color[1].rgb = normal_cameraspace;
-    out_color[1].a = z_clipspace;
-
+    vec3 ambientColor = texture(ambient, uv).rgb;
+    out_color.rgb = color + ambientColor;
+    out_color.a = 1.0f;
 
 }

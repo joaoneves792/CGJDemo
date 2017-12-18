@@ -43,7 +43,8 @@ set(SOURCE_FILES
         FBOs/ColorTextureFrameBuffer.cpp
 		FBOs/DepthTextureFrameBuffer.cpp
 		FBOs/DoubleColorMSFrameBuffer.cpp
-		)
+        FBOs/GFrameBuffer.cpp
+        )
 set(HEADER_FILES
         headers/Cameras/Camera.h
         headers/CGJengine.h
@@ -72,6 +73,7 @@ set(HEADER_FILES
 		headers/FBOs/ColorTextureFrameBuffer.h
 		headers/FBOs/DepthTextureFrameBuffer.h
 		headers/FBOs/DoubleColorMSFrameBuffer.h
+		headers/FBOs/GFrameBuffer.h
 		)
 
 

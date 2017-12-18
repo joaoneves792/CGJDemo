@@ -24,13 +24,9 @@ void setupScene(){
     rm->addMesh("quad", quad);
 
     /*Create the framebuffers*/
-    ResourceManager::Factory::createDoubleColorMSAAFrameBuffer(MAIN_FBO, WIN_X, WIN_Y, MSAA);
-    auto sceneColorFBO = ResourceManager::Factory::createColorTextureFrameBuffer(SCENE_COLOR_FBO, WIN_X, WIN_Y);
-    auto reflectionFBO = ResourceManager::Factory::createFrameBuffer(REFLECTION_FBO, REFLECTION_RESOLUTION, REFLECTION_RESOLUTION);
-    auto normalZFBO = ResourceManager::Factory::createColorTextureFrameBuffer(NORMALZ_FBO, WIN_X, WIN_Y);
-    auto depthFBO = ResourceManager::Factory::createDepthTextureFrameBuffer(DEPTH_FBO, WIN_X, WIN_Y);
-    auto ssaoFBO = ResourceManager::Factory::createColorTextureFrameBuffer(SSAO_FBO, WIN_X, WIN_Y);
-    auto finalSceneFBO = ResourceManager::Factory::createColorTextureFrameBuffer(FINAL_FBO, WIN_X, WIN_Y);
+    auto gBuffer = ResourceManager::Factory::createGFrameBuffer(MAIN_FBO, WIN_X, WIN_Y);
+    auto sideBuffer1 = ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO1, WIN_X, WIN_Y);
+    auto sideBuffer2 = ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO2, WIN_X, WIN_Y);
 
     //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
     auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat());
@@ -39,7 +35,7 @@ void setupScene(){
     root->translate(0.0f, GROUND_LEVEL, 0.0f);
 
     /*Setup material handling for H3D models*/
-    Shader* h3dShader = rm->getShader(H3D_SHADER);
+    Shader* h3dShader = rm->getShader(GH3D_SHADER);
     GLint ambientLoc = glGetUniformLocation(h3dShader->getShader(), "ambient");
     GLint diffuseLoc = glGetUniformLocation(h3dShader->getShader(), "diffuse");
     GLint specularLoc = glGetUniformLocation(h3dShader->getShader(), "specular");
@@ -190,6 +186,7 @@ void setupScene(){
     carNode->addChild(exhaustRight);
 
     /*Heat haze*/
+    /**
     auto noise  = ResourceManager::Factory::createTexture("res/noise1.png");
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
     auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, sceneColorFBO->getTexture(),
@@ -211,7 +208,7 @@ void setupScene(){
     for(int i=0;i<1000;i++)
         hazeEmitter->update(20); //Hack to get things going faster
 
-    /*Quads for distance heat distortion*/
+    //Quads for distance heat distortion
     auto distanceHeatShader = rm->getShader(HEAT_DISTANCE_SHADER);
     GLint timeLoc = distanceHeatShader->getUniformLocation("time");
     auto distanceHeat = new SceneNode(DISTANCE_HEAT);
@@ -249,34 +246,52 @@ void setupScene(){
         sceneColorFBO->bindTexture();
     });
     distanceHeat->addChild(rearHeat);
+    **/
 
-    /*Place the heat reflection (Car exhaust)*/
-    auto reflectionTexture = ResourceManager::Factory::createTexture("res/heatReflection.png");
-    auto mirrorShader = rm->getShader(HEAT_SPOT_REFLECTION_SHADER);
-    auto reflectionNode = new SceneNode(EXHAUST_REFLECTION, quad, mirrorShader);
-    reflectionNode->setProcessingLevel(REFLECTIONS_LEVEL);
-    reflectionNode->translate(0.0f, -0.1f, 6.5f);
-    reflectionNode->rotate(1.0f, 0.0f, 0.0f, -PI/2.0f);
-    reflectionNode->scale(2.0f, 3.2f, 1.0f);
-    GLint reflectedViewLoc = mirrorShader->getUniformLocation("reflectionView");
-    timeLoc = mirrorShader->getUniformLocation("time");
-    reflectionNode->setPreDraw([=](){
-        glActiveTexture(GL_TEXTURE0);
-        reflectionTexture->bind();
+    auto finalCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1, true);
+    auto renderPipeline = ResourceManager::Factory::createScene(PIPELINE, finalCamera);
+    renderPipeline->translate(0.0f, 0.0f, -0.2f);
+
+    auto ssaoShader = rm->getShader(SSAO_SHADER);
+    auto ssao = new SceneNode(SSAO, quad, ssaoShader);
+
+    auto ssaoNoise = new Texture();
+    ssaoNoise->generateRandom(4);
+    rm->addTexture("ssaoNoise", ssaoNoise);
+
+    GLint PLoc = ssaoShader->getUniformLocation("P");
+    GLint inversePLoc = ssaoShader->getUniformLocation("inverseP");
+    ssao->setProcessingLevel(SSAO_LEVEL);
+    ssao->setPreDraw([=](){
         glActiveTexture(GL_TEXTURE1);
-        reflectionFBO->bindTexture();
+        ssaoNoise->bind();
+        glActiveTexture(GL_TEXTURE2);
+        gBuffer->bindNormals();
         glActiveTexture(GL_TEXTURE0);
-        Mat4 rView = scene->getCamera()->getReflectedViewMatrix();
-        glUniformMatrix4fv(reflectedViewLoc, 1, GL_FALSE, glm::value_ptr(rView));
+        gBuffer->bindDepth();
+        ssaoShader->use();
+        glUniformMatrix4fv(inversePLoc, 1, GL_FALSE, glm::value_ptr(scene->getCamera()->getInverseProjection()));
+        glUniformMatrix4fv(PLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
     });
-    reflectionNode->setUpdateCallback([=](int dt){
-        static float time = 0.0f;
-        time = time + dt/20000.0f;
-        time = time - (int)time;
-        mirrorShader->use();
-        glUniform1f(timeLoc,time);
+    renderPipeline->addChild(ssao);
+
+    auto ssaoBlur = new SceneNode(SSAO_BLUR, quad, rm->getShader(SSAO_BLUR_SHADER));
+    ssaoBlur->setProcessingLevel(SSAO_BLUR_LEVEL);
+    renderPipeline->addChild(ssaoBlur);
+
+    auto lightingShader = rm->getShader(LIGHTING_SHADER);
+    auto lighting = new SceneNode(LIGHTING, quad, lightingShader);
+    GLint ViewLoc = lightingShader->getUniformLocation("View");
+    GLint ProjectionLoc = lightingShader->getUniformLocation("Projection");
+    inversePLoc = lightingShader->getUniformLocation("inverseP");
+    lighting->setProcessingLevel(LIGHTS_LEVEL);
+    lighting->setPreDraw([=](){
+        glUniformMatrix4fv(inversePLoc, 1, GL_FALSE, glm::value_ptr(scene->getCamera()->getInverseProjection()));
+        glUniformMatrix4fv(ViewLoc, 1, GL_FALSE, glm::value_ptr(scene->getViewMatrix()));
+        glUniformMatrix4fv(ProjectionLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
     });
-    carNode->addChild(reflectionNode);
+    renderPipeline->addChild(lighting);
+
 
     /*Setup HUD*/
     auto creditsCamera = ResourceManager::Factory::createHUDCamera(BOTTOM_RIGHT_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);
@@ -293,74 +308,5 @@ void setupScene(){
     });
     credits->scale(-100.0f, -50.0f, 1.0f);
     credits->translate(100.0f, 50.0f, -0.1f);
-
-
-    /*Setup final result*/
-    auto finalCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1, true);
-
-    /*Setup SSAO*/
-    SceneNode* ssao = ResourceManager::Factory::createScene(SSAO, finalCamera);
-    auto ssaoNoise = new Texture();
-    ssaoNoise->generateRandom(4);
-    rm->addTexture("ssaoNoise", ssaoNoise);
-
-    auto ssaoShader = rm->getShader(SSAO_SHADER);
-    //GLint kernelLoc = ssaoShader->getUniformLocation("kernel");
-    GLint PLoc = ssaoShader->getUniformLocation("P");
-    GLint inversePLoc = ssaoShader->getUniformLocation("inverseP");
-    ssao->setShader(ssaoShader);
-    ssao->setMesh(quad);
-    ssao->translate(0.0f, 0.0f, -0.2f);
-    srand(89328);
-    ssao->setPreDraw([=](){
-        glActiveTexture(GL_TEXTURE1);
-        ssaoNoise->bind();
-        glActiveTexture(GL_TEXTURE2);
-        normalZFBO->bindTexture();
-        glActiveTexture(GL_TEXTURE0);
-        depthFBO->bindTexture();
-
-        /*Code to generate a random kernel (commented out because of flickering
-         * instead we allways use a hardcoded kernel in the shader
-         * /
-        /*auto random = [](){
-            return (static_cast <float> (rand()) / static_cast <float> (RAND_MAX/2.0f))-1.0f;
-        };
-        auto lerp = [](float v1, float v2, float t){
-            return (1 - t) * v1 + t * v2;
-        };
-        const int kernelSize = 4*4;
-        float kernel[kernelSize*3];
-        for (int i = 0; i < kernelSize; ++i) {
-            Vec3 r = glm::normalize(Vec3(
-                    random(),
-                    random(),
-                    std::abs(random())));
-            float scale = float(i) / float(kernelSize);
-            scale = lerp(0.1f, 1.0f, scale * scale);
-            r = r*scale;
-            kernel[i*3] = r[0];
-            kernel[i*3+1] = r[1];
-            kernel[i*3+2] = r[2];
-            std::cout << "vec3(" << kernel[i*3] << "f, " << kernel[i*3+1] << "f, " << kernel[i*3+2] << "f)," << std::endl;
-        }
-        std::cout << std::endl;*/
-        ssaoShader->use();
-        //glUniform3fv(kernelLoc, kernelSize, kernel);
-        glUniformMatrix4fv(inversePLoc, 1, GL_FALSE, glm::value_ptr(scene->getCamera()->getInverseProjection()));
-        glUniformMatrix4fv(PLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
-    });
-
-
-    /*Blur SSAO*/
-    SceneNode* blur = ResourceManager::Factory::createScene(SSAO_APPLY, finalCamera);
-    blur->setShader(rm->getShader(SSAO_APPLY_SHADER));
-    blur->setMesh(quad);
-    blur->setPreDraw([=](){
-        glActiveTexture(GL_TEXTURE1);
-        sceneColorFBO->bindTexture();
-        glActiveTexture(GL_TEXTURE0);
-        ssaoFBO->bindTexture();
-    });
 }
 

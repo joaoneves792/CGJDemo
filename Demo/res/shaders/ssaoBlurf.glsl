@@ -3,9 +3,6 @@
 in vec2 uv;
 
 uniform sampler2D ssaoTexture;
-uniform sampler2D renderedScene;
-uniform float toggle;
-
 
 out vec4 color;
 
@@ -37,12 +34,6 @@ void main() {
     vec2 texelSize = 2.0f / vec2(textureSize(ssaoTexture, 0));
     vec3 occlusion = convolute(blur_kernel, uv, texelSize).rgb;
 
-    if(toggle < 1.0f){
-        color = vec4(texture(renderedScene, uv).rgb*occlusion.r, 1.0f);
-    }else if (toggle < 2.0f){
-        color = vec4(occlusion, 1.0f);
-    }else{
-        color = texture(renderedScene, uv);
-    }
+    color = vec4(occlusion, 1.0f);
 }
 

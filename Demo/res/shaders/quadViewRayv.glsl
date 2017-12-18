@@ -11,7 +11,7 @@ uniform mat4 inverseP;
 void main() {
 	gl_Position = MVP * vec4(inPosition, 1.0f);
 	uv = (inPosition.xy+1)*0.5;
-	vec4 ray = inverseP*vec4(inPosition.xy, 1.0f, 1.0f); //This works because Quad is in range [-1, 1]
+	vec4 ray = inverseP*vec4(inPosition.xy, -1.0f, 1.0f); //This works because Quad is in range [-1, 1]
 
     // unproject the frustum corner from NDC to view space
 	frustumRay = (ray / ray.w).xyz;

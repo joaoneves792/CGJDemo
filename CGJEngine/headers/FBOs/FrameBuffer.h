@@ -19,8 +19,9 @@ protected:
     friend class DepthTextureFrameBuffer;
     friend class MSFrameBuffer;
     friend class DoubleColorMSFrameBuffer;
+    friend class GFrameBuffer;
 public:
-    FrameBuffer() = default;
+    FrameBuffer();
     FrameBuffer(int x, int y);
     void bind();
     void unbind();
