@@ -17,6 +17,7 @@ uniform sampler2D ambient;
 uniform sampler2D normals;
 uniform sampler2D specular;
 uniform sampler2D depth;
+uniform sampler2D occlusion;
 
 /*Lights Properties*/
 uniform vec3 lightPosition_worldspace[MAX_LIGHTS];
@@ -36,7 +37,6 @@ void main() {
 
 	vec3 color = vec3(0,0,0);//start with black;
 	vec3 N = normalize(texture(normals, uv).xyz);
-
 	vec3 E = normalize(-position_viewspace);
 
 	for(int i=0; i<MAX_LIGHTS; i++){
@@ -63,7 +63,7 @@ void main() {
 
         //Blinn term
         vec3 H = normalize(L+E);
-        float shininess = texture(specular, uv).w;
+        float shininess = texture(specular, uv).w*128.0;
         float lightSpecular = pow(clamp(dot(H, N), 0, 1), shininess*4.0f);
 
 	    //Diffuse component
@@ -78,8 +78,9 @@ void main() {
         color += lightContribution;
 	}
 
+    float occlusionFactor = texture(occlusion, uv).r;
     vec3 ambientColor = texture(ambient, uv).rgb;
-    out_color.rgb = color + ambientColor;
+    out_color.rgb = (color + ambientColor)*occlusionFactor;
     out_color.a = 1.0f;
 
 }

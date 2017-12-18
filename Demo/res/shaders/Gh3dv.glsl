@@ -21,7 +21,7 @@ void main() {
     vec4 position = vec4(inPosition, 1.0f);
 
     /*Calculate normals*/
-    normal_cameraspace = (NormalMatrix * vec4(inNormal, 0)).xyz;
+    normal_cameraspace = ((NormalMatrix * vec4(inNormal, 0.0f)).xyz);
     normal_worldspace = (Model * vec4(inNormal, 0.0f)).xyz; //Assuming there is no scale
 
 	/*Position in worldspace and cameraspace*/

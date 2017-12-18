@@ -4,7 +4,6 @@
 #define AMBIENT 1
 #define SPECULAR 2
 #define NORMAL 3
-#define POSITION 4
 
 in vec3 eyeDirection_worldspace;
 in vec2 texture_coord_from_vshader;
@@ -36,7 +35,7 @@ void main() {
         vec3 E = normalize(eyeDirection_worldspace);
         vec3 R = reflect(E, N);
         R = R + vec3(0.0f, 0.0f, movement);
-        matDiffuse += texture(environment, R).rgb*(shininess/128.0f)*0.1f*(1/alpha);
+        matDiffuse += texture(environment, R).rgb*(shininess/128.0f)*0.3f*(1/alpha);
     }
 
     G_output[DIFFUSE].rgb = matDiffuse;

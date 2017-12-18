@@ -14,8 +14,10 @@ uniform float brightness;
 
 void main()
 {
-    outColor[DIFFUSE] = texture(skybox, TexCoords)*brightness;
-    outColor[AMBIENT] = outColor[DIFFUSE];
+    vec3 color = texture(skybox, TexCoords).rgb;
+    outColor[DIFFUSE] = vec4(color*brightness, 1.0f);
+    outColor[AMBIENT] = vec4(color*brightness, 1.0f);
+
 
     outColor[SPECULAR] = vec4(0.0f);
     outColor[NORMAL] = vec4(0.0f, 0.0f, 0.0f, 1.0f);

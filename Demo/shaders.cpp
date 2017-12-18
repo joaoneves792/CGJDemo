@@ -123,24 +123,6 @@ void loadShaders(){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
-    /*Heat reflection shader*/
-    auto heatRShader = ResourceManager::Factory::createShader(HEAT_SPOT_REFLECTION_SHADER, "res/shaders/heatReflectionV.glsl", "res/shaders/heatReflectionF.glsl");
-    heatRShader->setAttribLocation("vertex", VERTICES__ATTR);
-    heatRShader->link();
-    heatRShader->use();
-    ModelLocation = heatRShader->getUniformLocation("Model");
-    ViewLocation = heatRShader->getUniformLocation("View");
-    ProjectionLocation = heatRShader->getUniformLocation("Projection");
-    textureLoc = glGetUniformLocation(heatRShader->getShader(), "map");
-    GLint mirrorLoc = glGetUniformLocation(heatRShader->getShader(), "mirror");
-    glUniform1i(textureLoc, 0);
-    glUniform1i(mirrorLoc, 1);
-    heatRShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, glm::value_ptr(M));
-        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
-        glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
-    });
-
     /*Fire shader*/
     auto fireShader = ResourceManager::Factory::createShader(FIRE_SHADER, "res/shaders/firev.glsl", "res/shaders/firef.glsl");
     fireShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
@@ -188,12 +170,14 @@ void loadShaders(){
     GLint specularLoc = lightingShader->getUniformLocation("specular");
     GLint depthLoc = lightingShader->getUniformLocation("depth");
     GLint normalLoc = lightingShader->getUniformLocation("normals");
+    GLint occlusionLoc = lightingShader->getUniformLocation("occlusion");
     MVPLocation = lightingShader->getUniformLocation("MVP");
     glUniform1i(diffuseLoc, 0);
     glUniform1i(ambientLoc, 1);
     glUniform1i(specularLoc, 2);
     glUniform1i(depthLoc, 3);
     glUniform1i(normalLoc, 4);
+    glUniform1i(occlusionLoc, 5);
     lightingShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
 

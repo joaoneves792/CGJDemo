@@ -41,7 +41,7 @@ vec3 kernel[KERNEL_SIZE] = vec3[](
 void main() {
 
     //Reconstruct the position from depth and view ray
-    float d = texture(depthBuffer, uv).r *2.0f - 1.0f;
+    float d = texture(depthBuffer, uv).r;
     //float z = -(d*P[3][3]-P[3][2])/(d*P[2][3]-P[2][2]); //Can be simplified to:
     float z = -(P[3][2]/(d+P[2][2]));
     vec3 origin = frustumRay*z;

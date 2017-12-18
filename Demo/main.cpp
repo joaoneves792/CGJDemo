@@ -55,11 +55,13 @@ void display()
 	/*Copy fbo to texture and use the copy for post-processing*/
     //scene->draw(HEAT_HAZE_LEVEL);
 	//particlePool->draw(HEAT_HAZE_LEVEL);
-	/*sideBuffer1->bind();
+	sideBuffer1->bind();
 	pipeline->draw(SSAO_LEVEL);
 	sideBuffer1->unbind();
+    sideBuffer2->bind();
 	sideBuffer1->bindTexture();
-	pipeline->draw(SSAO_BLUR_LEVEL);*/
+	pipeline->draw(SSAO_BLUR_LEVEL);
+    sideBuffer2->unbind();
     sideBuffer1->bind();
 	glActiveTexture(GL_TEXTURE0);
 	mainFBO->bindDiffuse();
@@ -71,12 +73,12 @@ void display()
 	mainFBO->bindDepth();
 	glActiveTexture(GL_TEXTURE4);
 	mainFBO->bindNormals();
+    glActiveTexture(GL_TEXTURE5);
+    sideBuffer2->bindTexture();
 	glActiveTexture(GL_TEXTURE0);
 	pipeline->draw(LIGHTS_LEVEL);
     sideBuffer1->unbind();
     sideBuffer1->blit();
-    /*mainFBO->blitNormal(sideBuffer2);
-    sideBuffer2->blit();*/
 
 
     creditsHUD->draw();
