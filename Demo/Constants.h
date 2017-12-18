@@ -33,6 +33,7 @@
 #define SSAO_SHADER "ssao"
 #define SSAO_BLUR_SHADER "ssaoBlur"
 #define LIGHTING_SHADER "lightingshader"
+#define BLEND_SHADER "blend"
 
 /*Scenes*/
 #define SCENE "main"
@@ -93,13 +94,15 @@
 #define REAR_HEAT "rearheat"
 
 
-/*Pipeline Levels*/
-#define SSAO_LEVEL (-3)
+/*Pipeline Stages*/
+#define SSAO_LEVEL (-4)
 #define SSAO "ssao"
-#define SSAO_BLUR_LEVEL (-2)
+#define SSAO_BLUR_LEVEL (-3)
 #define SSAO_BLUR "ssaoBlur"
-#define LIGHTS_LEVEL (-1)
+#define LIGHTS_LEVEL (-2)
 #define LIGHTING "lighting"
+#define BLEND_LEVEL (-1)
+#define BLEND "blend"
 
 /*Misc constants*/
 #define PI 3.14159f

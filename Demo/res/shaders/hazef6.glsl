@@ -1,14 +1,18 @@
 #version 330 core
 
+#define DIFFUSE 0
+#define AMBIENT 1
+#define SPECULAR 2
+#define NORMAL 3
+
 in vec2 uv;
 in vec2 position_modelspace;
 in float life;
 
 uniform sampler2D renderedTexture;
 uniform sampler2D noiseTexture;
-uniform float noise_blur_black;
 
-out vec4 color;
+out vec4[4] color;
 
 #define PI 3.14159f
 #define AMPLITUDE 1.0f/800.0f
@@ -75,15 +79,7 @@ void main() {
 
     vec3 noise_component = texture(renderedTexture, noise_uv).rgb;
     vec3 blur_component = convolute(blur_kernel, waved_uv);
-    if(noise_blur_black == 0.0){
-        color.rgb = 0.6f*noise_component+0.4*blur_component;
-    }else if(noise_blur_black == 1.0f){
-        color.rgb = noise_component;
-    }else if(noise_blur_black == 2.0f){
-        color.rgb = blur_component;
-    }else{
-            color.rgb = vec3(0.0f, 0.0f, 0.0f);
-    }
+    color[DIFFUSE].rgb = 0.6f*noise_component+0.4*blur_component;
 
-    color.a = 1.0f-length(position_modelspace)*2;
+    color[DIFFUSE].a = 1.0f-length(position_modelspace)*2;
 }

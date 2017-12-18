@@ -160,6 +160,19 @@ void loadShaders(){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
+    /*Layer Blending shader*/
+    auto blendShader = ResourceManager::Factory::createShader(BLEND_SHADER, "res/shaders/quadv.glsl", "res/shaders/blendf.glsl");
+    blendShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    blendShader->link();
+    blendShader->use();
+    GLint background = blendShader->getUniformLocation("background");
+    GLint foreground = blendShader->getUniformLocation("foreground");
+    glUniform1i(background, 0);
+    glUniform1i(foreground, 1);
+    blendShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+    });
+
     /*Lighting Shader*/
     auto lightingShader = ResourceManager::Factory::createShader(LIGHTING_SHADER, "res/shaders/quadViewRayv.glsl", "res/shaders/lightingf.glsl");
     lightingShader->setAttribLocation("inPosition", VERTICES__ATTR);

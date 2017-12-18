@@ -186,10 +186,10 @@ void setupScene(){
     carNode->addChild(exhaustRight);
 
     /*Heat haze*/
-    /**
+
     auto noise  = ResourceManager::Factory::createTexture("res/noise1.png");
     auto heatShader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
-    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, sceneColorFBO->getTexture(),
+    auto hazeEmitter = ResourceManager::Factory::createParticleEmmiter(HEAT_EMITTER, pool, heatShader, nullptr,
                                                                        Vec3(0.0f, 1e-8f, 0.0f), Vec3(0.0f, 3e-5f, 3e-5f),
                                                                        Vec3(0.0f, 0.3f, 6.4f), 0.002, 0.0f);
     hazeEmitter->setRandomAcceleration(Vec3(2e-8f, 3e-10f, 1e-8f));
@@ -197,8 +197,6 @@ void setupScene(){
     hazeEmitter->setProcessingLevel(HEAT_HAZE_LEVEL);
     hazeEmitter->emmit();
     hazeEmitter->setPreDraw([=](){
-        glActiveTexture(GL_TEXTURE0);
-        sceneColorFBO->bindTexture();
         glActiveTexture(GL_TEXTURE1);
         noise->bind();
         glActiveTexture(GL_TEXTURE0);
@@ -209,7 +207,7 @@ void setupScene(){
         hazeEmitter->update(20); //Hack to get things going faster
 
     //Quads for distance heat distortion
-    auto distanceHeatShader = rm->getShader(HEAT_DISTANCE_SHADER);
+    /*auto distanceHeatShader = rm->getShader(HEAT_DISTANCE_SHADER);
     GLint timeLoc = distanceHeatShader->getUniformLocation("time");
     auto distanceHeat = new SceneNode(DISTANCE_HEAT);
     distanceHeat->scale(15.0f, 5.0f, 0.0f);
@@ -292,6 +290,9 @@ void setupScene(){
     });
     renderPipeline->addChild(lighting);
 
+    auto blend = new SceneNode(BLEND, quad, rm->getShader(BLEND_SHADER));
+    blend->setProcessingLevel(BLEND_LEVEL);
+    renderPipeline->addChild(blend);
 
     /*Setup HUD*/
     auto creditsCamera = ResourceManager::Factory::createHUDCamera(BOTTOM_RIGHT_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);

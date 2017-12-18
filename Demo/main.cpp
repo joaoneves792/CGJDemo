@@ -49,12 +49,8 @@ void display()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	scene->draw();
 	mainFBO->unbind();
-    //particlePool->draw(DEFAULT_PARTICLES_LEVEL);
 
-
-	/*Copy fbo to texture and use the copy for post-processing*/
-    //scene->draw(HEAT_HAZE_LEVEL);
-	//particlePool->draw(HEAT_HAZE_LEVEL);
+    /*Perform SSAO stage*/
 	sideBuffer1->bind();
 	pipeline->draw(SSAO_LEVEL);
 	sideBuffer1->unbind();
@@ -62,6 +58,8 @@ void display()
 	sideBuffer1->bindTexture();
 	pipeline->draw(SSAO_BLUR_LEVEL);
     sideBuffer2->unbind();
+
+    /*Perform Lighting stage*/
     sideBuffer1->bind();
 	glActiveTexture(GL_TEXTURE0);
 	mainFBO->bindDiffuse();
@@ -78,8 +76,39 @@ void display()
 	glActiveTexture(GL_TEXTURE0);
 	pipeline->draw(LIGHTS_LEVEL);
     sideBuffer1->unbind();
-    sideBuffer1->blit();
 
+
+    /*Draw regular particles*/
+    mainFBO->bind();
+    glClear(GL_COLOR_BUFFER_BIT); //Only clear color, leave depth
+    particlePool->draw(DEFAULT_PARTICLES_LEVEL);
+    mainFBO->unbind();
+
+    /*Blend regular particles*/
+    sideBuffer2->bind();
+    glActiveTexture(GL_TEXTURE0);
+    sideBuffer1->bindTexture();
+    glActiveTexture(GL_TEXTURE1);
+    mainFBO->bindDiffuse();
+    glActiveTexture(GL_TEXTURE0);
+    pipeline->draw(BLEND_LEVEL);
+    sideBuffer2->unbind();
+
+    /*Draw Post-FX particles*/
+    mainFBO->bind();
+    glActiveTexture(GL_TEXTURE0);
+    sideBuffer2->bindTexture();
+    //scene->draw(HEAT_HAZE_LEVEL);
+    particlePool->draw(HEAT_HAZE_LEVEL);
+    mainFBO->unbind();
+
+    /*Blend the FX particles and draw to viewport*/
+    glActiveTexture(GL_TEXTURE0);
+    sideBuffer2->bindTexture();
+    glActiveTexture(GL_TEXTURE1);
+    mainFBO->bindDiffuse();
+    glActiveTexture(GL_TEXTURE0);
+    pipeline->draw(BLEND_LEVEL);
 
     creditsHUD->draw();
 
@@ -116,11 +145,8 @@ void reshape(int w, int h)
 	ResourceManager::getInstance()->getCamera(BOTTOM_RIGHT_CAM)->resize(w, h);
 
     ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
-    /*ResourceManager::getInstance()->getFrameBuffer(SCENE_COLOR_FBO)->resize(w, h);
-    ResourceManager::getInstance()->getFrameBuffer(NORMALZ_FBO)->resize(w, h);
-    ResourceManager::getInstance()->getFrameBuffer(DEPTH_FBO)->resize(w, h);
-    ResourceManager::getInstance()->getFrameBuffer(SSAO_FBO)->resize(w, h);
-    ResourceManager::getInstance()->getFrameBuffer(FINAL_FBO)->resize(w, h);*/
+    ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2)->resize(w, h);
 
 	glViewport(0, 0, w, h);
 }
@@ -202,14 +228,14 @@ void checkOpenGLInfo()
 void setupOpenGL()
 {
 	checkOpenGLInfo();
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
 	glDepthRange(0.0, 1.0);
 	glClearDepth(1.0);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnablei(GL_BLEND, 0);
+    glBlendFunci(0, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
