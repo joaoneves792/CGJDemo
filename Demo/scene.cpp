@@ -25,8 +25,9 @@ void setupScene(){
 
     /*Create the framebuffers*/
     auto gBuffer = ResourceManager::Factory::createGFrameBuffer(MAIN_FBO, WIN_X, WIN_Y);
-    auto sideBuffer1 = ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO1, WIN_X, WIN_Y);
-    auto sideBuffer2 = ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO2, WIN_X, WIN_Y);
+    ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO1, WIN_X, WIN_Y);
+    ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO2, WIN_X, WIN_Y);
+    ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO3, WIN_X, WIN_Y);
 
     //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
     auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat());
@@ -78,6 +79,7 @@ void setupScene(){
         glActiveTexture(GL_TEXTURE0);
     };
     sky->setPreDraw([=](){
+        glActiveTexture(GL_TEXTURE0);
         skyCubeMap->bindCubeMap();
     });
     root->addChild(sky);
@@ -289,6 +291,10 @@ void setupScene(){
         glUniformMatrix4fv(ProjectionLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
     });
     renderPipeline->addChild(lighting);
+
+    auto ambientBlend = new SceneNode(AMBIENT, quad, rm->getShader(AMBIENT_BLEND_SHADER));
+    ambientBlend->setProcessingLevel(AMBIENT_LEVEL);
+    renderPipeline->addChild(ambientBlend);
 
     auto blend = new SceneNode(BLEND, quad, rm->getShader(BLEND_SHADER));
     blend->setProcessingLevel(BLEND_LEVEL);

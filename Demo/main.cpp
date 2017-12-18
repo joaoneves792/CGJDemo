@@ -35,6 +35,7 @@ void display()
     static GFrameBuffer* mainFBO = (GFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO);
 	static ColorTextureFrameBuffer* sideBuffer1 = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1);
 	static ColorTextureFrameBuffer* sideBuffer2 = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2);
+    static ColorTextureFrameBuffer* sideBuffer3 = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3);
 
     static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
 
@@ -44,7 +45,7 @@ void display()
 
     LightsManager::getInstance()->uploadLights();
 
-    /*Draw scene to fbo*/
+    /*Draw scene to G-Buffer*/
 	mainFBO->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	scene->draw();
@@ -64,19 +65,26 @@ void display()
 	glActiveTexture(GL_TEXTURE0);
 	mainFBO->bindDiffuse();
 	glActiveTexture(GL_TEXTURE1);
-	mainFBO->bindAmbient();
+    mainFBO->bindSpecular();
 	glActiveTexture(GL_TEXTURE2);
-	mainFBO->bindSpecular();
+    mainFBO->bindDepth();
 	glActiveTexture(GL_TEXTURE3);
-	mainFBO->bindDepth();
-	glActiveTexture(GL_TEXTURE4);
-	mainFBO->bindNormals();
-    glActiveTexture(GL_TEXTURE5);
-    sideBuffer2->bindTexture();
+    mainFBO->bindNormals();
 	glActiveTexture(GL_TEXTURE0);
 	pipeline->draw(LIGHTS_LEVEL);
     sideBuffer1->unbind();
 
+    /*Blend in the ambient information*/
+    sideBuffer3->bind();
+    glActiveTexture(GL_TEXTURE0);
+    sideBuffer1->bindTexture();
+    glActiveTexture(GL_TEXTURE1);
+    mainFBO->bindAmbient();
+    glActiveTexture(GL_TEXTURE2);
+    sideBuffer2->bindTexture();
+    glActiveTexture(GL_TEXTURE0);
+    pipeline->draw(AMBIENT_LEVEL);
+    sideBuffer3->unbind();
 
     /*Draw regular particles*/
     mainFBO->bind();
@@ -87,7 +95,7 @@ void display()
     /*Blend regular particles*/
     sideBuffer2->bind();
     glActiveTexture(GL_TEXTURE0);
-    sideBuffer1->bindTexture();
+    sideBuffer3->bindTexture();
     glActiveTexture(GL_TEXTURE1);
     mainFBO->bindDiffuse();
     glActiveTexture(GL_TEXTURE0);
@@ -147,6 +155,7 @@ void reshape(int w, int h)
     ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
     ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1)->resize(w, h);
     ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3)->resize(w, h);
 
 	glViewport(0, 0, w, h);
 }

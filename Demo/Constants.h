@@ -28,19 +28,17 @@
 #define QUAD_SHADER "quadShader"
 #define FIRE_SHADER "fire"
 #define HEAT_SHADER "heat"
-#define HEAT_SPOT_REFLECTION_SHADER "heatSpotShader"
 #define HEAT_DISTANCE_SHADER "heatDistance"
 #define SSAO_SHADER "ssao"
 #define SSAO_BLUR_SHADER "ssaoBlur"
 #define LIGHTING_SHADER "lightingshader"
 #define BLEND_SHADER "blend"
+#define AMBIENT_BLEND_SHADER "ambientBlend"
 
 /*Scenes*/
 #define SCENE "main"
 #define PIPELINE "pipeline"
-#define FINAL "final"
 #define CREDITS_HUD "credits_hud"
-#define CONTROLS_HUD "controls_hud"
 
 /*Lights*/
 #define SUN "sun"
@@ -57,14 +55,9 @@
 
 /*FBOs*/
 #define MAIN_FBO "main"
-#define SCENE_COLOR_FBO "helper"
-#define REFLECTION_FBO "reflection"
-#define DEPTH_FBO "depth"
-#define NORMALZ_FBO "normalz"
-#define SSAO_FBO "ssaofbo"
-#define FINAL_FBO "final"
 #define SIDE_FBO1 "sidefbo1"
 #define SIDE_FBO2 "sidefbo2"
+#define SIDE_FBO3 "sidefbo3"
 
 /*Particles*/
 #define MAX_PARTICLES 1024
@@ -95,14 +88,17 @@
 
 
 /*Pipeline Stages*/
-#define SSAO_LEVEL (-4)
+#define SSAO_LEVEL (-5)
 #define SSAO "ssao"
-#define SSAO_BLUR_LEVEL (-3)
+#define SSAO_BLUR_LEVEL (-4)
 #define SSAO_BLUR "ssaoBlur"
-#define LIGHTS_LEVEL (-2)
+#define LIGHTS_LEVEL (-3)
 #define LIGHTING "lighting"
+#define AMBIENT_LEVEL (-2)
+#define AMBIENT "ambient"
 #define BLEND_LEVEL (-1)
 #define BLEND "blend"
+
 
 /*Misc constants*/
 #define PI 3.14159f

@@ -1,6 +1,6 @@
 #version 330 core
 
-#define MAX_LIGHTS 20
+#define MAX_LIGHTS 15
 
 in vec2 uv;
 in vec3 frustumRay;
@@ -13,11 +13,9 @@ uniform mat4 Projection;
 
 /*Material Properties*/
 uniform sampler2D diffuse;
-uniform sampler2D ambient;
 uniform sampler2D normals;
 uniform sampler2D specular;
 uniform sampler2D depth;
-uniform sampler2D occlusion;
 
 /*Lights Properties*/
 uniform vec3 lightPosition_worldspace[MAX_LIGHTS];
@@ -78,9 +76,7 @@ void main() {
         color += lightContribution;
 	}
 
-    float occlusionFactor = texture(occlusion, uv).r;
-    vec3 ambientColor = texture(ambient, uv).rgb;
-    out_color.rgb = (color + ambientColor)*occlusionFactor;
+    out_color.rgb =color;
     out_color.a = 1.0f;
 
 }

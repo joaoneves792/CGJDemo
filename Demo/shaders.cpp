@@ -179,18 +179,14 @@ void loadShaders(){
     lightingShader->link();
     lightingShader->use();
     GLint diffuseLoc = lightingShader->getUniformLocation("diffuse");
-    GLint ambientLoc = lightingShader->getUniformLocation("ambient");
     GLint specularLoc = lightingShader->getUniformLocation("specular");
     GLint depthLoc = lightingShader->getUniformLocation("depth");
     GLint normalLoc = lightingShader->getUniformLocation("normals");
-    GLint occlusionLoc = lightingShader->getUniformLocation("occlusion");
     MVPLocation = lightingShader->getUniformLocation("MVP");
     glUniform1i(diffuseLoc, 0);
-    glUniform1i(ambientLoc, 1);
-    glUniform1i(specularLoc, 2);
-    glUniform1i(depthLoc, 3);
-    glUniform1i(normalLoc, 4);
-    glUniform1i(occlusionLoc, 5);
+    glUniform1i(specularLoc, 1);
+    glUniform1i(depthLoc, 2);
+    glUniform1i(normalLoc, 3);
     lightingShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
 
@@ -209,5 +205,22 @@ void loadShaders(){
             glUniform4fv(lightAttenuationLocation + i, 1, glm::value_ptr(attenuation));
             glUniform3fv(lightPositionLocation + i, 1, glm::value_ptr(position));
         }
+    });
+
+    /*Ambient shading*/
+    auto ambientShader = ResourceManager::Factory::createShader(AMBIENT_BLEND_SHADER, "res/shaders/quadv.glsl", "res/shaders/ambientBlendf.glsl");
+    ambientShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    ambientShader->link();
+    ambientShader->use();
+    GLint frameLoc = ambientShader->getUniformLocation("frame");
+    GLint ambientLoc = ambientShader->getUniformLocation("ambient");
+    GLint occlusionLoc = ambientShader->getUniformLocation("ambientOcclusion");
+    MVPLocation = ambientShader->getUniformLocation("MVP");
+    glUniform1i(frameLoc, 0);
+    glUniform1i(ambientLoc, 1);
+    glUniform1i(occlusionLoc, 2);
+    ambientShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+
     });
 }
