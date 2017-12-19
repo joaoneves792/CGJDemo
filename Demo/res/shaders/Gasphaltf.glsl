@@ -11,7 +11,7 @@ in vec3 normal_cameraspace;
 in vec3 normal_worldspace;
 in vec3 position_worldspace;
 
-out vec4[4] G_output;
+out vec4[5] G_output;
 
 /*Material Properties*/
 uniform sampler2D texture_sampler;
@@ -43,7 +43,7 @@ void main() {
     G_output[AMBIENT].rgb = reflection;
     G_output[AMBIENT].a = 1.0f;
 
-    G_output[SPECULAR].w = 0.0f;//shininess;
+    G_output[SPECULAR] = vec4(0.0f);
 
     G_output[NORMAL] = vec4(normal_cameraspace, 1.0f);
 }

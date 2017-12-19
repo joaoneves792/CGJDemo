@@ -47,7 +47,7 @@ void loadShaders(){
     glUniform1i(environmentLoc, ENVIRONMENT_SLOT);
 
     /*Asphalt Shader*/
-    auto asphaltShader = ResourceManager::Factory::createShader(ASPHALT_SHADER, "res/shaders/h3dv.glsl", "res/shaders/Gasphaltf.glsl");
+    auto asphaltShader = ResourceManager::Factory::createShader(ASPHALT_SHADER, "res/shaders/Gh3dv.glsl", "res/shaders/Gasphaltf.glsl");
     asphaltShader->setAttribLocation("inPositon", VERTICES__ATTR);
     asphaltShader->setAttribLocation("inNormal", NORMALS__ATTR);
     asphaltShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
