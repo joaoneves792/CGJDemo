@@ -19,6 +19,7 @@ private:
     Vec3 _color;
     Vec4 _attenuation;
 
+
 public:
     LightNode(std::string name);
 
@@ -27,7 +28,7 @@ public:
     void setColor(float r, float g, float b);
     void setAttenuation(float k, float kd, float kdd, float range);
 
-    virtual Vec3 getPositionWorldspace();
+    Vec3 getPositionWorldspace() override;
 
     Vec4 getCone();
     Vec3 getColor();

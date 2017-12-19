@@ -261,10 +261,6 @@ void setupScene(){
     ssao->setPreDraw([=](){
         glActiveTexture(GL_TEXTURE1);
         ssaoNoise->bind();
-        glActiveTexture(GL_TEXTURE2);
-        gBuffer->bindNormals();
-        glActiveTexture(GL_TEXTURE0);
-        gBuffer->bindDepth();
         ssaoShader->use();
         glUniformMatrix4fv(inversePLoc, 1, GL_FALSE, glm::value_ptr(scene->getCamera()->getInverseProjection()));
         glUniformMatrix4fv(PLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
@@ -301,6 +297,10 @@ void setupScene(){
         glDepthMask(GL_TRUE);
     });
     renderPipeline->addChild(blit);
+
+    auto fxaa = new SceneNode(FXAA, quad, rm->getShader(FXAA_SHADER));
+    fxaa->setProcessingLevel(FXAA_LEVEL);
+    renderPipeline->addChild(fxaa);
 
     /*Setup HUD*/
     auto creditsCamera = ResourceManager::Factory::createHUDCamera(BOTTOM_RIGHT_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);

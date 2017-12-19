@@ -1,9 +1,18 @@
 #version 330 core
 
-#define KERNEL_SIZE 4*4
-#define SAMPLE_RADIUS 1.5f
+/* SSAO implementation
+ * based on examples provided in:
+ * https://john-chapman-graphics.blogspot.pt/2013/01/ssao-tutorial.html
+ * https://github.com/McNopper/OpenGL/blob/master/Example28/shader/ssao.frag.glsl
+ * https://mynameismjp.wordpress.com/2009/03/10/reconstructing-position-from-depth/
+ * http://www.derschmale.com/2014/01/26/reconstructing-positions-from-the-depth-buffer/
+ */
 
-#define CAP_MIN_DISTANCE 0.0001
+
+#define KERNEL_SIZE 4*4
+#define SAMPLE_RADIUS 2.5f
+
+#define CAP_MIN_DISTANCE 0.00001
 #define CAP_MAX_DISTANCE 0.005
 
 in vec2 uv;
@@ -14,7 +23,6 @@ uniform sampler2D noise;
 uniform sampler2D normals;
 //uniform vec3 kernel[KERNEL_SIZE]; //4x4 kernel with a vec3 position
 uniform mat4 P;
-uniform mat4 inverseP;
 
 out vec4 color;
 
@@ -39,7 +47,6 @@ vec3 kernel[KERNEL_SIZE] = vec3[](
 );
 
 void main() {
-
     //Reconstruct the position from depth and view ray
     float d = texture(depthBuffer, uv).r;
     //float z = -(d*P[3][3]-P[3][2])/(d*P[2][3]-P[2][2]); //Can be simplified to:
@@ -77,7 +84,7 @@ void main() {
 
 
         if (delta > CAP_MIN_DISTANCE && delta < CAP_MAX_DISTANCE){
-        			occlusion += 1.0;
+            occlusion += 1.0;
         }
     }
 

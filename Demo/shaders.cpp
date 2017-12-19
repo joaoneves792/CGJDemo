@@ -160,13 +160,23 @@ void loadShaders(){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
 
-    /*Particle prepare shader*/
+    /*General purpose blit shader*/
     auto blitShader = ResourceManager::Factory::createShader(BLIT_SHADER, "res/shaders/quadv.glsl", "res/shaders/blitf.glsl");
     blitShader->setAttribLocation("inPosition", VERTICES__ATTR);
     blitShader->link();
     blitShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
+
+    /*FXAA Shader*/
+    auto fxaaShader = ResourceManager::Factory::createShader(FXAA_SHADER, "res/shaders/quadv.glsl", "res/shaders/fxaaf.glsl");
+    fxaaShader->setAttribLocation("inPosition", VERTICES__ATTR);
+    fxaaShader->link();
+    fxaaShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+    });
+
+
 
     /*Lighting Shader*/
     auto lightingShader = ResourceManager::Factory::createShader(LIGHTING_SHADER, "res/shaders/quadViewRayv.glsl", "res/shaders/lightingf.glsl");

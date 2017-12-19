@@ -32,8 +32,8 @@ vec3 convolute(float[9] kernel, vec2 pos, vec2 texelSize){
 
 void main() {
     vec2 texelSize = 2.0f / vec2(textureSize(ssaoTexture, 0));
-    vec3 occlusion = convolute(blur_kernel, uv, texelSize).rgb;
+    float occlusion = convolute(blur_kernel, uv, texelSize).r;
 
-    color = vec4(occlusion, 1.0f);
+    color = vec4(occlusion, occlusion, occlusion, 1.0f);
 }
 

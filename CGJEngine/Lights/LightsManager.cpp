@@ -29,12 +29,26 @@ void LightsManager::registerShader(Shader *shader,
 
 void LightsManager::uploadLights() {
     int i = 0;
+    //Upload first enabled lights (this allows for optimizing the shaders)
     for(auto it=_enabledLights.begin(); it!=_enabledLights.end(); it++){
-        for(auto sit=_shaderUpdateCallback.begin(); sit!=_shaderUpdateCallback.end(); sit++){
-            sit->first->use();
-            sit->second(it->first->getColor(), it->first->getPositionWorldspace(),
-                        it->first->getCone(), it->first->getAttenuation(), it->second, i);
+        if(it->second) {
+            for (auto sit = _shaderUpdateCallback.begin(); sit != _shaderUpdateCallback.end(); sit++) {
+                sit->first->use();
+                sit->second(it->first->getColor(), it->first->getPositionWorldspace(),
+                            it->first->getCone(), it->first->getAttenuation(), it->second, i);
+            }
+            i++;
         }
-        i++;
+    }
+    //Next upload the disabled lights (at least mark them as disabled)
+    for(auto it=_enabledLights.begin(); it!=_enabledLights.end(); it++){
+        if(!it->second) {
+            for (auto sit = _shaderUpdateCallback.begin(); sit != _shaderUpdateCallback.end(); sit++) {
+                sit->first->use();
+                sit->second(it->first->getColor(), it->first->getPositionWorldspace(),
+                            it->first->getCone(), it->first->getAttenuation(), it->second, i);
+            }
+            i++;
+        }
     }
 }

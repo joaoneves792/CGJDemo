@@ -56,9 +56,14 @@ void display()
 
     /*Perform SSAO stage*/
 	sideBuffer1->bind();
+	glActiveTexture(GL_TEXTURE2);
+	mainFBO->bindNormals();
+	glActiveTexture(GL_TEXTURE0);
+	mainFBO->bindDepth();
 	pipeline->draw(SSAO_LEVEL);
 	sideBuffer1->unbind();
     sideBuffer2->bind();
+	glActiveTexture(GL_TEXTURE0);
 	sideBuffer1->bindTexture();
 	pipeline->draw(SSAO_BLUR_LEVEL);
     sideBuffer2->unbind();
@@ -118,13 +123,13 @@ void display()
     particlePool->draw(HEAT_HAZE_LEVEL);
     mainFBO->unbind();
 
+    /*Apply FXAA and render to screen*/
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    blit->use();
-    glUniform1i(renderTargetLoc, 0);
     glActiveTexture(GL_TEXTURE0);
-    //mainFBO->bindParticles();
     mainFBO->bindParticles();
-    pipeline->draw(BLIT_LEVEL);
+    pipeline->draw(FXAA_LEVEL);
+
+    //sideBuffer2->blit();
 
     creditsHUD->draw();
 

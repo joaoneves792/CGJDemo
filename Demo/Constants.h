@@ -34,6 +34,7 @@
 #define LIGHTING_SHADER "lightingshader"
 #define BLIT_SHADER "prepareParticles"
 #define AMBIENT_BLEND_SHADER "ambientBlend"
+#define FXAA_SHADER "fxaashader"
 
 /*Scenes*/
 #define SCENE "main"
@@ -88,17 +89,18 @@
 
 
 /*Pipeline Stages*/
-#define SSAO_LEVEL (-5)
+#define SSAO_LEVEL (-6)
 #define SSAO "ssao"
-#define SSAO_BLUR_LEVEL (-4)
+#define SSAO_BLUR_LEVEL (-5)
 #define SSAO_BLUR "ssaoBlur"
-#define LIGHTS_LEVEL (-3)
+#define LIGHTS_LEVEL (-4)
 #define LIGHTING "lighting"
-#define AMBIENT_LEVEL (-2)
+#define AMBIENT_LEVEL (-3)
 #define AMBIENT "ambient"
-#define BLIT_LEVEL (-1)
+#define BLIT_LEVEL (-2)
 #define BLIT "prepareParticles"
-
+#define FXAA_LEVEL (-1)
+#define FXAA "fxaa"
 
 /*Misc constants*/
 #define PI 3.14159f

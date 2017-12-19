@@ -24,6 +24,7 @@ out vec4[5] color;
 #define HARMONICS_N 4
 
 #define NEXT_TEXEL_STEP 0.0025f
+#define NEXT_TEXEL_STEP_BLUR 0.001f
 
 #define NOISE_FREQUENCY 64.0f
 #define NOISE_PERIOD  40.0f
@@ -35,17 +36,17 @@ float blur_kernel[9] = float[](0.05f, 0.15f, 0.05f,
 
 vec3 convolute(float[9] kernel, vec2 pos){
     vec3 t[9] = vec3[](
-        texture(renderedTexture, vec2(pos.x-NEXT_TEXEL_STEP, pos.y+NEXT_TEXEL_STEP)).rgb,
-        texture(renderedTexture, vec2(pos.x, pos.y+NEXT_TEXEL_STEP)).rgb,
-        texture(renderedTexture, vec2(pos.x+NEXT_TEXEL_STEP, pos.y+NEXT_TEXEL_STEP)).rgb,
+        texture(renderedTexture, vec2(pos.x-NEXT_TEXEL_STEP_BLUR, pos.y+NEXT_TEXEL_STEP_BLUR)).rgb,
+        texture(renderedTexture, vec2(pos.x, pos.y+NEXT_TEXEL_STEP_BLUR)).rgb,
+        texture(renderedTexture, vec2(pos.x+NEXT_TEXEL_STEP_BLUR, pos.y+NEXT_TEXEL_STEP_BLUR)).rgb,
 
-        texture(renderedTexture, vec2(pos.x-NEXT_TEXEL_STEP, pos.y)).rgb,
+        texture(renderedTexture, vec2(pos.x-NEXT_TEXEL_STEP_BLUR, pos.y)).rgb,
         texture(renderedTexture, vec2(pos.x, pos.y)).rgb,
-        texture(renderedTexture, vec2(pos.x+NEXT_TEXEL_STEP, pos.y)).rgb,
+        texture(renderedTexture, vec2(pos.x+NEXT_TEXEL_STEP_BLUR, pos.y)).rgb,
 
-        texture(renderedTexture, vec2(pos.x-NEXT_TEXEL_STEP, pos.y-NEXT_TEXEL_STEP)).rgb,
-        texture(renderedTexture, vec2(pos.x, pos.y-NEXT_TEXEL_STEP)).rgb,
-        texture(renderedTexture, vec2(pos.x+NEXT_TEXEL_STEP, pos.y-NEXT_TEXEL_STEP)).rgb
+        texture(renderedTexture, vec2(pos.x-NEXT_TEXEL_STEP_BLUR, pos.y-NEXT_TEXEL_STEP_BLUR)).rgb,
+        texture(renderedTexture, vec2(pos.x, pos.y-NEXT_TEXEL_STEP_BLUR)).rgb,
+        texture(renderedTexture, vec2(pos.x+NEXT_TEXEL_STEP_BLUR, pos.y-NEXT_TEXEL_STEP_BLUR)).rgb
     );
 
     return kernel[8]*t[0] + kernel[7]*t[1] + kernel[6]*t[2] +

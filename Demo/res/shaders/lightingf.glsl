@@ -37,10 +37,8 @@ void main() {
 	vec3 N = normalize(texture(normals, uv).xyz);
 	vec3 E = normalize(-position_viewspace);
 
-	for(int i=0; i<MAX_LIGHTS; i++){
-	    if(lightsEnabled[i] == 0){
-	        continue;
-	    }
+    /*Go through the the lights until we hit a disabled one or MAX_LIGHTS (they should be sorted)*/
+	for(int i=0; (bool(lightsEnabled[i]) && i<MAX_LIGHTS); i++){
 	    vec3 lightPosition_viewspace = (View * vec4(lightPosition_worldspace[i], 1.0f)).xyz;
 		vec3 lightDirection_viewspace = lightPosition_viewspace - position_viewspace;
 
