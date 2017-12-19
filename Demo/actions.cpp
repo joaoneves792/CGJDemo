@@ -89,8 +89,7 @@ void setupActions() {
             glUniform1f(brightnessLoc, 0.5f);
             asphaltShader->use();
             glUniform1f(asphaltNightLoc, 1.0f);
-            /*scene->findNode(DISTANCE_HEAT)->hidden(true);
-            scene->findNode(EXHAUST_REFLECTION)->hidden(true);*/
+            scene->findNode(DISTANCE_HEAT)->hidden(true);
         }else {
             for(int i=0; i<ACTIVE_LAMPS; i++) {
                 std::stringstream lightName;
@@ -104,27 +103,7 @@ void setupActions() {
             glUniform1f(brightnessLoc, 1.0f);
             asphaltShader->use();
             glUniform1f(asphaltNightLoc, 0.0f);
-            /*scene->findNode(DISTANCE_HEAT)->hidden(false);
-            scene->findNode(EXHAUST_REFLECTION)->hidden(false);*/
+            scene->findNode(DISTANCE_HEAT)->hidden(false);
         }
     });
-    im->addKeyActionOnce('b', [=](){
-        static int toggleHazeParticles = 0;
-        toggleHazeParticles = (toggleHazeParticles+1)%4;
-        auto shader = ResourceManager::getInstance()->getShader(HEAT_SHADER);
-        auto uniformLocation = shader->getUniformLocation("noise_blur_black");
-        shader->use();
-        glUniform1f(uniformLocation, (float)toggleHazeParticles);
-        glUseProgram(0);
-    });
-    im->addKeyActionOnce('o', [=](){
-        static int toggleSSAO = 0;
-        toggleSSAO = (toggleSSAO+1)%3;
-        auto shader = ResourceManager::getInstance()->getShader(SSAO_BLUR_SHADER);
-        auto uniformLocation = shader->getUniformLocation("toggle");
-        shader->use();
-        glUniform1f(uniformLocation, (float)toggleSSAO);
-        glUseProgram(0);
-    });
-
 }

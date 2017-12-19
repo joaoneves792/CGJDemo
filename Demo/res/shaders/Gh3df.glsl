@@ -30,18 +30,21 @@ void main() {
 
     float alpha = texture(texture_sampler, texture_coord_from_vshader).a - transparency;
 
+    vec3 matAmbient = ambient.rgb;
+
     if(shininess >= 65.0f){
 	    vec3 N = normalize(normal_worldspace);
         vec3 E = normalize(eyeDirection_worldspace);
         vec3 R = reflect(E, N);
         R = R + vec3(0.0f, 0.0f, movement);
-        matDiffuse += texture(environment, R).rgb*(shininess/128.0f)*0.3f*(1/alpha);
+        matDiffuse += texture(environment, R).rgb*(shininess/128.0f)*0.35f;//*(1/alpha);
     }
 
     G_output[DIFFUSE].rgb = matDiffuse;
     G_output[DIFFUSE].a = alpha;
 
-    G_output[AMBIENT] = ambient*vec4(matDiffuse, 1.0f);
+    G_output[AMBIENT].rgb = matAmbient*matDiffuse;
+    G_output[AMBIENT].a = 1.0f;
 
     G_output[SPECULAR].xyz = specular.rgb;
     G_output[SPECULAR].w = shininess;

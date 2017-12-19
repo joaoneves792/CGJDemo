@@ -22,6 +22,7 @@ uniform float night;
 void main() {
 	//Material properties
 	vec3 matDiffuse = (texture(texture_sampler, texture_coord_from_vshader).rgb);
+    vec3 reflection = vec3(0.0f);
 
     if(night < 1.0f){
         vec3 N = normalize(normal_worldspace);
@@ -31,15 +32,15 @@ void main() {
         distanceCoef *= smoothstep(0.1, 0.5, distanceCoef);
         vec3 ambient = texture(environment, R).rgb*distanceCoef;
 
-        matDiffuse += ambient.rgb+matDiffuse*0.1f;
+        reflection += ambient.rgb+matDiffuse*0.1f;
     }else{
-        matDiffuse += matDiffuse*0.1;
+        reflection += matDiffuse*0.1;
     }
 
     G_output[DIFFUSE].rgb = matDiffuse;
     G_output[DIFFUSE].a = 1.0f;
 
-    G_output[AMBIENT].rgb = 0.1*matDiffuse;
+    G_output[AMBIENT].rgb = reflection;
     G_output[AMBIENT].a = 1.0f;
 
     G_output[SPECULAR].w = 0.0f;//shininess;

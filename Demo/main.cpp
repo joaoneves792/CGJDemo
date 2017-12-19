@@ -37,6 +37,9 @@ void display()
 	static ColorTextureFrameBuffer* sideBuffer2 = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2);
     static ColorTextureFrameBuffer* sideBuffer3 = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3);
 
+    static Shader* blit = ResourceManager::getInstance()->getShader(BLIT_SHADER);
+    static GLint renderTargetLoc = blit->getUniformLocation("renderTarget");
+
     static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
 
 
@@ -86,37 +89,42 @@ void display()
     pipeline->draw(AMBIENT_LEVEL);
     sideBuffer3->unbind();
 
-    /*Draw regular particles*/
+    /*Prepare buffer to draw particles*/
     mainFBO->bind();
-    glClear(GL_COLOR_BUFFER_BIT); //Only clear color, leave depth
+    blit->use();
+    glUniform1i(renderTargetLoc, 4);
+    glActiveTexture(GL_TEXTURE0);
+    sideBuffer3->bindTexture();
+    pipeline->draw(BLIT_LEVEL);
+
+    /*Draw the normal particles*/
     particlePool->draw(DEFAULT_PARTICLES_LEVEL);
     mainFBO->unbind();
 
-    /*Blend regular particles*/
-    sideBuffer2->bind();
+    /*Prepare the background for post-FX particles*/
+    sideBuffer3->bind();
+    blit->use();
+    glUniform1i(renderTargetLoc, 0);
     glActiveTexture(GL_TEXTURE0);
-    sideBuffer3->bindTexture();
-    glActiveTexture(GL_TEXTURE1);
-    mainFBO->bindDiffuse();
-    glActiveTexture(GL_TEXTURE0);
-    pipeline->draw(BLEND_LEVEL);
-    sideBuffer2->unbind();
+    mainFBO->bindParticles();
+    pipeline->draw(BLIT_LEVEL);
+    sideBuffer3->unbind();
 
-    /*Draw Post-FX particles*/
+    /*Draw post-FX particles*/
     mainFBO->bind();
     glActiveTexture(GL_TEXTURE0);
-    sideBuffer2->bindTexture();
-    //scene->draw(HEAT_HAZE_LEVEL);
+    sideBuffer3->bindTexture();
+    scene->draw(HEAT_HAZE_LEVEL);
     particlePool->draw(HEAT_HAZE_LEVEL);
     mainFBO->unbind();
 
-    /*Blend the FX particles and draw to viewport*/
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    blit->use();
+    glUniform1i(renderTargetLoc, 0);
     glActiveTexture(GL_TEXTURE0);
-    sideBuffer2->bindTexture();
-    glActiveTexture(GL_TEXTURE1);
-    mainFBO->bindDiffuse();
-    glActiveTexture(GL_TEXTURE0);
-    pipeline->draw(BLEND_LEVEL);
+    //mainFBO->bindParticles();
+    mainFBO->bindParticles();
+    pipeline->draw(BLIT_LEVEL);
 
     creditsHUD->draw();
 
@@ -243,9 +251,15 @@ void setupOpenGL()
 	glDepthMask(GL_TRUE);
 	glDepthRange(0.0, 1.0);
 	glClearDepth(1.0);
+
+    /*Set transparency on diffuse render target*/
     glEnablei(GL_BLEND, 0);
     glBlendFunci(0, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_CULL_FACE);
+    glEnablei(GL_BLEND, 4);
+    //glBlendFunci(4, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparatei(4, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+
+    glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	glEnable(GL_MULTISAMPLE);

@@ -19,6 +19,7 @@ private:
     Texture* _depthBuffer;
     Texture* _specularBuffer;
     Texture* _ambientBuffer;
+    Texture* _particleBuffer;
 public:
     GFrameBuffer(int x, int y);
     ~GFrameBuffer() override;
@@ -33,6 +34,7 @@ public:
     void bindDepth();
     void bindSpecular();
     void bindAmbient();
+    void bindParticles();
 private:
     void initializeNewFrameBuffer(int x, int y);
     void destroy();

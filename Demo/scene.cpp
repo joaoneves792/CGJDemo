@@ -209,7 +209,7 @@ void setupScene(){
         hazeEmitter->update(20); //Hack to get things going faster
 
     //Quads for distance heat distortion
-    /*auto distanceHeatShader = rm->getShader(HEAT_DISTANCE_SHADER);
+    auto distanceHeatShader = rm->getShader(HEAT_DISTANCE_SHADER);
     GLint timeLoc = distanceHeatShader->getUniformLocation("time");
     auto distanceHeat = new SceneNode(DISTANCE_HEAT);
     distanceHeat->scale(15.0f, 5.0f, 0.0f);
@@ -231,8 +231,6 @@ void setupScene(){
     frontHeat->setPreDraw([=](){
         glActiveTexture(GL_TEXTURE1);
         noise->bind();
-        glActiveTexture(GL_TEXTURE0);
-        sceneColorFBO->bindTexture();
     });
 
     distanceHeat->addChild(frontHeat);
@@ -242,11 +240,9 @@ void setupScene(){
     rearHeat->setPreDraw([=](){
         glActiveTexture(GL_TEXTURE1);
         noise->bind();
-        glActiveTexture(GL_TEXTURE0);
-        sceneColorFBO->bindTexture();
     });
     distanceHeat->addChild(rearHeat);
-    **/
+
 
     auto finalCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1, true);
     auto renderPipeline = ResourceManager::Factory::createScene(PIPELINE, finalCamera);
@@ -296,9 +292,15 @@ void setupScene(){
     ambientBlend->setProcessingLevel(AMBIENT_LEVEL);
     renderPipeline->addChild(ambientBlend);
 
-    auto blend = new SceneNode(BLEND, quad, rm->getShader(BLEND_SHADER));
-    blend->setProcessingLevel(BLEND_LEVEL);
-    renderPipeline->addChild(blend);
+    auto blit = new SceneNode(BLIT, quad, rm->getShader(BLIT_SHADER));
+    blit->setProcessingLevel(BLIT_LEVEL);
+    blit->setPreDraw([=](){
+        glDepthMask(GL_FALSE);
+    });
+    blit->setPostDraw([=](){
+        glDepthMask(GL_TRUE);
+    });
+    renderPipeline->addChild(blit);
 
     /*Setup HUD*/
     auto creditsCamera = ResourceManager::Factory::createHUDCamera(BOTTOM_RIGHT_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);

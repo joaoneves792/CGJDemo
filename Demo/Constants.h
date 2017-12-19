@@ -32,7 +32,7 @@
 #define SSAO_SHADER "ssao"
 #define SSAO_BLUR_SHADER "ssaoBlur"
 #define LIGHTING_SHADER "lightingshader"
-#define BLEND_SHADER "blend"
+#define BLIT_SHADER "prepareParticles"
 #define AMBIENT_BLEND_SHADER "ambientBlend"
 
 /*Scenes*/
@@ -96,8 +96,8 @@
 #define LIGHTING "lighting"
 #define AMBIENT_LEVEL (-2)
 #define AMBIENT "ambient"
-#define BLEND_LEVEL (-1)
-#define BLEND "blend"
+#define BLIT_LEVEL (-1)
+#define BLIT "prepareParticles"
 
 
 /*Misc constants*/

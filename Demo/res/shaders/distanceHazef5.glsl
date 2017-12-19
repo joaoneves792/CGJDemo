@@ -1,14 +1,15 @@
 #version 330 core
 
+#define PARTICLES 4
+
 in vec2 uv;
 in vec2 position_modelspace;
 in float life;
 
 uniform sampler2D renderedTexture;
 uniform sampler2D noiseTexture;
-uniform float noise_blur_black;
 
-out vec4 color;
+out vec4[5] color;
 
 #define PI 3.14159f
 #define AMPLITUDE 1.0f/800.0f
@@ -69,15 +70,7 @@ void main() {
     vec2 noise_offset = vec2(cos(noise*NOISE_FREQUENCY), sin(noise*NOISE_FREQUENCY)) * NOISE_AMPLITUDE * NEXT_TEXEL_STEP;
     vec3 noise_component = texture(renderedTexture, uv+wave_offset+noise_offset).rgb;
     vec3 blur_component = convolute(blur_kernel, uv+wave_offset);
-    if(noise_blur_black == 0.0){
-        color.rgb = 0.6f*noise_component+0.4*blur_component;
-    }else if(noise_blur_black == 1.0f){
-        color.rgb = noise_component;
-    }else if(noise_blur_black == 2.0f){
-        color.rgb = blur_component;
-    }else{
-            color.rgb = vec3(0.0f, 0.0f, 0.0f);
-    }
 
-    color.a = 1.0f-smoothstep(0.7, 1.0f, length(pos));
+    color[PARTICLES].rgb = 0.6f*noise_component+0.4*blur_component;
+    color[PARTICLES].a = 1.0f-smoothstep(0.7, 1.0f, length(pos));
 }

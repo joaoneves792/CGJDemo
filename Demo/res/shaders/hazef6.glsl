@@ -4,6 +4,7 @@
 #define AMBIENT 1
 #define SPECULAR 2
 #define NORMAL 3
+#define PARTICLES 4
 
 in vec2 uv;
 in vec2 position_modelspace;
@@ -12,7 +13,7 @@ in float life;
 uniform sampler2D renderedTexture;
 uniform sampler2D noiseTexture;
 
-out vec4[4] color;
+out vec4[5] color;
 
 #define PI 3.14159f
 #define AMPLITUDE 1.0f/800.0f
@@ -79,7 +80,9 @@ void main() {
 
     vec3 noise_component = texture(renderedTexture, noise_uv).rgb;
     vec3 blur_component = convolute(blur_kernel, waved_uv);
-    color[DIFFUSE].rgb = 0.6f*noise_component+0.4*blur_component;
 
-    color[DIFFUSE].a = 1.0f-length(position_modelspace)*2;
+    color[PARTICLES].rgb = 0.6f*noise_component+0.4*blur_component;
+    //color[PARTICLES].rgb = vec3(0.0f, 1.0f, 0.0f);
+    float alpha = 1.0f-length(position_modelspace)*2;
+    color[PARTICLES].a = alpha;
 }
