@@ -12,17 +12,14 @@
 #define ROAD "road"
 #define ASPHALT "asphalt"
 #define SKY "sky"
+#define QUAD "quad"
 
 /*Textures*/
 #define SKY_CUBE_MAP "skycubemap"
 #define ENVIRONMENT "environment"
-#define HAZE_ENVIRONMENT "hazeenvironment"
-#define CREDITS "credits"
-#define NOISE "noise"
 
 /*Shaders*/
 #define H3D_SHADER "h3d"
-#define GH3D_SHADER "gh3d"
 #define ASPHALT_SHADER "asphalt"
 #define SKY_SHADER "sky"
 #define QUAD_SHADER "quadShader"
@@ -44,12 +41,10 @@
 /*Lights*/
 #define SUN "sun"
 #define LAMP_POST "lamp_post"
-#define HEADLIGHT_R "headlight_r"
-#define HEADLIGHT_L "headlight_l"
 
 /*Cameras*/
-#define FREE_CAM "freeCamera"
 #define SPHERE_CAM "sphereCamera"
+#define FREE_CAM "freeCamera"
 #define ORTHO_CAM "ortho"
 #define BOTTOM_RIGHT_CAM "brCamera"
 #define TOP_RIGHT_CAM "trCamera"
@@ -63,8 +58,6 @@
 /*Particles*/
 #define MAX_PARTICLES 1024
 #define POOL "pool"
-#define SMOKE_EMITTER "smoke"
-#define SMOKE_PARTICLE "res/smoke.png"
 #define LEFT_EXHAUST "exhaust_l"
 #define RIGHT_EXHAUST "exhaust_r"
 #define FIRE_PARTICLE "res/fireAtlas.png"
@@ -82,7 +75,6 @@
 #define RLWHEEL "rl"
 #define FRWHEEL "fr"
 #define FLWHEEL "fl"
-#define EXHAUST_REFLECTION "reflection"
 #define DISTANCE_HEAT "distanceheat"
 #define FRONT_HEAT "frontheat"
 #define REAR_HEAT "rearheat"
@@ -108,14 +100,7 @@
 #define ACTIVE_LAMPS 12
 #define ROAD_LENGTH 60.0f
 #define HEAT_HAZE_LEVEL 10
-#define REFLECTIONS_LEVEL 9
 #define GROUND_LEVEL 0.0f
-#define ROAD_LEVEL 2
-#define REFLECTION_RESOLUTION 512
 #define HEAT_HAZE_DISTANCE 300.0f
-
-
-
-
 
 #endif //CGJDEMO_RESOURCENAMES_H

@@ -4,24 +4,12 @@
 
 #include "CGJengine.h"
 #include "shaders.h"
-#include "Constants.h"
+#include "constants.h"
 
 
 void loadShaders(){
-    int MVPLocation;
-    int ModelLocation;
-    int ViewLocation;
-    int ProjectionLocation;
-    int NormalLocation;
-    int lightPositionLocation;
-    int lightsEnabledLocation;
-    int lightColorLocation;
-    int lightConeLocation;
-    int lightAttenuationLocation;
-
-
-    /*G-Buffered H3D Shader*/
-    auto Gh3dShader = ResourceManager::Factory::createShader(GH3D_SHADER, "res/shaders/Gh3dv.glsl", "res/shaders/Gh3df.glsl");
+    /*H3D Shader*/
+    auto Gh3dShader = ResourceManager::Factory::createShader(H3D_SHADER, "res/shaders/Gh3dv.glsl", "res/shaders/Gh3df.glsl");
     Gh3dShader->setAttribLocation("inPositon", VERTICES__ATTR);
     Gh3dShader->setAttribLocation("inNormal", NORMALS__ATTR);
     Gh3dShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
@@ -30,10 +18,10 @@ void loadShaders(){
     Gh3dShader->setFragOutputLocation("G_output", 0);
     Gh3dShader->link();
 
-    MVPLocation = Gh3dShader->getUniformLocation("MVP");
-    ModelLocation = Gh3dShader->getUniformLocation("Model");
-    ViewLocation = Gh3dShader->getUniformLocation("View");
-    NormalLocation = Gh3dShader->getUniformLocation("NormalMatrix");
+    int MVPLocation = Gh3dShader->getUniformLocation("MVP");
+    int ModelLocation = Gh3dShader->getUniformLocation("Model");
+    int ViewLocation = Gh3dShader->getUniformLocation("View");
+    int NormalLocation = Gh3dShader->getUniformLocation("NormalMatrix");
     GLint textureLoc = Gh3dShader->getUniformLocation("texture_sampler");
     GLint environmentLoc = Gh3dShader->getUniformLocation("environment");
     Gh3dShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
@@ -103,7 +91,7 @@ void loadShaders(){
     glUniform1i(renderderTextureLoc, 0);
     glUniform1i(noiseLoc, 1);
     ViewLocation = heatShader->getUniformLocation("View");
-    ProjectionLocation = heatShader->getUniformLocation("Projection");
+    int ProjectionLocation = heatShader->getUniformLocation("Projection");
     heatShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
@@ -196,11 +184,11 @@ void loadShaders(){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
 
     });
-    lightPositionLocation = lightingShader->getUniformLocation("lightPosition_worldspace[0]");
-    lightsEnabledLocation = lightingShader->getUniformLocation("lightsEnabled[0]");
-    lightColorLocation = lightingShader->getUniformLocation("lightColor[0]");
-    lightConeLocation = lightingShader->getUniformLocation("lightCone[0]");
-    lightAttenuationLocation = lightingShader->getUniformLocation("lightAttenuation[0]");
+    int lightPositionLocation = lightingShader->getUniformLocation("lightPosition_worldspace[0]");
+    int lightsEnabledLocation = lightingShader->getUniformLocation("lightsEnabled[0]");
+    int lightColorLocation = lightingShader->getUniformLocation("lightColor[0]");
+    int lightConeLocation = lightingShader->getUniformLocation("lightCone[0]");
+    int lightAttenuationLocation = lightingShader->getUniformLocation("lightAttenuation[0]");
     LightsManager::getInstance()->registerShader(lightingShader, [=](Vec3 color, Vec3 position, Vec4 cone,
                                                                 Vec4 attenuation, int enabled, int i){
         glUniform1iv(lightsEnabledLocation+i, 1, &enabled);

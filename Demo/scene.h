@@ -9,7 +9,6 @@
 #include "CGJengine.h"
 
 void setupScene();
-void roadAccelerate(int dt);
-void roadBrake(int dt);
+void flames(int value);
 
 #endif //CGJDEMO_SCENE_H

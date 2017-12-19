@@ -19,9 +19,9 @@ set(SOURCE_FILES
 		meshes.h
 		shaders.cpp
 		shaders.h
-        Constants.h
-        Movement.cpp
-        Movement.h)
+		constants.h
+        movement.cpp
+        movement.h pipeline.cpp pipeline.h)
 
 add_executable(demo ${SOURCE_FILES})
 target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} CGJEngine)

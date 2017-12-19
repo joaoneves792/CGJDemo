@@ -11,7 +11,7 @@
 #include "CGJengine.h"
 #include "shaders.h"
 #include "meshes.h"
-#include "Constants.h"
+#include "constants.h"
 #include "SceneGraph/SceneNode.h"
 
 void setupScene(){
@@ -21,22 +21,17 @@ void setupScene(){
 
     /*Generic quad mesh for multiple purposes*/
     Mesh* quad = new QuadMesh();
-    rm->addMesh("quad", quad);
+    rm->addMesh(QUAD, quad);
 
-    /*Create the framebuffers*/
-    auto gBuffer = ResourceManager::Factory::createGFrameBuffer(MAIN_FBO, WIN_X, WIN_Y);
-    ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO1, WIN_X, WIN_Y);
-    ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO2, WIN_X, WIN_Y);
-    ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO3, WIN_X, WIN_Y);
 
-    //auto camera = ResourceManager::Factory::createFreeCamera(FREE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
-    auto camera = ResourceManager::Factory::createSphereCamera(FREE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat());
+    //auto camera = ResourceManager::Factory::createFreeCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
+    auto camera = ResourceManager::Factory::createSphereCamera(SPHERE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat());
     camera->perspective((float)PI/4.0f, 0, 1.0f, 1000.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
     root->translate(0.0f, GROUND_LEVEL, 0.0f);
 
     /*Setup material handling for H3D models*/
-    Shader* h3dShader = rm->getShader(GH3D_SHADER);
+    Shader* h3dShader = rm->getShader(H3D_SHADER);
     GLint ambientLoc = glGetUniformLocation(h3dShader->getShader(), "ambient");
     GLint diffuseLoc = glGetUniformLocation(h3dShader->getShader(), "diffuse");
     GLint specularLoc = glGetUniformLocation(h3dShader->getShader(), "specular");
@@ -244,63 +239,6 @@ void setupScene(){
     distanceHeat->addChild(rearHeat);
 
 
-    auto finalCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1, true);
-    auto renderPipeline = ResourceManager::Factory::createScene(PIPELINE, finalCamera);
-    renderPipeline->translate(0.0f, 0.0f, -0.2f);
-
-    auto ssaoShader = rm->getShader(SSAO_SHADER);
-    auto ssao = new SceneNode(SSAO, quad, ssaoShader);
-
-    auto ssaoNoise = new Texture();
-    ssaoNoise->generateRandom(4);
-    rm->addTexture("ssaoNoise", ssaoNoise);
-
-    GLint PLoc = ssaoShader->getUniformLocation("P");
-    GLint inversePLoc = ssaoShader->getUniformLocation("inverseP");
-    ssao->setProcessingLevel(SSAO_LEVEL);
-    ssao->setPreDraw([=](){
-        glActiveTexture(GL_TEXTURE1);
-        ssaoNoise->bind();
-        ssaoShader->use();
-        glUniformMatrix4fv(inversePLoc, 1, GL_FALSE, glm::value_ptr(scene->getCamera()->getInverseProjection()));
-        glUniformMatrix4fv(PLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
-    });
-    renderPipeline->addChild(ssao);
-
-    auto ssaoBlur = new SceneNode(SSAO_BLUR, quad, rm->getShader(SSAO_BLUR_SHADER));
-    ssaoBlur->setProcessingLevel(SSAO_BLUR_LEVEL);
-    renderPipeline->addChild(ssaoBlur);
-
-    auto lightingShader = rm->getShader(LIGHTING_SHADER);
-    auto lighting = new SceneNode(LIGHTING, quad, lightingShader);
-    GLint ViewLoc = lightingShader->getUniformLocation("View");
-    GLint ProjectionLoc = lightingShader->getUniformLocation("Projection");
-    inversePLoc = lightingShader->getUniformLocation("inverseP");
-    lighting->setProcessingLevel(LIGHTS_LEVEL);
-    lighting->setPreDraw([=](){
-        glUniformMatrix4fv(inversePLoc, 1, GL_FALSE, glm::value_ptr(scene->getCamera()->getInverseProjection()));
-        glUniformMatrix4fv(ViewLoc, 1, GL_FALSE, glm::value_ptr(scene->getViewMatrix()));
-        glUniformMatrix4fv(ProjectionLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
-    });
-    renderPipeline->addChild(lighting);
-
-    auto ambientBlend = new SceneNode(AMBIENT, quad, rm->getShader(AMBIENT_BLEND_SHADER));
-    ambientBlend->setProcessingLevel(AMBIENT_LEVEL);
-    renderPipeline->addChild(ambientBlend);
-
-    auto blit = new SceneNode(BLIT, quad, rm->getShader(BLIT_SHADER));
-    blit->setProcessingLevel(BLIT_LEVEL);
-    blit->setPreDraw([=](){
-        glDepthMask(GL_FALSE);
-    });
-    blit->setPostDraw([=](){
-        glDepthMask(GL_TRUE);
-    });
-    renderPipeline->addChild(blit);
-
-    auto fxaa = new SceneNode(FXAA, quad, rm->getShader(FXAA_SHADER));
-    fxaa->setProcessingLevel(FXAA_LEVEL);
-    renderPipeline->addChild(fxaa);
 
     /*Setup HUD*/
     auto creditsCamera = ResourceManager::Factory::createHUDCamera(BOTTOM_RIGHT_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);
@@ -319,3 +257,10 @@ void setupScene(){
     credits->translate(100.0f, 50.0f, -0.1f);
 }
 
+void flames(int value){
+    /*Timer callback function to emmit exhaust flames*/
+    ((ParticleEmitterNode*)ResourceManager::getInstance()->getScene(SCENE)->findNode(RIGHT_EXHAUST))->emmit();
+    ((ParticleEmitterNode*)ResourceManager::getInstance()->getScene(SCENE)->findNode(LEFT_EXHAUST))->emmit();
+    auto nextInterval = (unsigned int)(((float)std::rand()/(float)RAND_MAX)*5000);
+    glutTimerFunc(nextInterval, flames, 0);
+}

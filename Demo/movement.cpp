@@ -2,8 +2,8 @@
 // Created by joao on 11/21/17.
 //
 
-#include "Movement.h"
-#include "Constants.h"
+#include "movement.h"
+#include "constants.h"
 #include "SceneGraph/SceneNode.h"
 
 float Movement::speed = 0;
@@ -13,7 +13,7 @@ void Movement::accelerate(int dt){
     static SceneNode* road = ResourceManager::getInstance()->getScene(SCENE)->findNode(ROAD);
     static SceneNode* frontAxis = ResourceManager::getInstance()->getScene(SCENE)->findNode(FRONT_AXIS);
     static SceneNode* rearAxis = ResourceManager::getInstance()->getScene(SCENE)->findNode(REAR_AXIS);
-    static Shader* shader = ResourceManager::getInstance()->getShader(GH3D_SHADER);
+    static Shader* shader = ResourceManager::getInstance()->getShader(H3D_SHADER);
     static GLint loc = shader->getUniformLocation("movement");
 
     if(speed < MAX_SPEED)
@@ -41,7 +41,7 @@ void Movement::deccelerate(int dt) {
     static SceneNode* road = ResourceManager::getInstance()->getScene(SCENE)->findNode(ROAD);
     static SceneNode* frontAxis = ResourceManager::getInstance()->getScene(SCENE)->findNode(FRONT_AXIS);
     static SceneNode* rearAxis = ResourceManager::getInstance()->getScene(SCENE)->findNode(REAR_AXIS);
-    static Shader* shader = ResourceManager::getInstance()->getShader(GH3D_SHADER);
+    static Shader* shader = ResourceManager::getInstance()->getShader(H3D_SHADER);
     static GLint loc = shader->getUniformLocation("movement");
 
     if(speed > 0.0f)

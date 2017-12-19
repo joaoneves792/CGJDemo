@@ -5,8 +5,8 @@
 #include <sstream>
 #include "CGJengine.h"
 #include "actions.h"
-#include "Constants.h"
-#include "Movement.h"
+#include "constants.h"
+#include "movement.h"
 #include "SceneGraph/SceneNode.h"
 
 #define ESCAPE 27

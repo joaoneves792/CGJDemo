@@ -4,7 +4,7 @@
 
 #include "CGJengine.h"
 #include "meshes.h"
-#include "Constants.h"
+#include "constants.h"
 
 void loadMeshes(){
     ResourceManager::Factory::createMesh(CAR, "res/F430GTC/F430GTC.h3d");
