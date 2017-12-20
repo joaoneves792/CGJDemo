@@ -60,12 +60,12 @@ float harmonic_sin(int i, float a, float f){
 
 void main() {
     vec2 pos = position_modelspace;
-    vec2 wave_offset = vec2(0.0f, 0.0f);
-    for(int i=0; i<HARMONICS_N; i++){
-        float hs = harmonic_sin(i, pos.x, life);
-        wave_offset.x += X_AMPLITUDE*hs;
-        wave_offset.y += Y_AMPLITUDE*hs;
-    }
+    float hs = harmonic_sin(0, pos.x, life)+
+               harmonic_sin(1, pos.x, life)+
+               harmonic_sin(2, pos.x, life)+
+               harmonic_sin(3, pos.x, life);
+
+    vec2 wave_offset = vec2(X_AMPLITUDE*hs, Y_AMPLITUDE*hs);
 
     float noise = texture(noiseTexture, vec2(pos.x+2*life, pos.y)).r-0.5f;
     vec2 noise_offset = vec2(cos(noise*NOISE_FREQUENCY), sin(noise*NOISE_FREQUENCY)) * NOISE_AMPLITUDE * NEXT_TEXEL_STEP;
