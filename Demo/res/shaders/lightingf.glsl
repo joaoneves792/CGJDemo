@@ -18,10 +18,10 @@ uniform sampler2D specular;
 uniform sampler2D depth;
 
 /*Lights Properties*/
-uniform vec3 lightPosition_worldspace[MAX_LIGHTS];
+uniform vec3 lightPosition_viewspace[MAX_LIGHTS];
 uniform int lightsEnabled[MAX_LIGHTS];
 uniform vec3 lightColor[MAX_LIGHTS];
-uniform vec4 lightCone[MAX_LIGHTS]; //xyz->direction w->cutoffCos
+uniform vec4 lightCone_viewspace[MAX_LIGHTS]; //xyz->direction w->cutoffCos
 uniform vec4 lightAttenuation[MAX_LIGHTS]; //x->constant y->linear z->quadratic w->range
 
 
@@ -39,18 +39,15 @@ void main() {
 
     /*Go through the the lights until we hit a disabled one or MAX_LIGHTS (they should be sorted)*/
 	for(int i=0; (bool(lightsEnabled[i]) && i<MAX_LIGHTS); i++){
-	    vec3 lightPosition_viewspace = (View * vec4(lightPosition_worldspace[i], 1.0f)).xyz;
-		vec3 lightDirection_viewspace = lightPosition_viewspace - position_viewspace;
+		vec3 lightDirection_viewspace = lightPosition_viewspace[i] - position_viewspace;
 
 	    float distanceToLight = length(lightDirection_viewspace);
 	    if(distanceToLight > lightAttenuation[i].w && lightAttenuation[i].w > 0.0f){
 	        continue;
 	    }
 
-		vec3 lightCone_viewspace = mat3(View) * lightCone[i].xyz;
-
-		float cosCutOff = dot( normalize(lightCone_viewspace), normalize(-lightDirection_viewspace) );
-		if(cosCutOff < lightCone[i].w && lightCone[i].w > -1.0f){
+		float cosCutOff = dot( normalize(lightCone_viewspace[i].xyz), normalize(-lightDirection_viewspace) );
+		if(cosCutOff < lightCone_viewspace[i].w && lightCone_viewspace[i].w > -1.0f){
             continue;
         }
 	    vec3 lightContribution = vec3(0,0,0);

@@ -184,19 +184,22 @@ void loadShaders(){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
 
     });
-    int lightPositionLocation = lightingShader->getUniformLocation("lightPosition_worldspace[0]");
+    int lightPositionLocation = lightingShader->getUniformLocation("lightPosition_viewspace[0]");
     int lightsEnabledLocation = lightingShader->getUniformLocation("lightsEnabled[0]");
     int lightColorLocation = lightingShader->getUniformLocation("lightColor[0]");
-    int lightConeLocation = lightingShader->getUniformLocation("lightCone[0]");
+    int lightConeLocation = lightingShader->getUniformLocation("lightCone_viewspace[0]");
     int lightAttenuationLocation = lightingShader->getUniformLocation("lightAttenuation[0]");
     LightsManager::getInstance()->registerShader(lightingShader, [=](Vec3 color, Vec3 position, Vec4 cone,
                                                                 Vec4 attenuation, int enabled, int i){
         glUniform1iv(lightsEnabledLocation+i, 1, &enabled);
         if(enabled) {
+            Mat4 View = ResourceManager::getInstance()->getScene(SCENE)->getViewMatrix();
+            Vec3 position_viewspace = View * Vec4(position, 1.0f);
+            Vec4 cone_viewspace = Vec4(Mat3(View) * Vec3(cone), cone[3]);
             glUniform3fv(lightColorLocation + i, 1, glm::value_ptr(color));
-            glUniform4fv(lightConeLocation + i, 1, glm::value_ptr(cone));
+            glUniform4fv(lightConeLocation + i, 1, glm::value_ptr(cone_viewspace));
             glUniform4fv(lightAttenuationLocation + i, 1, glm::value_ptr(attenuation));
-            glUniform3fv(lightPositionLocation + i, 1, glm::value_ptr(position));
+            glUniform3fv(lightPositionLocation + i, 1, glm::value_ptr(position_viewspace));
         }
     });
 
