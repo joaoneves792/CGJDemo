@@ -197,5 +197,7 @@ void executePipeline(){
     mainFBO->bindParticles();
     pipeline->draw(FXAA_LEVEL);
 
+    //sideBuffer2->blit();
+
     creditsHUD->draw();
 }

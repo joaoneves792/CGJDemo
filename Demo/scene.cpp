@@ -50,9 +50,9 @@ void setupScene(){
 
     /*Create environment map*/
     auto environment = ResourceManager::Factory::createCubeMap(ENVIRONMENT,
-                                                               "res/environment/right.png", "res/environment/left.png",
-                                                               "res/environment/top.png", "res/environment/bottom.png",
-                                                               "res/environment/back.png", "res/environment/front.png");
+                                                               "res/environment/right.jpg", "res/environment/left.jpg",
+                                                               "res/environment/top.jpg", "res/environment/bottom.jpg",
+                                                               "res/environment/back.jpg", "res/environment/front.jpg");
     auto bindEnvironment = [=](){
         glActiveTexture(GL_TEXTURE0+ENVIRONMENT_SLOT);
         environment->bindCubeMap();

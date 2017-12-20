@@ -10,10 +10,10 @@
 
 
 #define KERNEL_SIZE 4*4
-#define SAMPLE_RADIUS 2.5f
+#define SAMPLE_RADIUS 1.5f
 
 #define CAP_MIN_DISTANCE 0.00001
-#define CAP_MAX_DISTANCE 0.005
+#define CAP_MAX_DISTANCE 1.0f
 
 in vec2 uv;
 in vec3 frustumRay; //gets interpolated to a viewRay
@@ -48,7 +48,7 @@ vec3 kernel[KERNEL_SIZE] = vec3[](
 
 void main() {
     //Reconstruct the position from depth and view ray
-    float d = texture(depthBuffer, uv).r;
+    float d = texture(depthBuffer, uv).r*2.0f-1.0f;
     //float z = -(d*P[3][3]-P[3][2])/(d*P[2][3]-P[2][2]); //Can be simplified to:
     float z = -(P[3][2]/(d+P[2][2]));
     vec3 origin = frustumRay*z;
@@ -77,7 +77,7 @@ void main() {
         sample_pos.xy = (sample_pos.xy+1)*0.5f;
 
         //sample the depth buffer:
-        float sampleDepth = texture(depthBuffer, sample_pos.xy).r;
+        float sampleDepth = texture(depthBuffer, sample_pos.xy).r*2.0f-1.0f;
 
         //Compare samples depth with depth of scene
         float delta = sample_pos.z - sampleDepth;
