@@ -107,7 +107,7 @@ typedef struct
 typedef struct
 {
     char*           name;
-    float           ambient[4];                             //
+    float           ambient;                             //
     float           diffuse[4];                         //
     float           specular[4];                        //
     float           emissive[4];                        //
@@ -150,7 +150,7 @@ private:
 
 	h3d_vboDescription* _vboDescriptions;
 
-	std::function<void(float* ambient, float* diffuse, float* specular,
+	std::function<void(float ambient, float* diffuse, float* specular,
 					   float* emissive, float shininess, float transparency)> _uploadMaterialCallback;
 
 	bool _isAnimated;
@@ -171,7 +171,7 @@ public:
 
 	void setCurrentFrame(int f);
 
-	void setMaterialUploadCallback(std::function<void(float* ambient, float* diffuse, float* specular,
+	void setMaterialUploadCallback(std::function<void(float ambient, float* diffuse, float* specular,
 					   float* emissive, float shininess, float transparency)> callback );
 
 private:

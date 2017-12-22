@@ -38,8 +38,8 @@ void setupScene(){
     GLint emissiveLoc = glGetUniformLocation(h3dShader->getShader(), "emissive");
     GLint shininessLoc = glGetUniformLocation(h3dShader->getShader(), "shininess");
     GLint transparencyLoc = glGetUniformLocation(h3dShader->getShader(), "transparency");
-    auto materialUploadCallback = [=](float* ambient, float* diffuse, float* specular, float* emissive, float shininess, float transparency) {
-        glUniform4fv(ambientLoc, 1, ambient);
+    auto materialUploadCallback = [=](float ambient, float* diffuse, float* specular, float* emissive, float shininess, float transparency) {
+        glUniform1fv(ambientLoc, 1, &ambient);
         glUniform4fv(diffuseLoc, 1, diffuse);
         glUniform4fv(specularLoc, 1, specular);
         glUniform4fv(emissiveLoc, 1, emissive);

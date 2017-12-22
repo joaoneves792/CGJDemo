@@ -9,13 +9,14 @@ in vec3 eyeDirection_worldspace;
 in vec2 texture_coord_from_vshader;
 in vec3 normal_cameraspace;
 in vec3 normal_worldspace;
+in highp float depth;
 
 out vec4[4] G_output;
 
 /*Material Properties*/
 uniform sampler2D texture_sampler;
 uniform samplerCube environment;
-uniform vec4 ambient;
+uniform float ambient;
 uniform vec4 diffuse;
 uniform vec4 specular;
 uniform vec4 emissive;
@@ -28,9 +29,9 @@ void main() {
 	//Material properties
 	vec3 matDiffuse = (texture(texture_sampler, texture_coord_from_vshader).rgb * diffuse.xyz);
 
+    //For fully correct shading, fragments with alpha < 1.0f should only be drawn in a second separate pass
+    //We are however drawing everything at once, so some visual glitches may appear
     float alpha = texture(texture_sampler, texture_coord_from_vshader).a - transparency;
-
-    vec3 matAmbient = ambient.rgb;
 
     if(shininess >= 65.0f){
 	    vec3 N = normalize(normal_worldspace);
@@ -40,10 +41,13 @@ void main() {
         matDiffuse += texture(environment, R).rgb*(shininess/128.0f)*0.35f;//*(1/alpha);
     }
 
+    if(alpha == 0.0f){
+        discard;
+    }
     G_output[DIFFUSE].rgb = matDiffuse;
     G_output[DIFFUSE].a = alpha;
 
-    G_output[AMBIENT].rgb = matAmbient*matDiffuse;
+    G_output[AMBIENT].rgb = ambient*matDiffuse;
     G_output[AMBIENT].a = 1.0f;
 
     G_output[SPECULAR].xyz = specular.rgb;

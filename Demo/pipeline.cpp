@@ -197,7 +197,10 @@ void executePipeline(){
     mainFBO->bindParticles();
     pipeline->draw(FXAA_LEVEL);
 
+
+    /* Uncomment for result of SSAO*/
     //sideBuffer2->blit();
+
 
     creditsHUD->draw();
 }

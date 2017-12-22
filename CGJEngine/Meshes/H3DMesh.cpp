@@ -380,7 +380,7 @@ void H3DMesh::draw() {
     }
 }
 
-void H3DMesh::setMaterialUploadCallback(std::function<void(float *ambient, float *diffuse, float *specular,
+void H3DMesh::setMaterialUploadCallback(std::function<void(float ambient, float *diffuse, float *specular,
                                                            float *emissive, float shininess,
                                                            float transparency)> callback) {
     _uploadMaterialCallback = callback;
@@ -511,9 +511,6 @@ void H3DMesh::loadFromFile(const std::string& filename) {
         fread(&_materials[i].emissive, 3, sizeof(float), fp);
         fread(&_materials[i].shininess, 1, sizeof(float), fp);
         fread(&_materials[i].transparency, 1, sizeof(float), fp);
-        _materials[i].ambient[1] = _materials[i].ambient[0];
-        _materials[i].ambient[2] = _materials[i].ambient[0];
-        _materials[i].ambient[3] = 1.0f;
         _materials[i].diffuse[3] = 1.0f;
         _materials[i].specular[3] = 1.0f;
         _materials[i].emissive[3] = 1.0f;

@@ -35,7 +35,8 @@ void main() {
     vec3 eyePos = -d * rotMat;
     eyeDirection_worldspace = position_worldspace - eyePos;
 
-	gl_Position = MVP * position;
+    vec4 position_clipspace = MVP * position;
+	gl_Position = position_clipspace;
 
 	texture_coord_from_vshader = inTexCoord;
 }

@@ -76,6 +76,10 @@ void main() {
         sample_pos.xyz /= sample_pos.w;
         sample_pos.xy = (sample_pos.xy+1)*0.5f;
 
+        if(sample_pos.x > 1.0f || sample_pos.x < 0.0f || sample_pos.y > 1.0f || sample_pos.y < 0.0f){
+            continue; //Sample is outside the screen if we sample its depth we're getting wrong values
+        }
+
         //sample the depth buffer:
         float sampleDepth = texture(depthBuffer, sample_pos.xy).r*2.0f-1.0f;
 
