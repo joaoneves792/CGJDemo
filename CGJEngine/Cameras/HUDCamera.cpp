@@ -16,7 +16,7 @@ HUDCamera::HUDCamera(float left, float right, float top, float bottom, float nea
     _scale = scale;
     _projection = glm::ortho(left, right, bottom, top, near, far);
     _inverseProjection = glm::inverse(_projection);
-    _pseudoBillboard = Quat();//Identity quaternion
+    _pseudoBillboard = Quat(1.0f, 0.0f, 0.0f, 0.0f);//Identity quaternion
 }
 
 Mat4 HUDCamera::getMatrix() {

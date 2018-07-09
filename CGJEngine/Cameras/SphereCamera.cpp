@@ -2,6 +2,7 @@
 // Created by joao on 11/12/17.
 //
 
+#include <iostream>
 #include "Cameras/SphereCamera.h"
 #include "glm_wrapper.h"
 

@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <iostream>
 #include "CGJengine.h"
 #include "actions.h"
 #include "constants.h"

@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <CGJengine.h>
 #include "SceneGraph/SceneGraph.h"
 #include "Meshes/Mesh.h"
 #include "Shader.h"
@@ -14,7 +15,7 @@ SceneNode::SceneNode(const std::string& name) {
     _mesh = nullptr;
     _shader = nullptr;
     _position = Vec3(0.0f, 0.0f, 0.0f);
-    _orientation = Quat();
+    _orientation = Quat(1.0f, 0.0f, 0.0f, 0.0f);
     _size = Vec3(1.0f, 1.0f, 1.0f);
     _parent = nullptr;
     _preDraw = nullptr;
@@ -29,7 +30,7 @@ SceneNode::SceneNode(const std::string& name, Mesh *mesh) {
     _mesh = mesh;
     _shader = nullptr;
     _position = Vec3(0.0f, 0.0f, 0.0f);
-    _orientation = Quat();
+    _orientation = Quat(1.0f, 0.0f, 0.0f, 0.0f);
     _size = Vec3(1.0f, 1.0f, 1.0f);
     _parent = nullptr;
     _preDraw = nullptr;
@@ -44,7 +45,7 @@ SceneNode::SceneNode(const std::string& name, Mesh *mesh, Shader *shader) {
     _mesh = mesh;
     _shader = shader;
     _position = Vec3(0.0f, 0.0f, 0.0f);
-    _orientation = Quat();
+    _orientation = Quat(1.0f, 0.0f, 0.0f, 0.0f);
     _size = Vec3(1.0f, 1.0f, 1.0f);
     _parent = nullptr;
     _preDraw = nullptr;
