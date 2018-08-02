@@ -153,6 +153,7 @@ void loadShaders(){
     auto ssaoBlurShader = ResourceManager::Factory::createShader(SSAO_BLUR_SHADER, "res/shaders/quadv.glsl", "res/shaders/ssaoBlurf.glsl");
     ssaoBlurShader->setAttribLocation("inPosition", VERTICES__ATTR);
     ssaoBlurShader->link();
+    MVPLocation = ssaoBlurShader->getUniformLocation("MVP");
     ssaoBlurShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
@@ -161,6 +162,7 @@ void loadShaders(){
     auto blitShader = ResourceManager::Factory::createShader(BLIT_SHADER, "res/shaders/quadv.glsl", "res/shaders/blitf.glsl");
     blitShader->setAttribLocation("inPosition", VERTICES__ATTR);
     blitShader->link();
+    MVPLocation = blitShader->getUniformLocation("MVP");
     blitShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
@@ -169,6 +171,7 @@ void loadShaders(){
     auto fxaaShader = ResourceManager::Factory::createShader(FXAA_SHADER, "res/shaders/quadv.glsl", "res/shaders/fxaaf.glsl");
     fxaaShader->setAttribLocation("inPosition", VERTICES__ATTR);
     fxaaShader->link();
+    MVPLocation = fxaaShader->getUniformLocation("MVP");
     fxaaShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
     });
