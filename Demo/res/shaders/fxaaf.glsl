@@ -49,6 +49,11 @@ void main() {
         color = vec4(colorCenter, 1.0f);
         return;
     }
+    // super easy silhouette extraction:
+    //}else{
+    //    color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    //    return;
+    //}
 
     // Query the 4 remaining corners lumas.
     float lumaDownLeft = rgb2luma(textureOffset(frame, uv, ivec2(-1, -1)).rgb);
