@@ -7,6 +7,8 @@
 #include "constants.h"
 
 
+#define UPLOAD_MVP [=](const Mat4& M, const Mat4& V, const Mat4& P){ glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M)); }
+
 void loadShaders(){
     /*H3D Shader*/
     auto Gh3dShader = ResourceManager::Factory::createShader(H3D_SHADER, "res/shaders/Gh3dv.glsl", "res/shaders/Gh3df.glsl");
@@ -107,9 +109,7 @@ void loadShaders(){
     glUniform1i(renderderTextureLoc, 0);
     glUniform1i(noiseLoc, 1);
     MVPLocation = distanceShader->getUniformLocation("MVP");
-    distanceShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
-    });
+    distanceShader->setMVPFunction(UPLOAD_MVP);
 
     /*Fire shader*/
     auto fireShader = ResourceManager::Factory::createShader(FIRE_SHADER, "res/shaders/firev.glsl", "res/shaders/firef.glsl");
@@ -124,12 +124,12 @@ void loadShaders(){
     });
 
     /*Shadow Shader*/
-    /*auto shadowMapShader = ResourceManager::Factory::createShader(SHADOW_SHADER, "res/shaders/shadowv.glsl", "res/shaders/shadowf.glsl");
-    shadowMapShader->setAttribLocation("positon", VERTICES__ATTR);
+    auto shadowMapShader = ResourceManager::Factory::createShader(SHADOW_SHADER, "res/shaders/shadowv.glsl", "res/shaders/shadowf.glsl");
+    shadowMapShader->setAttribLocation("position", VERTICES__ATTR);
     //shadowMapShader->setAttribLocation("inJointIndex", BONEINDICES__ATTR);
     //shadowMapShader->setAttribLocation("inJointWeight", BONEWEIGHTS__ATTR);
     //shadowMapShader->setFragOutputLocation("fragmentdepth", 0);
-    shadowMapShader->link();*/
+    shadowMapShader->link();
 
 
     /*SSAO shader*/
@@ -144,37 +144,28 @@ void loadShaders(){
     glUniform1i(depthBufferLoc, 0);
     glUniform1i(noiseLoc, 1);
     glUniform1i(normalsLoc, 2);
-    ssaoShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
-
-    });
+    ssaoShader->setMVPFunction(UPLOAD_MVP);
 
     /*SSAO blur shader*/
     auto ssaoBlurShader = ResourceManager::Factory::createShader(SSAO_BLUR_SHADER, "res/shaders/quadv.glsl", "res/shaders/ssaoBlurf.glsl");
     ssaoBlurShader->setAttribLocation("inPosition", VERTICES__ATTR);
     ssaoBlurShader->link();
     MVPLocation = ssaoBlurShader->getUniformLocation("MVP");
-    ssaoBlurShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
-    });
+    ssaoBlurShader->setMVPFunction(UPLOAD_MVP);
 
     /*General purpose blit shader*/
     auto blitShader = ResourceManager::Factory::createShader(BLIT_SHADER, "res/shaders/quadv.glsl", "res/shaders/blitf.glsl");
     blitShader->setAttribLocation("inPosition", VERTICES__ATTR);
     blitShader->link();
     MVPLocation = blitShader->getUniformLocation("MVP");
-    blitShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
-    });
+    blitShader->setMVPFunction(UPLOAD_MVP);
 
     /*FXAA Shader*/
     auto fxaaShader = ResourceManager::Factory::createShader(FXAA_SHADER, "res/shaders/quadv.glsl", "res/shaders/fxaaf.glsl");
     fxaaShader->setAttribLocation("inPosition", VERTICES__ATTR);
     fxaaShader->link();
     MVPLocation = fxaaShader->getUniformLocation("MVP");
-    fxaaShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
-    });
+    fxaaShader->setMVPFunction(UPLOAD_MVP);
 
 
 
@@ -192,10 +183,8 @@ void loadShaders(){
     glUniform1i(specularLoc, 1);
     glUniform1i(depthLoc, 2);
     glUniform1i(normalLoc, 3);
-    lightingShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
+    lightingShader->setMVPFunction(UPLOAD_MVP);
 
-    });
     int lightPositionLocation = lightingShader->getUniformLocation("lightPosition_viewspace[0]");
     int lightsEnabledLocation = lightingShader->getUniformLocation("lightsEnabled[0]");
     int lightColorLocation = lightingShader->getUniformLocation("lightColor[0]");
@@ -231,8 +220,5 @@ void loadShaders(){
     glUniform1i(occlusionLoc, 2);
     glUniform1i(depthLoc, 3);
     glUniform1i(shadowLoc, 4);
-    ambientShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
-
-    });
+    ambientShader->setMVPFunction(UPLOAD_MVP);
 }

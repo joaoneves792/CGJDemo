@@ -61,6 +61,8 @@ void reshape(int w, int h){
     ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1)->resize(w, h);
     ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2)->resize(w, h);
     ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3)->resize(w, h);
+	ResourceManager::getInstance()->getFrameBuffer(SHADOW_FBO)->resize(w, h);
+
 
 	glViewport(0, 0, w, h);
 }

@@ -41,26 +41,26 @@ void main() {
     float d = texture(depth, uv).r * 2.0f - 1.0f;
     float z = -(Projection[3][2]/(d+Projection[2][2]));
     vec3 position_viewspace = frustumRay*z;
-    vec4 ShadowCoord = depthBiasMVP * vec4(position_viewspace, 1.0f);
+    vec4 ShadowCoord = clamp(depthBiasMVP * vec4(position_viewspace, 1.0f), 0.0f, 1.0f);
 
     vec3 color = texture(frame, uv).rgb;
     vec3 ambientColor = texture(ambient, uv).rgb;
     float occlusion = texture(ambientOcclusion, uv).r;
 
     float visibility = 1.0f;
-    /*float bias = 0.01;
+    float bias = 0.01;
     for (int i=0; i<16; i++){
         float contribution = 0.0625*(texture(shadow, ShadowCoord.xy + poissonDisk[i]/4000).r); //Grab color at point
         //Check depth
         visibility -= contribution * step(texture(shadow, ShadowCoord.xy).r, ((ShadowCoord.z-bias)/ ShadowCoord.w));
-    }*/
+    }
     out_color.rgb = ((color*visibility + ambientColor)*occlusion);
     //out_color.rgb = vec3(visibility);
     //out_color.rgb = vec3((ShadowCoord.z-bias)/ShadowCoord.w);
     //out_color.rgb  = vec3(texture( shadow, vec3(ShadowCoord.xy, (ShadowCoord.z-bias)/ ShadowCoord.w) ));
     //out_color.rgb  = texture(shadow, ShadowCoord.xy).rrr;
     //out_color.rgb = position_viewspace;
-    out_color.rgb = ((ambientColor));
+    //out_color.rgb = ((ambientColor));
     out_color.a = 1.0f;
 
 

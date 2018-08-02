@@ -26,7 +26,6 @@ void setupScene(){
 
     //auto camera = ResourceManager::Factory::createFreeCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
     auto camera = ResourceManager::Factory::createSphereCamera(SPHERE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
-    //auto camera = ResourceManager::Factory::createHUDCamera(SPHERE_CAM, -20.0f, 20.0f, 20.0f, 10.0f, 1.0f, 100.0f, false);
     camera->perspective((float)PI/4.0f, 0, 1.0f, 1000.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
     root->translate(0.0f, GROUND_LEVEL, 0.0f);
@@ -39,11 +38,11 @@ void setupScene(){
     GLint emissiveLoc = glGetUniformLocation(h3dShader->getShader(), "emissive");
     GLint shininessLoc = glGetUniformLocation(h3dShader->getShader(), "shininess");
     GLint transparencyLoc = glGetUniformLocation(h3dShader->getShader(), "transparency");
-    //GLint shadowShaderProgram = (GLint)rm->getShader(SHADOW_SHADER)->getShader();
+    GLint shadowShaderProgram = (GLint)rm->getShader(SHADOW_SHADER)->getShader();
     auto materialUploadCallback = [=](float ambient, float* diffuse, float* specular, float* emissive, float shininess, float transparency) {
-        /*GLint shader = 0;
+        GLint shader = 0;
         glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
-        if(shader != shadowShaderProgram) {*/
+        if(shader != shadowShaderProgram) {
             glUniform1fv(ambientLoc, 1, &ambient);
             glUniform4fv(diffuseLoc, 1, diffuse);
             glUniform4fv(specularLoc, 1, specular);
@@ -51,7 +50,7 @@ void setupScene(){
 
             glUniform1f(shininessLoc, shininess);
             glUniform1f(transparencyLoc, 1 - (transparency));
-        //}
+        }
     };
 
     /*Create environment map*/
@@ -266,10 +265,10 @@ void setupScene(){
 
     /*Shadows*/
     //auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -10.0f, 10.0f, 10.0f, 0.0f, 1.0f, 20.0f, false);
-    /*auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -20.0f, 20.0f, 20.0f, 10.0f, 1.0f, 100.0f, false);
-    //shadowCamera->changeOrientation(-PI/2.0f, 0.0f, 0.0f);
-    //shadowCamera->move(8.0f, 0.0f, 0.0f);
-    //shadowCamera->move(5.0f, 2.0f, 0.0f);
+    auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -20.0f, 20.0f, 5.0f, 0.0f, 0.1f, 100.0f, true);
+    shadowCamera->setOrientation(0.058f, -0.715f, -0.059f, 0.693f);
+    //shadowCamera->setPosition(39.685f, 2.0f, -19.65f);
+    shadowCamera->setPosition(45.685f, 2.0f, -19.65f);
     auto shadowShader = rm->getShader(SHADOW_SHADER);
     GLint MVPLoc = shadowShader->getUniformLocation("MVP");
     shadowShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
@@ -277,7 +276,7 @@ void setupScene(){
                    shadowCamera->getViewMatrix() *
                    M;
         glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
-    });*/
+    });
 
 
 }

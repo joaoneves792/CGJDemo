@@ -26,8 +26,9 @@ Mat4 HUDCamera::getMatrix() {
 }
 
 Mat4 HUDCamera::produceViewMatrix() {
+    //std::cout << _orientation[0] << " " <<  _orientation[1] << " " << _orientation[2] << " " << _orientation[3] << std::endl;
+    //std::cout << _position[0] << " " << _position[1] << " " << _position[2] << std::endl;
     return glm::toMat4(_orientation) * glm::translate(Mat4(1.0f), Vec3(-_position[0], -_position[1], -_position[2]));
-    //return Mat4(1.0f);
 }
 
 Mat4 HUDCamera::getInverseViewMatrix() {

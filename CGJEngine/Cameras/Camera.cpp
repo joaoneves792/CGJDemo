@@ -94,3 +94,16 @@ void Camera::setReflection(bool reflected, float nx, float ny, float nz, Vec3 p)
     _reflectionPlaneN = Vec3(nx, ny, nz);
     _reflectionPlaneP = p;
 }
+
+void Camera::setPosition(float x, float y, float z) {
+    _position[0] = x;
+    _position[1] = y;
+    _position[2] = z;
+}
+
+void Camera::setOrientation(float x, float y, float z, float w) {
+    _orientation[0] = x;
+    _orientation[1] = y;
+    _orientation[2] = z;
+    _orientation[3] = w;
+}
