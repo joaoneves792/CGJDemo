@@ -26,6 +26,7 @@ void setupScene(){
 
     //auto camera = ResourceManager::Factory::createFreeCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
     auto camera = ResourceManager::Factory::createSphereCamera(SPHERE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
+    //auto camera = ResourceManager::Factory::createHUDCamera(SPHERE_CAM, -20.0f, 20.0f, 20.0f, 10.0f, 1.0f, 100.0f, false);
     camera->perspective((float)PI/4.0f, 0, 1.0f, 1000.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
     root->translate(0.0f, GROUND_LEVEL, 0.0f);
@@ -38,14 +39,19 @@ void setupScene(){
     GLint emissiveLoc = glGetUniformLocation(h3dShader->getShader(), "emissive");
     GLint shininessLoc = glGetUniformLocation(h3dShader->getShader(), "shininess");
     GLint transparencyLoc = glGetUniformLocation(h3dShader->getShader(), "transparency");
+    //GLint shadowShaderProgram = (GLint)rm->getShader(SHADOW_SHADER)->getShader();
     auto materialUploadCallback = [=](float ambient, float* diffuse, float* specular, float* emissive, float shininess, float transparency) {
-        glUniform1fv(ambientLoc, 1, &ambient);
-        glUniform4fv(diffuseLoc, 1, diffuse);
-        glUniform4fv(specularLoc, 1, specular);
-        glUniform4fv(emissiveLoc, 1, emissive);
+        /*GLint shader = 0;
+        glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+        if(shader != shadowShaderProgram) {*/
+            glUniform1fv(ambientLoc, 1, &ambient);
+            glUniform4fv(diffuseLoc, 1, diffuse);
+            glUniform4fv(specularLoc, 1, specular);
+            glUniform4fv(emissiveLoc, 1, emissive);
 
-        glUniform1f(shininessLoc, shininess);
-        glUniform1f(transparencyLoc, 1 - (transparency));
+            glUniform1f(shininessLoc, shininess);
+            glUniform1f(transparencyLoc, 1 - (transparency));
+        //}
     };
 
     /*Create environment map*/
@@ -119,7 +125,8 @@ void setupScene(){
     /*Place the sun*/
     auto sun = ResourceManager::Factory::createLight(SUN);
     sun->setColor(0.9f, 0.9f, 0.9f);
-    sun->setPoint(10.0f, 20.0f, 0.0f);
+    Vec3 sunPos = Vec3(40.0f, 80.0f, 0.0f);
+    sun->setPoint(sunPos[0], sunPos[1], sunPos[2]);
     sun->setAttenuation(1.0f, 0.0f, 0.0f, -1.0f);
     root->addChild(sun);
     LightsManager::getInstance()->setEnabled(sun, true);
@@ -255,6 +262,24 @@ void setupScene(){
     });
     credits->scale(-100.0f, -50.0f, 1.0f);
     credits->translate(100.0f, 50.0f, -0.1f);
+
+
+    /*Shadows*/
+    //auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -10.0f, 10.0f, 10.0f, 0.0f, 1.0f, 20.0f, false);
+    /*auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -20.0f, 20.0f, 20.0f, 10.0f, 1.0f, 100.0f, false);
+    //shadowCamera->changeOrientation(-PI/2.0f, 0.0f, 0.0f);
+    //shadowCamera->move(8.0f, 0.0f, 0.0f);
+    //shadowCamera->move(5.0f, 2.0f, 0.0f);
+    auto shadowShader = rm->getShader(SHADOW_SHADER);
+    GLint MVPLoc = shadowShader->getUniformLocation("MVP");
+    shadowShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
+        Mat4 MVP = shadowCamera->getProjectionMatrix() *
+                   shadowCamera->getViewMatrix() *
+                   M;
+        glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
+    });*/
+
+
 }
 
 void flames(int value){

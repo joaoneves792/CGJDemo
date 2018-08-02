@@ -32,6 +32,7 @@ void setupPipeline(){
     ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO1, WIN_X, WIN_Y);
     ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO2, WIN_X, WIN_Y);
     ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO3, WIN_X, WIN_Y);
+    //ResourceManager::Factory::createDepthTextureFrameBuffer(SHADOW_FBO, WIN_X, WIN_Y);
 
     /*Create the ortho camera*/
     auto finalCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1, true);
@@ -79,8 +80,27 @@ void setupPipeline(){
 
     /*Ambient blending stage (extended lighting)*/
     auto ambientBlend = new SceneNode(AMBIENT, quad, rm->getShader(AMBIENT_BLEND_SHADER));
+    auto ambientShader = rm->getShader(AMBIENT_BLEND_SHADER);
+    ProjectionLoc = ambientShader->getUniformLocation("Projection");
+    inversePLoc = ambientShader->getUniformLocation("inverseP");
+    /*Mat4 biasMatrix(
+            0.5, 0.0, 0.0, 0.0,
+            0.0, 0.5, 0.0, 0.0,
+            0.0, 0.0, 0.5, 0.0,
+            0.5, 0.5, 0.5, 1.0);
+    GLint DepthBiasMVPLoc = ambientShader->getUniformLocation("depthBiasMVP");*/
     ambientBlend->setProcessingLevel(AMBIENT_LEVEL);
+    //auto shadowCamera = rm->getCamera(SHADOW_CAMERA);
+    ambientBlend->setPreDraw([=](){
+        glUniformMatrix4fv(inversePLoc, 1, GL_FALSE, glm::value_ptr(scene->getCamera()->getInverseProjection()));
+        glUniformMatrix4fv(ProjectionLoc, 1, GL_FALSE, glm::value_ptr(scene->getProjectionMatrix()));
+        /*Mat4 bias = biasMatrix * shadowCamera->getProjectionMatrix() *
+                    shadowCamera->getViewMatrix() *
+                    glm::inverse(scene->getViewMatrix());
+        glUniformMatrix4fv(DepthBiasMVPLoc, 1, GL_FALSE, glm::value_ptr(bias));*/
+    });
     renderPipeline->addChild(ambientBlend);
+
 
     /*General purpose blitting stage*/
     auto blit = new SceneNode(BLIT, quad, rm->getShader(BLIT_SHADER));
@@ -108,8 +128,11 @@ void executePipeline(){
     static ColorTextureFrameBuffer* sideBuffer1 = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1);
     static ColorTextureFrameBuffer* sideBuffer2 = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2);
     static ColorTextureFrameBuffer* sideBuffer3 = (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3);
+    //static DepthTextureFrameBuffer* shadowBuffer = (DepthTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(SHADOW_FBO);
 
     static Shader* blit = ResourceManager::getInstance()->getShader(BLIT_SHADER);
+    //static Shader* shadowShader = ResourceManager::getInstance()->getShader(SHADOW_SHADER);
+
     static GLint renderTargetLoc = blit->getUniformLocation("renderTarget");
 
     static ParticlePool* particlePool = ResourceManager::getInstance()->getParticlePool(POOL);
@@ -119,6 +142,11 @@ void executePipeline(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     scene->draw();
     mainFBO->unbind();
+
+    /*shadowBuffer->bind();
+    glClear(GL_DEPTH_BUFFER_BIT);
+    scene->draw(shadowShader);
+    shadowBuffer->unbind();*/
 
     /*Perform SSAO stage*/
     sideBuffer1->bind();
@@ -157,23 +185,32 @@ void executePipeline(){
     mainFBO->bindAmbient();
     glActiveTexture(GL_TEXTURE2);
     sideBuffer2->bindTexture();
+    glActiveTexture(GL_TEXTURE3);
+    mainFBO->bindDepth();
+    //glActiveTexture(GL_TEXTURE4);
+    //shadowBuffer->bindTexture();
     glActiveTexture(GL_TEXTURE0);
     pipeline->draw(AMBIENT_LEVEL);
     sideBuffer3->unbind();
 
     /*Prepare buffer to draw particles*/
+    /**/
     mainFBO->bind();
     blit->use();
     glUniform1i(renderTargetLoc, 4);
     glActiveTexture(GL_TEXTURE0);
     sideBuffer3->bindTexture();
     pipeline->draw(BLIT_LEVEL);
+    /**/
 
     /*Draw the normal particles*/
+    /**/
     particlePool->draw(DEFAULT_PARTICLES_LEVEL);
     mainFBO->unbind();
+    /**/
 
     /*Prepare the background for post-FX particles*/
+    /**/
     sideBuffer3->bind();
     blit->use();
     glUniform1i(renderTargetLoc, 0);
@@ -181,26 +218,30 @@ void executePipeline(){
     mainFBO->bindParticles();
     pipeline->draw(BLIT_LEVEL);
     sideBuffer3->unbind();
+    /**/
 
     /*Draw post-FX particles*/
+    /**/
     mainFBO->bind();
     glActiveTexture(GL_TEXTURE0);
     sideBuffer3->bindTexture();
     scene->draw(HEAT_HAZE_LEVEL);
     particlePool->draw(HEAT_HAZE_LEVEL);
     mainFBO->unbind();
+    /**/
 
     /*Apply FXAA and render to screen*/
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     mainFBO->bindParticles();
+    //sideBuffer3->bindTexture();
     pipeline->draw(FXAA_LEVEL);
 
 
     /* Uncomment for result of SSAO*/
     //sideBuffer2->blit();
-
+    //shadowBuffer->blit();
 
     creditsHUD->draw();
 }

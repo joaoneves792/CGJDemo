@@ -123,6 +123,15 @@ void loadShaders(){
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
     });
 
+    /*Shadow Shader*/
+    /*auto shadowMapShader = ResourceManager::Factory::createShader(SHADOW_SHADER, "res/shaders/shadowv.glsl", "res/shaders/shadowf.glsl");
+    shadowMapShader->setAttribLocation("positon", VERTICES__ATTR);
+    //shadowMapShader->setAttribLocation("inJointIndex", BONEINDICES__ATTR);
+    //shadowMapShader->setAttribLocation("inJointWeight", BONEWEIGHTS__ATTR);
+    //shadowMapShader->setFragOutputLocation("fragmentdepth", 0);
+    shadowMapShader->link();*/
+
+
     /*SSAO shader*/
     auto ssaoShader = ResourceManager::Factory::createShader(SSAO_SHADER, "res/shaders/quadViewRayv.glsl", "res/shaders/ssaof.glsl");
     ssaoShader->setAttribLocation("inPosition", VERTICES__ATTR);
@@ -204,17 +213,21 @@ void loadShaders(){
     });
 
     /*Ambient shading*/
-    auto ambientShader = ResourceManager::Factory::createShader(AMBIENT_BLEND_SHADER, "res/shaders/quadv.glsl", "res/shaders/ambientBlendf.glsl");
+    auto ambientShader = ResourceManager::Factory::createShader(AMBIENT_BLEND_SHADER, "res/shaders/quadViewRayv.glsl", "res/shaders/ambientBlendf.glsl");
     ambientShader->setAttribLocation("inPosition", VERTICES__ATTR);
     ambientShader->link();
     ambientShader->use();
     GLint frameLoc = ambientShader->getUniformLocation("frame");
     GLint ambientLoc = ambientShader->getUniformLocation("ambient");
     GLint occlusionLoc = ambientShader->getUniformLocation("ambientOcclusion");
+    depthLoc = ambientShader->getUniformLocation("depth");
+    GLint shadowLoc = ambientShader->getUniformLocation("shadow");
     MVPLocation = ambientShader->getUniformLocation("MVP");
     glUniform1i(frameLoc, 0);
     glUniform1i(ambientLoc, 1);
     glUniform1i(occlusionLoc, 2);
+    glUniform1i(depthLoc, 3);
+    glUniform1i(shadowLoc, 4);
     ambientShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P * V * M));
 

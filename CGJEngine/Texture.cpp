@@ -260,7 +260,7 @@ int loadJPEG(const char* filename, textureImage* texture){
 
 
 	/* Make a one-row-high sample array that will go away when done with image */
-    	buffer = (*cinfo.mem->alloc_sarray) ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
+    buffer = (*cinfo.mem->alloc_sarray) ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 	buffer[0] = (JSAMPROW)malloc(sizeof(JSAMPLE) * row_stride);
 
 	while (cinfo.output_scanline < cinfo.output_height) {
@@ -271,7 +271,7 @@ int loadJPEG(const char* filename, textureImage* texture){
 
 	jpeg_finish_decompress (&cinfo);
 	jpeg_destroy_decompress (&cinfo);
-	fclose(infile);	
+	fclose(infile);
 	return 1;
 }
 

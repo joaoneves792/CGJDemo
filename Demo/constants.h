@@ -32,6 +32,7 @@
 #define BLIT_SHADER "prepareParticles"
 #define AMBIENT_BLEND_SHADER "ambientBlend"
 #define FXAA_SHADER "fxaashader"
+#define SHADOW_SHADER "shadowshader"
 
 /*Scenes*/
 #define SCENE "main"
@@ -48,12 +49,14 @@
 #define ORTHO_CAM "ortho"
 #define BOTTOM_RIGHT_CAM "brCamera"
 #define TOP_RIGHT_CAM "trCamera"
+#define SHADOW_CAMERA "shadowCamera"
 
 /*FBOs*/
 #define MAIN_FBO "main"
 #define SIDE_FBO1 "sidefbo1"
 #define SIDE_FBO2 "sidefbo2"
 #define SIDE_FBO3 "sidefbo3"
+#define SHADOW_FBO "shadowfbo"
 
 /*Particles*/
 #define MAX_PARTICLES 1024
