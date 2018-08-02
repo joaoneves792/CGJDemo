@@ -2,7 +2,6 @@
 // Created by joao on 11/12/17.
 //
 
-#include <iostream>
 #include "Cameras/SphereCamera.h"
 #include "glm_wrapper.h"
 
@@ -19,6 +18,11 @@ Mat4 SphereCamera::getMatrix() {
 Mat4 SphereCamera::produceViewMatrix() {
     return glm::translate(Mat4(1.0f), Vec3(0, 0, -_distance))
            * glm::translate(glm::toMat4(_orientation), Vec3(-_center[0], -_center[1], -_center[2]));
+}
+
+Mat4 SphereCamera::getInverseViewMatrix() {
+    //TODO: try not to invert the matrix
+    return glm::inverse(produceViewMatrix());
 }
 
 void SphereCamera::move(float x, float y, float z){

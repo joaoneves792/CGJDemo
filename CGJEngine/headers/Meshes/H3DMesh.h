@@ -39,6 +39,8 @@ typedef struct
 {
     float   vertex[3];
 	float 	normal[3];
+	float   tangent[3];
+	float   bitangent[3];
 	float 	uv[2];
 	int     boneID[BONE_COUNT];                                    // -1 = no bone
     float   weight[BONE_COUNT];
@@ -102,6 +104,7 @@ typedef struct
 
 	int 			shapeKeyCount;
 	h3d_shape_key*	shapeKeys;
+	float			sk_slotp[3];						//Percentage of shapekey slot influence
 } h3d_group;
 
 typedef struct
@@ -113,8 +116,9 @@ typedef struct
     float           emissive[4];                        //
     float           shininess;                          // 0.0f - 128.0f
     float           transparency;                       // 0.0f - 1.0f
-    char*           textureImage;
-	GLint 			textureId;
+    unsigned int    textureCount;
+	char**          textureImage;
+	GLint* 			textureId;
 } h3d_material;
 
 
@@ -129,11 +133,19 @@ typedef struct{
 	size_t positionSize;
 	size_t textureCoordSize;
 	size_t normalsSize;
+    size_t tangentsSize;
     size_t jointsSize;
 	size_t weightsSize;
-    size_t* shapeKeysIndices; //Size is same as position/normals size
+	size_t shapeKeysSize;
+	size_t beginShapeKeyPointer;
 	size_t totalSize;
 }h3d_vboDescription;
+
+typedef struct{
+	int currentFrame;
+	int startFrame;
+	int endFrame;
+}animationSlotInfo;
 
 class H3DMesh : public Mesh{
 private:
@@ -153,8 +165,11 @@ private:
 	std::function<void(float ambient, float* diffuse, float* specular,
 					   float* emissive, float shininess, float transparency)> _uploadMaterialCallback;
 
+	std::function<void(int i, Mat4 transform)> _boneUploadCallback;
+	std::function<void(float p, int slot)> _shapeKeyPercentCallback;
+
 	bool _isAnimated;
-	int _currentFrame;
+	std::vector<animationSlotInfo*> _animationSlotInfo;
 
 public:
 	H3DMesh();
@@ -169,10 +184,15 @@ public:
 	void unload();
 	void draw();
 
-	void setCurrentFrame(int f);
+	void setCurrentFrame(int f, int animationSlot);
+	void setCurrentFrame(int f, int animationSlot, int start, int end);
 
 	void setMaterialUploadCallback(std::function<void(float ambient, float* diffuse, float* specular,
 					   float* emissive, float shininess, float transparency)> callback );
+	void setBoneUploadCallback(std::function<void(int i, Mat4 transform)> callback);
+	void setShapeKeyPercentCallback(std::function<void(float p, int slot)> callback);
+	void setupShapeKey(const std::string& groupName, const std::string& SKname, int slot);
+	void setShapeKeyPercent(const std::string& groupName, int slot, float percent);
 
 private:
 	void prepareGroup(h3d_group* group, unsigned int groupIndex);
@@ -181,7 +201,7 @@ private:
 	Mat4 recursiveBindPose(h3d_joint* joints, int i);
     Mat4 getBindPose(h3d_joint* joint);
 	void handleAnimation(h3d_group* group);
-    Mat4 getBoneTransform(h3d_joint* joint);
+    Mat4 getBoneTransform(h3d_joint* joint, animationSlotInfo* animationInfo);
 };
 
 #endif // _H3DMESH_H_

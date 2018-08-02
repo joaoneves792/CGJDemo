@@ -24,7 +24,13 @@ Mat4 HUDCamera::getMatrix() {
 }
 
 Mat4 HUDCamera::produceViewMatrix() {
-    return Mat4(1.0f);
+    return glm::toMat4(_orientation) * glm::translate(Mat4(1.0f), Vec3(-_position[0], -_position[1], -_position[2]));
+    //return Mat4(1.0f);
+}
+
+Mat4 HUDCamera::getInverseViewMatrix() {
+    return glm::toMat4(glm::inverse(_orientation)) *
+           glm::translate(Mat4(1.0f), Vec3(_position[0], _position[1], _position[2]));
 }
 
 void HUDCamera::resize(int x, int y) {
@@ -45,11 +51,14 @@ void HUDCamera::resize(int x, int y) {
 }
 
 void HUDCamera::move(float x, float y, float z) {
-    //empty
+    _position += Vec3(x, y, z);
 }
 
 void HUDCamera::changeOrientation(float yaw, float pitch, float roll) {
-    //empty
+    _orientation = glm::angleAxis(yaw, up) * _orientation;
+    _orientation = glm::angleAxis(pitch, right) * _orientation;
+    _orientation = glm::angleAxis(roll, front) * _orientation;
+    glm::normalize(_orientation);
 }
 
 HUDCamera::~HUDCamera()=default;

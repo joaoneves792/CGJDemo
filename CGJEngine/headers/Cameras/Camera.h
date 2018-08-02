@@ -37,6 +37,7 @@ public:
     Quat getBillboardOrientation();
     Mat4 getViewMatrix();
     Mat4 getReflectedViewMatrix();
+    virtual Mat4 getInverseViewMatrix()=0;
     virtual void move(float x, float y, float z)=0;
     virtual void changeOrientation(float yaw, float pitch, float roll)=0;
     virtual void resize(int x, int y);

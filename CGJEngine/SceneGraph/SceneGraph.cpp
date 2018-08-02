@@ -39,6 +39,10 @@ Mat4 SceneGraph::getViewMatrix() {
         return Mat4(1.0f);
 }
 
+void SceneGraph::setCamera(Camera *camera) {
+    _camera = camera;
+}
+
 Camera* SceneGraph::getCamera() {
     return _camera;
 }
@@ -53,13 +57,25 @@ void SceneGraph::update(int dt) {
 }
 
 void SceneGraph::draw(int level){
-    if(_root != nullptr)
-        _root->draw(level, Mat4(1.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f), Mat4(1.0f));
+    draw(level, nullptr);
 }
 
 void SceneGraph::draw(){
-    draw(0);
+    draw(0, nullptr);
 }
+
+void SceneGraph::draw(Shader *shader) {
+    draw(0, shader);
+}
+
+void SceneGraph::draw(int level, Shader *shader) {
+    if(_root != nullptr)
+        _root->draw(level, Mat4(1.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f), Mat4(1.0f), shader);
+
+}
+
+
+
 SceneNode* SceneGraph::findNode(const std::string& name) {
     auto it = _lookUpTable.find(name);
     if(it!=_lookUpTable.end())

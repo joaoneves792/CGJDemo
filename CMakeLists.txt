@@ -7,10 +7,14 @@ if( MSVC )
 		${CGJDemo_SOURCE_DIR}/dependencies/freeglut/ )
 endif (MSVC)
 
+set(OpenGL_GL_PREFERENCE GLVND)
+
 find_package(GLEW REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(glm QUIET)
+find_package(JPEG REQUIRED)
+find_package(PNG REQUIRED)
 
 if(glm_FOUND)
     message(STATUS "Using system GLM")
@@ -62,15 +66,15 @@ else(MSVC)
 endif (MSVC)
 
 
-set(ZLIB_INCLUDE_DIRS ${CGJDemo_SOURCE_DIR}/dependencies/zlib
-        CACHE INTERNAL "ZLIB: Include Directories" FORCE)
-set(JPEG_INCLUDE_DIR ${CGJDemo_SOURCE_DIR}/dependencies/libjpeg
-        CACHE INTERNAL "JPEG: Include Directories" FORCE)
-set(PNG_INCLUDE_DIR ${CGJDemo_SOURCE_DIR}/dependencies/libpng
-        CACHE INTERNAL "PNG: Include Directories" FORCE)
-add_subdirectory(dependencies/zlib)
-add_subdirectory(dependencies/libjpeg)
-add_subdirectory(dependencies/libpng)
+#set(ZLIB_INCLUDE_DIRS ${CGJDemo_SOURCE_DIR}/dependencies/zlib
+#        CACHE INTERNAL "ZLIB: Include Directories" FORCE)
+#set(JPEG_INCLUDE_DIR ${CGJDemo_SOURCE_DIR}/dependencies/libjpeg
+#        CACHE INTERNAL "JPEG: Include Directories" FORCE)
+#set(PNG_INCLUDE_DIR ${CGJDemo_SOURCE_DIR}/dependencies/libpng
+#        CACHE INTERNAL "PNG: Include Directories" FORCE)
+#add_subdirectory(dependencies/zlib)
+#add_subdirectory(dependencies/libjpeg)
+#add_subdirectory(dependencies/libpng)
 
 list(INSERT CMAKE_PREFIX_PATH 0
         ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})

@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include <CGJengine.h>
 #include "SceneGraph/SceneGraph.h"
 #include "Meshes/Mesh.h"
 #include "Shader.h"
@@ -208,7 +207,8 @@ SceneNode* SceneNode::findNode(const std::string &name) {
     return nullptr;
 }
 
-void SceneNode::draw(int level, const Mat4 &parentTranslate, const Quat &parentOrientation, const Mat4 &parentScale) {
+void SceneNode::draw(int level, const Mat4 &parentTranslate, const Quat &parentOrientation,
+                     const Mat4 &parentScale, Shader* shader) {
     if(!_visible)
         return;
 
@@ -225,15 +225,19 @@ void SceneNode::draw(int level, const Mat4 &parentTranslate, const Quat &parentO
         if (_scene == nullptr)
             _scene = getScene();
 
+        Shader* use_shader;
+        if(shader != nullptr)
+            use_shader = shader;
+        else
+            use_shader = _shader;
+
         if (_mesh != nullptr) {
             //Set the shader
-            if (_shader != nullptr)
-                _shader->use();
-            else {
+            if (use_shader == nullptr){
                 SceneNode *n = this;
                 while (n->_parent != nullptr) {
                     if (n->_parent->_shader != nullptr) {
-                        n->_parent->_shader->use();
+                        use_shader = n->_parent->_shader;
                         break;
                     } else {
                         if (_parent == nullptr) {
@@ -244,6 +248,7 @@ void SceneNode::draw(int level, const Mat4 &parentTranslate, const Quat &parentO
                     }
                 }
             }
+            use_shader->use();
         }
         //Call pre draw
         if (_preDraw != nullptr)
@@ -254,7 +259,7 @@ void SceneNode::draw(int level, const Mat4 &parentTranslate, const Quat &parentO
             Mat4 P = _scene->getProjectionMatrix();
             Mat4 V = _scene->getViewMatrix();
             Mat4 M = translation*glm::toMat4(orientation)*scale;
-            _shader->uploadMVP(M, V, P);
+            use_shader->uploadMVP(M, V, P);
 
             //Draw
             _mesh->draw();
@@ -267,5 +272,5 @@ void SceneNode::draw(int level, const Mat4 &parentTranslate, const Quat &parentO
     }
     //Draw the childs
     for(SceneNode* n : _childs)
-        n->draw(level, translation, orientation, scale);
+        n->draw(level, translation, orientation, scale, shader);
 }
