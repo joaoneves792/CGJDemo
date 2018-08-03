@@ -49,18 +49,13 @@ void main() {
 
     float visibility = 1.0f;
     float bias = 0.01;
-    for (int i=0; i<16; i++){
-        float contribution = 0.0625*(texture(shadow, ShadowCoord.xy + poissonDisk[i]/4000).r); //Grab color at point
+    for (int i=0; i<4; i++){
+        //float contribution = 0.0625*(texture(shadow, ShadowCoord.xy + poissonDisk[i]/4000).r); //Grab color at point
+        float contribution = 0.25*(texture(shadow, ShadowCoord.xy + poissonDisk[i]/700).r); //Grab color at point
         //Check depth
         visibility -= contribution * step(texture(shadow, ShadowCoord.xy).r, ((ShadowCoord.z-bias)/ ShadowCoord.w));
     }
     out_color.rgb = ((color*visibility + ambientColor)*occlusion);
-    //out_color.rgb = vec3(visibility);
-    //out_color.rgb = vec3((ShadowCoord.z-bias)/ShadowCoord.w);
-    //out_color.rgb  = vec3(texture( shadow, vec3(ShadowCoord.xy, (ShadowCoord.z-bias)/ ShadowCoord.w) ));
-    //out_color.rgb  = texture(shadow, ShadowCoord.xy).rrr;
-    //out_color.rgb = position_viewspace;
-    //out_color.rgb = ((ambientColor));
     out_color.a = 1.0f;
 
 

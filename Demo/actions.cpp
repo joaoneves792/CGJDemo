@@ -52,10 +52,10 @@ void setupActions() {
         scene->getCamera()->move(timeDelta * movementRate, 0.0f, 0.0f);
     });
     im->addKeyAction('q', [=](int timeDelta){
-        scene->getCamera()->changeOrientation(0.0f, 0.0f, (timeDelta * movementRate));
+        scene->getCamera()->changeOrientation(0.0f, 0.0f, (timeDelta * movementRate/4));
     });
     im->addKeyAction('e', [=](int timeDelta){
-        scene->getCamera()->changeOrientation(0.0f, 0.0f, -(timeDelta * movementRate));
+        scene->getCamera()->changeOrientation(0.0f, 0.0f, -(timeDelta * movementRate/4));
     });
     im->addKeyAction(ESCAPE, [=](int timeDelta){
         glutLeaveMainLoop();

@@ -30,10 +30,15 @@ void FreeCamera::move(float x, float y, float z){
     _position += Vec3(x, y, z) * _orientation;
 }
 void FreeCamera::changeOrientation(float yaw, float pitch, float roll){
-    _orientation = glm::angleAxis(yaw, up) * _orientation;
+    glm::quat q = glm::quat(glm::vec3(pitch, yaw, roll));
+    _orientation = q * _orientation;
+    glm::normalize(_orientation);
+
+    /*_orientation = glm::angleAxis(yaw, up) * _orientation;
     _orientation = glm::angleAxis(pitch, right) * _orientation;
     _orientation = glm::angleAxis(roll, front) * _orientation;
-    glm::normalize(_orientation);
+    glm::normalize(_orientation);*/
+
 
     calculateBillboard();
 }

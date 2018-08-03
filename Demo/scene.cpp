@@ -24,8 +24,12 @@ void setupScene(){
     rm->addMesh(QUAD, quad);
 
 
-    //auto camera = ResourceManager::Factory::createFreeCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat());
+    //auto camera = ResourceManager::Factory::createFreeCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
     auto camera = ResourceManager::Factory::createSphereCamera(SPHERE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
+    /*auto camera = ResourceManager::Factory::createHUDCamera(SPHERE_CAM, -20.0f, 20.0f, 10.0f, -20.0f, 0.1f, 100.0f, true);
+    camera->changeOrientation(-PI/2.0f, 0.0f, 0.0f);
+    camera->changeOrientation(0.0f, PI/4.0f, 0.0f);
+    camera->setPosition(50.0f, 40.0f, -20.0f);*/
     camera->perspective((float)PI/4.0f, 0, 1.0f, 1000.0f);
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
     root->translate(0.0f, GROUND_LEVEL, 0.0f);
@@ -102,6 +106,12 @@ void setupScene(){
         auto asphalt = new SceneNode(asphaltName.str(), asphaltModel, asphaltShader);
         asphalt->setPreDraw(bindSkyEnvironment);
         roadPart->translate(0.0f, 0.0f, ROAD_LENGTH*(i-ROAD_SEGMENTS/2));
+        roadScenery->setPreDraw([=](){
+            glDisable(GL_CULL_FACE);
+        });
+        roadScenery->setPostDraw([=](){
+            glEnable(GL_CULL_FACE);
+        });
         road->addChild(roadPart);
         roadPart->addChild(roadScenery);
         roadPart->addChild(asphalt);
@@ -264,11 +274,10 @@ void setupScene(){
 
 
     /*Shadows*/
-    //auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -10.0f, 10.0f, 10.0f, 0.0f, 1.0f, 20.0f, false);
-    auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -20.0f, 20.0f, 5.0f, 0.0f, 0.1f, 100.0f, true);
-    shadowCamera->setOrientation(0.058f, -0.715f, -0.059f, 0.693f);
-    //shadowCamera->setPosition(39.685f, 2.0f, -19.65f);
-    shadowCamera->setPosition(45.685f, 2.0f, -19.65f);
+    auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -20.0f, 20.0f, 10.0f, -20.0f, 0.1f, 100.0f, true);
+    shadowCamera->changeOrientation(-PI/2.0f, 0.0f, 0.0f);
+    shadowCamera->changeOrientation(0.0f, PI/4.0f, 0.0f);
+    shadowCamera->setPosition(50.0f, 40.0f, -20.0f);
     auto shadowShader = rm->getShader(SHADOW_SHADER);
     GLint MVPLoc = shadowShader->getUniformLocation("MVP");
     shadowShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
