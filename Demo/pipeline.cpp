@@ -2,6 +2,7 @@
 // Created by joao on 12/19/17.
 //
 
+#include <iostream>
 #include "CGJengine.h"
 #include "constants.h"
 #include "pipeline.h"
@@ -33,6 +34,11 @@ void setupPipeline(){
     ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO2, WIN_X, WIN_Y);
     ResourceManager::Factory::createColorTextureFrameBuffer(SIDE_FBO3, WIN_X, WIN_Y);
     ResourceManager::Factory::createDepthTextureFrameBuffer(SHADOW_FBO, WIN_X, WIN_Y);
+
+    rm->getFrameBuffer(MAIN_FBO)->setInternalFormats(GL_RGBA16F, GL_RGBA16F, GL_DEPTH_COMPONENT32);
+    rm->getFrameBuffer(SIDE_FBO1)->setInternalFormats(GL_RGBA16F, GL_RGBA16F, GL_DEPTH_COMPONENT32);
+    rm->getFrameBuffer(SIDE_FBO2)->setInternalFormats(GL_RGBA16F, GL_RGBA16F, GL_DEPTH_COMPONENT32);
+    rm->getFrameBuffer(SIDE_FBO3)->setInternalFormats(GL_RGBA16F, GL_RGBA16F, GL_DEPTH_COMPONENT32);
 
     /*Create the ortho camera*/
     auto finalCamera = ResourceManager::Factory::createHUDCamera(ORTHO_CAM, -1, 1, 1, -1, 0, 1, true);
@@ -175,6 +181,9 @@ void executePipeline(){
     mainFBO->bindNormals();
     glActiveTexture(GL_TEXTURE0);
     pipeline->draw(LIGHTS_LEVEL);
+    //float data[4];
+    //glReadPixels(0, 0, 1, 1, GL_RGBA, GL_FLOAT, &data[0]);
+    //std::cout << data[0] << " " << data[1] << " " << data[2] << std::endl;
     sideBuffer1->unbind();
 
     /*Blend in the ambient and occlusion information*/

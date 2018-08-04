@@ -43,7 +43,7 @@ void FrameBuffer::initializeNewFrameBuffer(int x, int y) {
     GLuint colorBuffer;
     glGenTextures(1, &colorBuffer);
     glBindTexture(GL_TEXTURE_2D, colorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, _colorInternalFormat, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -57,7 +57,7 @@ void FrameBuffer::initializeNewFrameBuffer(int x, int y) {
     GLuint depthBuffer;
     glGenTextures(1, &depthBuffer);
     glBindTexture(GL_TEXTURE_2D, depthBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, _width, _height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, _depthInternalFormat, _width, _height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -115,4 +115,11 @@ void FrameBuffer::resize(int x, int y) {
     _colorBuffer = new Texture();
     _depthStencilBuffer = new Texture();
     initializeNewFrameBuffer(x, y);
+}
+
+void FrameBuffer::setInternalFormats(GLuint color, GLuint normal, GLuint depth) {
+    _colorInternalFormat = color;
+    _normalInternalFormat = normal;
+    _depthInternalFormat = depth;
+    resize(_width, _height);
 }

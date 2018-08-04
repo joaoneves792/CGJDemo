@@ -12,6 +12,9 @@ class FrameBuffer{
 protected:
     GLuint _frameBuffer;
     Texture* _depthStencilBuffer;
+    GLuint _colorInternalFormat = GL_RGBA8;
+    GLuint _normalInternalFormat = GL_RGBA16F;
+    GLuint _depthInternalFormat = GL_DEPTH_COMPONENT32;
     int _width;
     int _height;
     Texture* _colorBuffer;
@@ -23,6 +26,7 @@ protected:
 public:
     FrameBuffer();
     FrameBuffer(int x, int y);
+    void setInternalFormats(GLuint color, GLuint normal, GLuint depth);
     void bind();
     void unbind();
     virtual void bindTexture(); //This doesnt work with MSFramebuffers!

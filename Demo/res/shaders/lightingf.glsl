@@ -71,7 +71,12 @@ void main() {
         color += lightContribution;
 	}
 
-    out_color.rgb =color;
+    //Check for NaN (caused by points infinitelly far away like the skybox)
+    if( color.r > 0){
+        out_color.rgb = color;
+    }else{
+        out_color.rgb = vec3(0.0f);
+    }
     out_color.a = 1.0f;
 
 }

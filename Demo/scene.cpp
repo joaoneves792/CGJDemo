@@ -24,8 +24,8 @@ void setupScene(){
     rm->addMesh(QUAD, quad);
 
 
-    //auto camera = ResourceManager::Factory::createFreeCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
-    auto camera = ResourceManager::Factory::createSphereCamera(SPHERE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
+    auto camera = ResourceManager::Factory::createFreeCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
+    //auto camera = ResourceManager::Factory::createSphereCamera(SPHERE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
     /*auto camera = ResourceManager::Factory::createHUDCamera(SPHERE_CAM, -20.0f, 20.0f, 10.0f, -20.0f, 0.1f, 100.0f, true);
     camera->changeOrientation(-PI/2.0f, 0.0f, 0.0f);
     camera->changeOrientation(0.0f, PI/4.0f, 0.0f);

@@ -26,13 +26,13 @@ void DoubleColorMSFrameBuffer::initializeNewFrameBuffer(int x, int y) {
     GLuint colorBuffer;
     glGenTextures(1, &colorBuffer);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, colorBuffer);
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, GL_RGBA8, _width, _height, GL_TRUE);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, _colorInternalFormat, _width, _height, GL_TRUE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, colorBuffer, 0);
 
     GLuint secondColorBuffer;
     glGenTextures(1, &secondColorBuffer);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, secondColorBuffer);
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, GL_RGBA8, _width, _height, GL_TRUE);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, _samples, _colorInternalFormat, _width, _height, GL_TRUE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, secondColorBuffer, 0);
 
     /*glGenRenderbuffers(1, &_depthStencilBuffer);

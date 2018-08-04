@@ -83,5 +83,7 @@ void main() {
     float blurFactor = 1.0f-noiseFactor;
 
     color[PARTICLES].rgb = noiseFactor*noise_component+blurFactor*blur_component;
-    color[PARTICLES].a = 1.0f-length(position_modelspace)*2;
+    //color[PARTICLES].a = 1.0f-length(position_modelspace)*2;
+    vec2 quadrance = position_modelspace*position_modelspace;
+    color[PARTICLES].a = 1.0f-max(quadrance.x, quadrance.y)*4.0f;
 }
