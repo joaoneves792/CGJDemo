@@ -9,7 +9,6 @@ in vec3 eyeDirection_worldspace;
 in vec2 texture_coord_from_vshader;
 in vec3 normal_cameraspace;
 in vec3 normal_worldspace;
-in highp float depth;
 
 out vec4[4] G_output;
 

@@ -92,7 +92,8 @@ void setupScene(){
     H3DMesh* roadModel = (H3DMesh*)rm->getMesh(ROAD);
     H3DMesh* asphaltModel = (H3DMesh*)rm->getMesh(ASPHALT);
     Shader* asphaltShader = rm->getShader(ASPHALT_SHADER);
-    roadModel->setMaterialUploadCallback(materialUploadCallback);
+    Shader* parallaxShader = rm->getShader(PARALLAX_SHADER);
+    //roadModel->setMaterialUploadCallback(materialUploadCallback);
     auto road = new SceneNode(ROAD);
     root->addChild(road);
     int li = 0;
@@ -102,7 +103,7 @@ void setupScene(){
         sceneryName << ROAD << "scenery" << i;
         asphaltName << ASPHALT << i;
         auto roadPart = new SceneNode(name.str());
-        auto roadScenery = new SceneNode(sceneryName.str(), roadModel, h3dShader);
+        auto roadScenery = new SceneNode(sceneryName.str(), roadModel, parallaxShader);
         auto asphalt = new SceneNode(asphaltName.str(), asphaltModel, asphaltShader);
         asphalt->setPreDraw(bindSkyEnvironment);
         roadPart->translate(0.0f, 0.0f, ROAD_LENGTH*(i-ROAD_SEGMENTS/2));

@@ -60,6 +60,37 @@ void loadShaders(){
     glUniform1i(textureLoc, TEXTURE_SLOT);
     glUniform1i(environmentLoc, ENVIRONMENT_SLOT);
 
+    auto parallaxShader = ResourceManager::Factory::createShader(PARALLAX_SHADER, "res/shaders/Gh3dv.glsl", "res/shaders/parallaxf.glsl");
+    parallaxShader->setAttribLocation("inPositon", VERTICES__ATTR);
+    parallaxShader->setAttribLocation("inNormal", NORMALS__ATTR);
+    parallaxShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
+    parallaxShader->setAttribLocation("inJointIndex", BONEINDICES__ATTR);
+    parallaxShader->setAttribLocation("inJointWeight", BONEWEIGHTS__ATTR);
+    parallaxShader->setAttribLocation("inTangent", TANGENTS__ATTR);
+    parallaxShader->setAttribLocation("inBitangent", BITANGENTS__ATTR);
+    parallaxShader->setFragOutputLocation("G_output", 0);
+    parallaxShader->link();
+
+    MVPLocation = parallaxShader->getUniformLocation("MVP");
+    ModelLocation = parallaxShader->getUniformLocation("Model");
+    ViewLocation = parallaxShader->getUniformLocation("View");
+    int ProjectionLocation = parallaxShader->getUniformLocation("Projection");
+    NormalLocation = parallaxShader->getUniformLocation("NormalMatrix");
+    int diffuseLocation = parallaxShader->getUniformLocation("diffuse");
+    int bumpLocation = parallaxShader->getUniformLocation("bump");
+    int normalsLocation = parallaxShader->getUniformLocation("normals");
+    parallaxShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P*V*M));
+        glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, glm::value_ptr(M));
+        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
+        glUniformMatrix4fv(NormalLocation, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(V*M))));
+        glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
+    });
+    parallaxShader->use();
+    glUniform1i(diffuseLocation, 0);
+    glUniform1i(normalsLocation, 1);
+    glUniform1i(bumpLocation, 2);
+
     /*Sky Shader*/
     auto skyShader = ResourceManager::Factory::createShader(SKY_SHADER, "res/shaders/skyv.glsl", "res/shaders/skyf.glsl");
     skyShader->setAttribLocation("aPos", VERTICES__ATTR);
@@ -93,7 +124,7 @@ void loadShaders(){
     glUniform1i(renderderTextureLoc, 0);
     glUniform1i(noiseLoc, 1);
     ViewLocation = heatShader->getUniformLocation("View");
-    int ProjectionLocation = heatShader->getUniformLocation("Projection");
+    ProjectionLocation = heatShader->getUniformLocation("Projection");
     heatShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P) {
         glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));

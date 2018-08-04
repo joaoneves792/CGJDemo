@@ -33,6 +33,7 @@
 #define AMBIENT_BLEND_SHADER "ambientBlend"
 #define FXAA_SHADER "fxaashader"
 #define SHADOW_SHADER "shadowshader"
+#define PARALLAX_SHADER "parallax"
 
 /*Scenes*/
 #define SCENE "main"
