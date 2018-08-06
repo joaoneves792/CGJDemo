@@ -15,6 +15,9 @@ out vec4 color;
 #define SCALE 0.5f
 
 
+/*Code borrowed from NVIDIA smooth particles example
+* Available here: http://developer.download.nvidia.com/SDK/10/direct3d/samples.html
+*/
 float contrast(float Input, float ContrastPower)
 {
 /**/
