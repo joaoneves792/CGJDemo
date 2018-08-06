@@ -8,7 +8,7 @@
 
 #include <GL/glew.h>
 #include "FrameBuffer.h"
-#include "Texture.h"
+#include "Textures/Texture.h"
 #include "ColorTextureFrameBuffer.h"
 #include "DepthTextureFrameBuffer.h"
 

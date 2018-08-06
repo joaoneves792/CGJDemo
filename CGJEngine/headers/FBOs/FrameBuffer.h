@@ -6,7 +6,7 @@
 #define CGJDEMO_FRAMEBUFFER_H
 
 #include <GL/glew.h>
-#include "Texture.h"
+#include "Textures/Texture.h"
 
 class FrameBuffer{
 protected:

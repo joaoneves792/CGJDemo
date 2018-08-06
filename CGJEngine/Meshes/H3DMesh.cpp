@@ -7,7 +7,7 @@
 #include <Meshes/H3DMesh.h>
 #include <CGJengine.h>
 #include "Meshes/H3DMesh.h"
-#include "Texture.h"
+#include "Textures/Texture.h"
 
 H3DMesh::H3DMesh() {
     _vao = nullptr;

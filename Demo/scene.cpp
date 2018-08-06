@@ -89,14 +89,17 @@ void setupScene(){
     root->addChild(sky);
 
     /*Place the road*/
+
     H3DMesh* roadModel = (H3DMesh*)rm->getMesh(ROAD);
     H3DMesh* asphaltModel = (H3DMesh*)rm->getMesh(ASPHALT);
     H3DMesh* grassModel = (H3DMesh*)rm->getMesh(GRASS);
     Shader* asphaltShader = rm->getShader(ASPHALT_SHADER);
     Shader* parallaxShader = rm->getShader(PARALLAX_SHADER);
     Shader* grassShader = rm->getShader(GRASS_SHADER);
-    const int GRASS_LAYERS = 10;
-    const float GRASS_LENGHT = 0.3;
+    const int GRASS_LAYERS = 40;
+    const float GRASS_LENGHT = 0.4;
+    Fur* grass = new Fur(GRASS_LAYERS-1, 512, 10000, 12345, 0.0f, 0.7f, 0.0f);
+    rm->addFur("grassFur", grass);
     auto grassNoiseTexture = ResourceManager::Factory::createTexture(GRASS_NOISE);
     int furLengthLocation = grassShader->getUniformLocation("furLength");
     int uvScaleLocation = grassShader->getUniformLocation("uvScale");
@@ -106,9 +109,10 @@ void setupScene(){
         if(shader != shadowShaderProgram) {
             glUniform1f(furLengthLocation, GRASS_LENGHT * ((float)layer/(float)GRASS_LAYERS));
             //glUniform1f(uvScaleLocation, 1.0f + 1.0f * ((float)layer/(float)GRASS_LAYERS));
-            glUniform1f(uvScaleLocation, 2.0f);
+            glUniform1f(uvScaleLocation, 1.2f);
             glActiveTexture(GL_TEXTURE1);
-            grassNoiseTexture->bind();
+            grass->bindLayerTexture(layer-1);
+            //grassNoiseTexture->bind();
         }
     };
     auto road = new SceneNode(ROAD);

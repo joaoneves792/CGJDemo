@@ -246,8 +246,9 @@ void executePipeline(){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
+
     mainFBO->bindParticles();
-    //sideBuffer3->bindTexture();
+    //sideBuffer2->bindTexture();
     pipeline->draw(FXAA_LEVEL);
 
     creditsHUD->draw();

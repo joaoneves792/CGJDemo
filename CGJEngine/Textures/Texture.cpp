@@ -11,7 +11,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <Texture.h>
+#include <Textures/Texture.h>
 #include <glm_wrapper.h>
 
 extern "C" {
@@ -20,7 +20,7 @@ extern "C" {
 #include <png.h>
 }
 
-#include "Texture.h"
+#include "Textures/Texture.h"
 
 /*****************************************/
 /*  Load Bitmaps, Jpegs, Pngs And Convert To Textures */

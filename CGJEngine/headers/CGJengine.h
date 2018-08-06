@@ -30,6 +30,7 @@
 #include "Particles/ParticlePool.h"
 #include "SceneGraph/ParticleEmitterNode.h"
 #include "Particles/Particle.h"
-#include "Texture.h"
+#include "Textures/Texture.h"
+#include "Textures/Fur.h"
 
 #endif //CGJM_CGJENGINE_H

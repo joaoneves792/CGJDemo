@@ -55,6 +55,10 @@ void ResourceManager::__destroyTexture(Texture* texture) {
     delete texture;
 }
 
+void ResourceManager::__destroyFur(Fur *fur) {
+    delete fur;
+}
+
 void ResourceManager::addMesh(const std::string& name, Mesh *mesh) {
     _meshes[name] = mesh;
 }
@@ -81,6 +85,10 @@ void ResourceManager::addParticlePool(const std::string &name, ParticlePool *poo
 
 void ResourceManager::addTexture(const std::string &name, Texture* texture) {
     _textures[name] = texture;
+}
+
+void ResourceManager::addFur(const std::string &name, Fur *fur) {
+    _furs[name] = fur;
 }
 
 Mesh* ResourceManager::getMesh(const std::string& name) {
@@ -134,6 +142,14 @@ ParticlePool* ResourceManager::getParticlePool(const std::string &name) {
 Texture* ResourceManager::getTexture(const std::string &name) {
     auto it = _textures.find(name);
     if(it == _textures.end()){
+        return nullptr;
+    }
+    return it->second;
+}
+
+Fur* ResourceManager::getFur(const std::string &name) {
+    auto it = _furs.find(name);
+    if(it == _furs.end()){
         return nullptr;
     }
     return it->second;
@@ -198,6 +214,14 @@ void ResourceManager::destroyTexture(const std::string &name) {
     }
 }
 
+void ResourceManager::destroyFur(const std::string &name) {
+    auto it = _furs.find(name);
+    if(it != _furs.end()){
+        __destroyFur(it->second);
+        _furs.erase(it);
+    }
+}
+
 void ResourceManager::destroyAllMeshes() {
     for(auto it: _meshes){
         __destroyMesh(it.second);
@@ -247,6 +271,13 @@ void ResourceManager::destroyAllTextures() {
     _textures.clear();
 }
 
+void ResourceManager::destroyAllFurs() {
+    for(auto it : _furs){
+        __destroyFur(it.second);
+    }
+    _furs.clear();
+}
+
 void ResourceManager::destroyEverything() {
     destroyAllMeshes();
     destroyAllShaders();
@@ -255,5 +286,6 @@ void ResourceManager::destroyEverything() {
     destroyAllFrameBuffers();
     destroyAllParticlePools();
     destroyAllTextures();
+    destroyAllFurs();
 }
 

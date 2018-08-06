@@ -2,7 +2,7 @@
 // Created by joao on 11/21/17.
 //
 #include <iostream>
-#include <Texture.h>
+#include <Textures/Texture.h>
 #include <FBOs/MSFrameBuffer.h>
 #include "ResourceManager.h"
 #include "Meshes/Mesh.h"

@@ -34,7 +34,7 @@ set(SOURCE_FILES
     	SceneGraph/ParticleEmitterNode.cpp
 	    ResourceManager.cpp
     	InputManager.cpp
-        Texture.cpp
+        Textures/Texture.cpp
         FBOs/FrameBuffer.cpp
 	    ResourceFactory.cpp
 		Lights/LightsManager.cpp
@@ -44,7 +44,7 @@ set(SOURCE_FILES
 		FBOs/DepthTextureFrameBuffer.cpp
 		FBOs/DoubleColorMSFrameBuffer.cpp
         FBOs/GFrameBuffer.cpp
-        )
+		Textures/Fur.cpp)
 set(HEADER_FILES
         headers/Cameras/Camera.h
         headers/CGJengine.h
@@ -65,7 +65,7 @@ set(HEADER_FILES
         headers/Shader.h
         headers/Shader.h
 		headers/Cameras/SphereCamera.h
-        headers/Texture.h
+        headers/Textures/Texture.h
 		headers/Particles/ParticlePool.h
 		headers/Particles/Particle.h
 		headers/SceneGraph/ParticleEmitterNode.h
@@ -74,7 +74,7 @@ set(HEADER_FILES
 		headers/FBOs/DepthTextureFrameBuffer.h
 		headers/FBOs/DoubleColorMSFrameBuffer.h
 		headers/FBOs/GFrameBuffer.h
-		)
+		headers/Textures/Fur.h)
 
 
 #add_library(jpeg_lib STATIC IMPORTED)

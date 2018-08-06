@@ -10,7 +10,7 @@
 #include "Shader.h"
 #include "SceneGraph/SceneNode.h"
 #include "Particles/Particle.h"
-#include "Texture.h"
+#include "Textures/Texture.h"
 
 class ParticlePool;
 
