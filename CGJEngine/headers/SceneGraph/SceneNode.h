@@ -30,6 +30,7 @@ protected:
     Vec3 _size;
 
     bool _visible;
+    int _layers;
 
     SceneNode* _parent;
     std::list<SceneNode*> _childs = {};
@@ -37,6 +38,7 @@ protected:
     std::function<void()> _preDraw;
     std::function<void()> _postDraw;
     std::function<void(int dt)> _updateCallback;
+    std::function<void(int layer)> _layerCallback;
 
     int _processingLevel = 0;
 
@@ -68,6 +70,7 @@ public:
     void setPreDraw(std::function<void()> callback);
     void setPostDraw(std::function<void()> callback);
     void setUpdateCallback(std::function<void(int dt)> callback);
+    void setLayerCallback(std::function<void(int layer)> callback);
 
     void addChild(SceneNode* child);
     void destroy();
@@ -81,6 +84,8 @@ public:
                       const Quat& parentOrientation, const Mat4& parentScale, Shader* shader);
 
     Mat4 getModelMatrix();
+
+    void setLayerCount(int layers);
 
 
     SceneNode* findNode(const std::string& name);

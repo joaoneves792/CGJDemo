@@ -91,6 +91,25 @@ void loadShaders(){
     glUniform1i(normalsLocation, 1);
     glUniform1i(bumpLocation, 2);
 
+    auto grassShader = ResourceManager::Factory::createShader(GRASS_SHADER, "res/shaders/grassv.glsl", "res/shaders/grassf.glsl");
+    grassShader->setAttribLocation("inPositon", VERTICES__ATTR);
+    grassShader->setAttribLocation("inNormal", NORMALS__ATTR);
+    grassShader->setAttribLocation("inTexCoord", TEXCOORDS__ATTR);
+    grassShader->setFragOutputLocation("G_output", 0);
+    grassShader->link();
+
+    MVPLocation = grassShader->getUniformLocation("MVP");
+    NormalLocation = grassShader->getUniformLocation("NormalMatrix");
+    GLint baseLocation = grassShader->getUniformLocation("base");
+    GLint noiseLocation = grassShader->getUniformLocation("noise");
+    grassShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
+        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P*V*M));
+        glUniformMatrix4fv(NormalLocation, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(V*M))));
+    });
+    grassShader->use();
+    glUniform1i(baseLocation, 0);
+    glUniform1i(noiseLocation, 1);
+
     /*Sky Shader*/
     auto skyShader = ResourceManager::Factory::createShader(SKY_SHADER, "res/shaders/skyv.glsl", "res/shaders/skyf.glsl");
     skyShader->setAttribLocation("aPos", VERTICES__ATTR);

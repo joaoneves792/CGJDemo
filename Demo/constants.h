@@ -11,12 +11,14 @@
 #define WHEEL "wheel"
 #define ROAD "road"
 #define ASPHALT "asphalt"
+#define GRASS "grass"
 #define SKY "sky"
 #define QUAD "quad"
 
 /*Textures*/
 #define SKY_CUBE_MAP "skycubemap"
 #define ENVIRONMENT "environment"
+#define GRASS_NOISE "res/Road/grass.png"
 
 /*Shaders*/
 #define H3D_SHADER "h3d"
@@ -35,6 +37,7 @@
 #define SHADOW_SHADER "shadowshader"
 #define PARALLAX_SHADER "parallax"
 #define SMOKE_SHADER "smokeShader"
+#define GRASS_SHADER "grassShader"
 
 /*Scenes*/
 #define SCENE "main"

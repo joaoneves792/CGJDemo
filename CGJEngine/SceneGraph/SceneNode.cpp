@@ -19,9 +19,11 @@ SceneNode::SceneNode(const std::string& name) {
     _parent = nullptr;
     _preDraw = nullptr;
     _postDraw = nullptr;
+    _layerCallback = nullptr;
     _visible = true;
     _scene = nullptr;
     _billboard = false;
+    _layers = 1;
 }
 
 SceneNode::SceneNode(const std::string& name, Mesh *mesh) {
@@ -34,9 +36,11 @@ SceneNode::SceneNode(const std::string& name, Mesh *mesh) {
     _parent = nullptr;
     _preDraw = nullptr;
     _postDraw = nullptr;
+    _layerCallback = nullptr;
     _visible = true;
     _scene = nullptr;
     _billboard = false;
+    _layers = 1;
 }
 
 SceneNode::SceneNode(const std::string& name, Mesh *mesh, Shader *shader) {
@@ -49,9 +53,11 @@ SceneNode::SceneNode(const std::string& name, Mesh *mesh, Shader *shader) {
     _parent = nullptr;
     _preDraw = nullptr;
     _postDraw = nullptr;
+    _layerCallback = nullptr;
     _visible = true;
     _scene = nullptr;
     _billboard = false;
+    _layers = 1;
 }
 
 std::string SceneNode::getName() {
@@ -98,6 +104,11 @@ void SceneNode::scale(float x, float y, float z) {
     _size = Vec3(x, y, z);
 }
 
+void SceneNode::setLayerCount(int layers) {
+    _layers = layers;
+}
+
+
 void SceneNode::setPreDraw(std::function<void()> callback) {
     _preDraw = callback;
 }
@@ -108,6 +119,10 @@ void SceneNode::setPostDraw(std::function<void()> callback) {
 
 void SceneNode::setUpdateCallback(std::function<void(int dt)> callback) {
     _updateCallback = callback;
+}
+
+void SceneNode::setLayerCallback(std::function<void(int layer)> callback) {
+    _layerCallback = callback;
 }
 
 void SceneNode::setScene(SceneGraph *sceneGraph) {
@@ -262,7 +277,11 @@ void SceneNode::draw(int level, const Mat4 &parentTranslate, const Quat &parentO
             use_shader->uploadMVP(M, V, P);
 
             //Draw
-            _mesh->draw();
+            for(int i=0;i<_layers; i++) {
+                if(_layerCallback != nullptr)
+                    _layerCallback(i);
+                _mesh->draw();
+            }
         }
         //Call post draw
         if (_postDraw != nullptr)

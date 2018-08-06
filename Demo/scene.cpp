@@ -91,20 +91,41 @@ void setupScene(){
     /*Place the road*/
     H3DMesh* roadModel = (H3DMesh*)rm->getMesh(ROAD);
     H3DMesh* asphaltModel = (H3DMesh*)rm->getMesh(ASPHALT);
+    H3DMesh* grassModel = (H3DMesh*)rm->getMesh(GRASS);
     Shader* asphaltShader = rm->getShader(ASPHALT_SHADER);
     Shader* parallaxShader = rm->getShader(PARALLAX_SHADER);
-    //roadModel->setMaterialUploadCallback(materialUploadCallback);
+    Shader* grassShader = rm->getShader(GRASS_SHADER);
+    const int GRASS_LAYERS = 10;
+    const float GRASS_LENGHT = 0.3;
+    auto grassNoiseTexture = ResourceManager::Factory::createTexture(GRASS_NOISE);
+    int furLengthLocation = grassShader->getUniformLocation("furLength");
+    int uvScaleLocation = grassShader->getUniformLocation("uvScale");
+    auto grassLayerCallback = [=](int layer){
+        GLint shader = 0;
+        glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+        if(shader != shadowShaderProgram) {
+            glUniform1f(furLengthLocation, GRASS_LENGHT * ((float)layer/(float)GRASS_LAYERS));
+            //glUniform1f(uvScaleLocation, 1.0f + 1.0f * ((float)layer/(float)GRASS_LAYERS));
+            glUniform1f(uvScaleLocation, 2.0f);
+            glActiveTexture(GL_TEXTURE1);
+            grassNoiseTexture->bind();
+        }
+    };
     auto road = new SceneNode(ROAD);
     root->addChild(road);
     int li = 0;
     for(int i=0; i<ROAD_SEGMENTS; i++){
-        std::stringstream name, sceneryName, asphaltName;
+        std::stringstream name, sceneryName, asphaltName, grassName;
         name << ROAD << i;
         sceneryName << ROAD << "scenery" << i;
         asphaltName << ASPHALT << i;
+        grassName << GRASS << i;
         auto roadPart = new SceneNode(name.str());
         auto roadScenery = new SceneNode(sceneryName.str(), roadModel, parallaxShader);
         auto asphalt = new SceneNode(asphaltName.str(), asphaltModel, asphaltShader);
+        auto grass = new SceneNode(grassName.str(), grassModel, grassShader);
+        grass->setLayerCount(GRASS_LAYERS);
+        grass->setLayerCallback(grassLayerCallback);
         asphalt->setPreDraw(bindSkyEnvironment);
         roadPart->translate(0.0f, 0.0f, ROAD_LENGTH*(i-ROAD_SEGMENTS/2));
         roadScenery->setPreDraw([=](){
@@ -116,6 +137,7 @@ void setupScene(){
         road->addChild(roadPart);
         roadPart->addChild(roadScenery);
         roadPart->addChild(asphalt);
+        roadPart->addChild(grass);
 
         if(std::abs(i-ROAD_SEGMENTS/2) <= ACTIVE_LAMPS/2) {
             /*Create the lights*/
