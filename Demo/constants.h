@@ -34,6 +34,7 @@
 #define FXAA_SHADER "fxaashader"
 #define SHADOW_SHADER "shadowshader"
 #define PARALLAX_SHADER "parallax"
+#define SMOKE_SHADER "smokeShader"
 
 /*Scenes*/
 #define SCENE "main"
@@ -65,7 +66,10 @@
 #define LEFT_EXHAUST "exhaust_l"
 #define RIGHT_EXHAUST "exhaust_r"
 #define FIRE_PARTICLE "res/fireAtlas.png"
+#define SMOKE_PARTICLE "res/smoke_particle.png"
 #define HEAT_EMITTER "heatHaze"
+#define SMOKE_EMITTER_RL "smokeEmmiterRL"
+#define SMOKE_EMITTER_RR "smokeEmmiterRR"
 
 /*Window properties*/
 #define WIN_X 1024
@@ -95,6 +99,7 @@
 #define AMBIENT "ambient"
 #define BLIT_LEVEL (-2)
 #define BLIT "prepareParticles"
+#define SMOOTH_PARTICLES_LEVEL (-7)
 #define FXAA_LEVEL (-1)
 #define FXAA "fxaa"
 

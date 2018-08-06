@@ -196,8 +196,36 @@ void setupScene(){
     exhaustLeft->setRandomAcceleration(Vec3(3e-10f, 3e-8f, 0.0f));
     exhaustRight->setRandomAcceleration(Vec3(3e-10f, 3e-8f, 0.0f));
 
+    exhaustLeft->setProcessingLevel(SMOOTH_PARTICLES_LEVEL);
+    exhaustRight->setProcessingLevel(SMOOTH_PARTICLES_LEVEL);
+
     carNode->addChild(exhaustLeft);
     carNode->addChild(exhaustRight);
+
+    /*Smoke*/
+    auto smokeTexture = ResourceManager::Factory::createTexture(SMOKE_PARTICLE);
+    auto smokeShader = rm->getShader(SMOKE_SHADER);
+    const Vec3 smoke_accelaration = Vec3(0.0f, 9e-8f, 1e-5f);
+    const Vec3 smoke_random_accelaration = Vec3(2e-6f, 3e-10f, 1e-7f);
+    const Vec3 smoke_velocity = Vec3(0.0f, 9e-4f, 6e-5f);
+    const float smoke_rate = 0.03f;
+    const float smoke_decay = 0.00001f;
+    const float smoke_particle_decay = 5e-4f;
+    auto smokeLeft = ResourceManager::Factory::createParticleEmmiter(SMOKE_EMITTER_RL, pool, smokeShader, smokeTexture,
+                                                                        smoke_accelaration, smoke_velocity,
+                                                                        Vec3(0.0f), smoke_rate, smoke_decay);
+    smokeLeft->setRandomAcceleration(smoke_random_accelaration);
+    smokeLeft->setParticleLifeDecayRate(smoke_particle_decay);
+    smokeLeft->setProcessingLevel(SMOOTH_PARTICLES_LEVEL);
+    rlWheel->addChild(smokeLeft);
+
+    auto smokeRight = ResourceManager::Factory::createParticleEmmiter(SMOKE_EMITTER_RR, pool, smokeShader, smokeTexture,
+                                                                     smoke_accelaration, smoke_velocity,
+                                                                     Vec3(0.0f), smoke_rate, smoke_decay);
+    smokeRight->setRandomAcceleration(smoke_random_accelaration);
+    smokeRight->setParticleLifeDecayRate(smoke_particle_decay);
+    smokeRight->setProcessingLevel(SMOOTH_PARTICLES_LEVEL);
+    rrWheel->addChild(smokeRight);
 
     /*Heat haze*/
 

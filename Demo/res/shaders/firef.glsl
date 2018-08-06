@@ -1,18 +1,16 @@
 #version 330 core
 
-#define DIFFUSE 0
-#define AMBIENT 1
-#define SPECULAR 2
-#define NORMAL 3
-#define PARTICLES 4
-
 in vec2 uv;
+in vec3 screen_position;
 
 uniform sampler2D tex;
+uniform sampler2D depth;
 
-out vec4[5] color;
+out vec4 color;
 
 void main() {
-    color[PARTICLES].rgba = texture(tex, uv).rgba;
-    color[PARTICLES].a *= 0.5f;
+    if (screen_position.z >= texture(depth, screen_position.xy).r)
+        discard;
+    color.rgba = texture(tex, uv).rgba;
+    color.a *= 0.5f;
 }

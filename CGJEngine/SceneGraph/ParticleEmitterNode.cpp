@@ -143,8 +143,10 @@ void ParticleEmitterNode::particlePreDraw(int level) {
         Mat4 M = getModelMatrix();
         _shader->uploadMVP(M, V, P);
 
-        if(_texture)
+        if(_texture){
+            glActiveTexture(GL_TEXTURE0);
             _texture->bind();
+        }
     }
 }
 

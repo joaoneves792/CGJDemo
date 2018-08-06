@@ -147,12 +147,34 @@ void loadShaders(){
     fireShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
     fireShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
     fireShader->link();
+    GLint depthBufferLoc = fireShader->getUniformLocation("depth");
+    textureLoc = fireShader->getUniformLocation("tex");
     ViewLocation = fireShader->getUniformLocation("View");
     ProjectionLocation = fireShader->getUniformLocation("Projection");
     fireShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
         glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
         glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
     });
+    fireShader->use();
+    glUniform1i(textureLoc, 0);
+    glUniform1i(depthBufferLoc, 1);
+
+    /*Smoke shader*/
+    auto smokeShader = ResourceManager::Factory::createShader(SMOKE_SHADER, "res/shaders/smokev.glsl", "res/shaders/smokef.glsl");
+    smokeShader->setAttribLocation("vertex", PARTICLE_VERT_ATTR);
+    smokeShader->setAttribLocation("state", PARTICLE_STATE_ATTR);
+    smokeShader->link();
+    depthBufferLoc = smokeShader->getUniformLocation("depth");
+    textureLoc = smokeShader->getUniformLocation("tex");
+    ViewLocation = smokeShader->getUniformLocation("View");
+    ProjectionLocation = smokeShader->getUniformLocation("Projection");
+    smokeShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
+        glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
+        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
+    });
+    smokeShader->use();
+    glUniform1i(textureLoc, 0);
+    glUniform1i(depthBufferLoc, 1);
 
     /*Shadow Shader*/
     auto shadowMapShader = ResourceManager::Factory::createShader(SHADOW_SHADER, "res/shaders/shadowv.glsl", "res/shaders/shadowf.glsl");
@@ -168,7 +190,7 @@ void loadShaders(){
     ssaoShader->setAttribLocation("inPosition", VERTICES__ATTR);
     ssaoShader->link();
     ssaoShader->use();
-    GLint depthBufferLoc = ssaoShader->getUniformLocation("depthBuffer");
+    depthBufferLoc = ssaoShader->getUniformLocation("depthBuffer");
     GLint normalsLoc = ssaoShader->getUniformLocation("normals");
     noiseLoc = ssaoShader->getUniformLocation("noise");
     MVPLocation = ssaoShader->getUniformLocation("MVP");

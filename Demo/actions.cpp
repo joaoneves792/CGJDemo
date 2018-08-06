@@ -15,6 +15,10 @@
 void setupActions() {
     SceneGraph *scene = ResourceManager::getInstance()->getScene(SCENE);
     InputManager *im = InputManager::getInstance();
+    static ParticleEmitterNode* smokeLR = (ParticleEmitterNode*)
+            ResourceManager::getInstance()->getScene(SCENE)->findNode(SMOKE_EMITTER_RL);
+    static ParticleEmitterNode* smokeRR = (ParticleEmitterNode*)
+            ResourceManager::getInstance()->getScene(SCENE)->findNode(SMOKE_EMITTER_RR);
 
     im->setActionInterval(10); //Update every 10ms
 
@@ -65,6 +69,8 @@ void setupActions() {
         accelerating = !accelerating;
         if(accelerating){
             scene->findNode(ROAD)->setUpdateCallback(Movement::accelerate);
+            smokeLR->emmit();
+            smokeRR->emmit();
         }else {
             scene->findNode(ROAD)->setUpdateCallback(Movement::deccelerate);
         }

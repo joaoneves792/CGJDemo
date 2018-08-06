@@ -8,5 +8,6 @@ uniform sampler2D background;
 uniform int renderTarget;
 
 void main() {
-    out_color[renderTarget] = texture(background, uv);
+    out_color[renderTarget].rgb = texture(background, uv).rgb;
+    out_color[renderTarget].a = 1.0f;
 }
