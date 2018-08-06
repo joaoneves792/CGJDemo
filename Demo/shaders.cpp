@@ -101,14 +101,14 @@ void loadShaders(){
     MVPLocation = grassShader->getUniformLocation("MVP");
     NormalLocation = grassShader->getUniformLocation("NormalMatrix");
     GLint baseLocation = grassShader->getUniformLocation("base");
-    GLint noiseLocation = grassShader->getUniformLocation("noise");
+    GLint grassLocation = grassShader->getUniformLocation("grass");
     grassShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
         glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P*V*M));
         glUniformMatrix4fv(NormalLocation, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(V*M))));
     });
     grassShader->use();
     glUniform1i(baseLocation, 0);
-    glUniform1i(noiseLocation, 1);
+    glUniform1i(grassLocation, 1);
 
     /*Sky Shader*/
     auto skyShader = ResourceManager::Factory::createShader(SKY_SHADER, "res/shaders/skyv.glsl", "res/shaders/skyf.glsl");

@@ -100,9 +100,9 @@ void setupScene(){
     const float GRASS_LENGHT = 0.4;
     Fur* grass = new Fur(GRASS_LAYERS-1, 512, 10000, 12345, 0.0f, 0.7f, 0.0f);
     rm->addFur("grassFur", grass);
-    auto grassNoiseTexture = ResourceManager::Factory::createTexture(GRASS_NOISE);
     int furLengthLocation = grassShader->getUniformLocation("furLength");
     int uvScaleLocation = grassShader->getUniformLocation("uvScale");
+    int timeLoc = grassShader->getUniformLocation("time");
     auto grassLayerCallback = [=](int layer){
         GLint shader = 0;
         glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
@@ -115,6 +115,7 @@ void setupScene(){
             //grassNoiseTexture->bind();
         }
     };
+
     auto road = new SceneNode(ROAD);
     root->addChild(road);
     int li = 0;
@@ -130,6 +131,14 @@ void setupScene(){
         auto grass = new SceneNode(grassName.str(), grassModel, grassShader);
         grass->setLayerCount(GRASS_LAYERS);
         grass->setLayerCallback(grassLayerCallback);
+        grass->setUpdateCallback([=](int dt){
+            static float time = 0.0f;
+            time = time + dt/10000.0f;
+            //time = time - (int)time;
+            grassShader->use();
+            glUniform1f(timeLoc,time);
+
+        });
         asphalt->setPreDraw(bindSkyEnvironment);
         roadPart->translate(0.0f, 0.0f, ROAD_LENGTH*(i-ROAD_SEGMENTS/2));
         roadScenery->setPreDraw([=](){
@@ -276,7 +285,7 @@ void setupScene(){
 
     //Quads for distance heat distortion
     auto distanceHeatShader = rm->getShader(HEAT_DISTANCE_SHADER);
-    GLint timeLoc = distanceHeatShader->getUniformLocation("time");
+    timeLoc = distanceHeatShader->getUniformLocation("time");
     auto distanceHeat = new SceneNode(DISTANCE_HEAT);
     distanceHeat->scale(15.0f, 5.0f, 0.0f);
     distanceHeat->translate(20.0f, 5.0f, 0.0);

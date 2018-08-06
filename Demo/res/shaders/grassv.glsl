@@ -6,11 +6,13 @@ in vec2 inTexCoord;
 
 out vec2 texture_coord_from_vshader;
 out vec3 normal_cameraspace;
+out vec3 position_modelspace;
 
 uniform mat4 NormalMatrix;
 uniform mat4 MVP;
 
 uniform float furLength;
+uniform float time;
 
 void main() {
     vec4 position = vec4(inPosition + inNormal*furLength, 1.0f);
@@ -25,4 +27,5 @@ void main() {
 	gl_Position = position_clipspace;
 
 	texture_coord_from_vshader = inTexCoord;
+	position_modelspace = position.xyz;
 }
