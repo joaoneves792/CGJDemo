@@ -342,10 +342,10 @@ void setupScene(){
 
 
     /*Shadows*/
-    auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -20.0f, 20.0f, 10.0f, -20.0f, 0.1f, 100.0f, true);
+    auto shadowCamera = ResourceManager::Factory::createHUDCamera(SHADOW_CAMERA, -30.0f, 30.0f, 10.0f, -20.0f, 0.1f, 100.0f, true);
     shadowCamera->changeOrientation(-PI/2.0f, 0.0f, 0.0f);
     shadowCamera->changeOrientation(0.0f, PI/4.0f, 0.0f);
-    shadowCamera->setPosition(50.0f, 40.0f, -20.0f);
+    shadowCamera->setPosition(43.5f, 40.0f, -20.0f);
     auto shadowShader = rm->getShader(SHADOW_SHADER);
     GLint MVPLoc = shadowShader->getUniformLocation("MVP");
     shadowShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
