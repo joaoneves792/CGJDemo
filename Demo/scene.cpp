@@ -356,6 +356,20 @@ void setupScene(){
     });
 
 
+    Mesh* box = new RectangleMesh(10.0f, 10.0f, 10.0f);
+    rm->addMesh("BOX", box);
+    auto volumetricShader = rm->getShader(VOLUMETRIC_SHADER);
+    auto boxNode = new SceneNode("BOX", box, volumetricShader);
+
+    carNode->addChild(boxNode);
+
+    //Example infinite floor (not quite but extends to far plane)
+    /*Mesh* floor = new InfiniteQuadMesh();
+    rm->addMesh("FLOOR", floor);
+    auto floorShader = rm->getShader(FLOOR_SHADER);
+    auto floorNode = new SceneNode("FLOOR", floor, floorShader);
+    root->addChild(floorNode);*/
+
 }
 
 void flames(int value){

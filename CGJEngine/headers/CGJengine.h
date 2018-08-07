@@ -16,6 +16,8 @@
 #include "Meshes/OBJMesh.h"
 #include "Meshes/H3DMesh.h"
 #include "Meshes/QuadMesh.h"
+#include "Meshes/RectangleMesh.h"
+#include "Meshes/InfiniteQuadMesh.h"
 #include "SceneGraph/SceneGraph.h"
 #include "SceneGraph/SceneNode.h"
 #include "FBOs/FrameBuffer.h"

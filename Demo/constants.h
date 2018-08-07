@@ -38,6 +38,8 @@
 #define PARALLAX_SHADER "parallax"
 #define SMOKE_SHADER "smokeShader"
 #define GRASS_SHADER "grassShader"
+#define VOLUMETRIC_SHADER "volumetricShader"
+#define FLOOR_SHADER "floorShader"
 
 /*Scenes*/
 #define SCENE "main"

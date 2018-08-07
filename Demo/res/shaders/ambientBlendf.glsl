@@ -65,6 +65,7 @@ void main() {
     }
 
     out_color.rgb = (color*visibility + ambientColor)*occlusion;
+    //out_color.rgb = (ambientColor);
     out_color.a = 1.0f;
 
 }

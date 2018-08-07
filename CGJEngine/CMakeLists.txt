@@ -23,6 +23,8 @@ set(SOURCE_FILES
 	    Meshes/OBJMesh.cpp
     	Meshes/H3DMesh.cpp
 	    Meshes/QuadMesh.cpp
+		Meshes/RectangleMesh.cpp
+		Meshes/InfiniteQuadMesh.cpp
     	Cameras/SphereCamera.cpp
 	    Cameras/FreeCamera.cpp
     	Cameras/HUDCamera.cpp
@@ -59,6 +61,8 @@ set(HEADER_FILES
 		headers/Meshes/Mesh.h
 		headers/Meshes/OBJMesh.h
 		headers/Meshes/QuadMesh.h
+		headers/Meshes/RectangleMesh.h
+		headers/Meshes/InfiniteQuadMesh.h
         headers/ResourceManager.h
 		headers/SceneGraph/SceneGraph.h
 		headers/SceneGraph/SceneNode.h
