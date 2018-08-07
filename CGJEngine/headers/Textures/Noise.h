@@ -22,6 +22,7 @@ public:
     Noise(int layers, int size);
     void setColor(float minRed, float minGreen, float minBlue, float maxRed, float maxGreen, float maxBlue);
     void generateSimpleNoise(int density, int seed);
+    void generatePerlinNoise(int octaves, float persistence, float invisibleThreshold);
     void bindLayerTexture(int layer);
     ~Noise();
 

@@ -100,7 +100,9 @@ void setupScene(){
     const float GRASS_LENGHT = 0.4;
     Noise* grass = new Noise(GRASS_LAYERS-1, 512);
     grass->setColor(0.0f, 0.7f, 0.0f, 0.0f, 0.7f, 0.0f);
+    //grass->setColor(0.0f, 0.7f, 0.0f, 0.0f, 0.1f, 0.0f);
     grass->generateSimpleNoise(10000, 12345);
+    //grass->generatePerlinNoise(2, 2.0f, 0.5f); // <- good for generating thick bushes!
     rm->addNoise("grassNoise", grass);
     int furLengthLocation = grassShader->getUniformLocation("furLength");
     int uvScaleLocation = grassShader->getUniformLocation("uvScale");
