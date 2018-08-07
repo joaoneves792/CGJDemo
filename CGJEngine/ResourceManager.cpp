@@ -55,7 +55,7 @@ void ResourceManager::__destroyTexture(Texture* texture) {
     delete texture;
 }
 
-void ResourceManager::__destroyFur(Fur *fur) {
+void ResourceManager::__destroyNoise(Noise *fur) {
     delete fur;
 }
 
@@ -87,8 +87,8 @@ void ResourceManager::addTexture(const std::string &name, Texture* texture) {
     _textures[name] = texture;
 }
 
-void ResourceManager::addFur(const std::string &name, Fur *fur) {
-    _furs[name] = fur;
+void ResourceManager::addNoise(const std::string &name, Noise *fur) {
+    _noise[name] = fur;
 }
 
 Mesh* ResourceManager::getMesh(const std::string& name) {
@@ -147,9 +147,9 @@ Texture* ResourceManager::getTexture(const std::string &name) {
     return it->second;
 }
 
-Fur* ResourceManager::getFur(const std::string &name) {
-    auto it = _furs.find(name);
-    if(it == _furs.end()){
+Noise* ResourceManager::getNoise(const std::string &name) {
+    auto it = _noise.find(name);
+    if(it == _noise.end()){
         return nullptr;
     }
     return it->second;
@@ -214,11 +214,11 @@ void ResourceManager::destroyTexture(const std::string &name) {
     }
 }
 
-void ResourceManager::destroyFur(const std::string &name) {
-    auto it = _furs.find(name);
-    if(it != _furs.end()){
-        __destroyFur(it->second);
-        _furs.erase(it);
+void ResourceManager::destroyNoise(const std::string &name) {
+    auto it = _noise.find(name);
+    if(it != _noise.end()){
+        __destroyNoise(it->second);
+        _noise.erase(it);
     }
 }
 
@@ -271,11 +271,11 @@ void ResourceManager::destroyAllTextures() {
     _textures.clear();
 }
 
-void ResourceManager::destroyAllFurs() {
-    for(auto it : _furs){
-        __destroyFur(it.second);
+void ResourceManager::destroyAllNoise() {
+    for(auto it : _noise){
+        __destroyNoise(it.second);
     }
-    _furs.clear();
+    _noise.clear();
 }
 
 void ResourceManager::destroyEverything() {
@@ -286,6 +286,6 @@ void ResourceManager::destroyEverything() {
     destroyAllFrameBuffers();
     destroyAllParticlePools();
     destroyAllTextures();
-    destroyAllFurs();
+    destroyAllNoise();
 }
 

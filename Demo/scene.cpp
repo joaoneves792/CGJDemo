@@ -98,8 +98,10 @@ void setupScene(){
     Shader* grassShader = rm->getShader(GRASS_SHADER);
     const int GRASS_LAYERS = 40;
     const float GRASS_LENGHT = 0.4;
-    Fur* grass = new Fur(GRASS_LAYERS-1, 512, 10000, 12345, 0.0f, 0.7f, 0.0f);
-    rm->addFur("grassFur", grass);
+    Noise* grass = new Noise(GRASS_LAYERS-1, 512);
+    grass->setColor(0.0f, 0.7f, 0.0f, 0.0f, 0.7f, 0.0f);
+    grass->generateSimpleNoise(10000, 12345);
+    rm->addNoise("grassNoise", grass);
     int furLengthLocation = grassShader->getUniformLocation("furLength");
     int uvScaleLocation = grassShader->getUniformLocation("uvScale");
     int timeLoc = grassShader->getUniformLocation("time");

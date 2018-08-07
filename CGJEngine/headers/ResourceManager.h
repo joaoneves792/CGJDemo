@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <string>
 #include <FBOs/GFrameBuffer.h>
-#include <Textures/Fur.h>
+#include <Textures/Noise.h>
 #include "SceneGraph/SceneGraph.h"
 #include "Shader.h"
 #include "Meshes/Mesh.h"
@@ -37,7 +37,7 @@ private:
     std::unordered_map<std::string, FrameBuffer*> _fbos;
     std::unordered_map<std::string, ParticlePool*> _pools;
     std::unordered_map<std::string, Texture*> _textures;
-    std::unordered_map<std::string, Fur*> _furs;
+    std::unordered_map<std::string, Noise*> _noise;
 public:
     class Factory{
     public:
@@ -76,7 +76,7 @@ private:
     void __destroyFrameBuffer(FrameBuffer* fbo);
     void __destroyParticlePool(ParticlePool* pool);
     void __destroyTexture(Texture* texture);
-    void __destroyFur(Fur* fur);
+    void __destroyNoise(Noise *fur);
 public:
     static ResourceManager* getInstance();
     static void deleteInstance();
@@ -87,7 +87,7 @@ public:
     void addFrameBuffer(const std::string& name, FrameBuffer* fbo);
     void addParticlePool(const std::string& name, ParticlePool* pool);
     void addTexture(const std::string& name, Texture* texture);
-    void addFur(const std::string& name, Fur* fur);
+    void addNoise(const std::string &name, Noise *fur);
 
     Shader* getShader(const std::string& name);
     Mesh* getMesh(const std::string& name);
@@ -96,7 +96,7 @@ public:
     FrameBuffer* getFrameBuffer(const std::string& name);
     ParticlePool* getParticlePool(const std::string& name);
     Texture* getTexture(const std::string& name);
-    Fur* getFur(const std::string& name);
+    Noise* getNoise(const std::string &name);
 
     void destroyShader(const std::string& name);
     void destroyMesh(const std::string& name);
@@ -105,7 +105,7 @@ public:
     void destroyFrameBuffer(const std::string& name);
     void destroyParticlePool(const std::string& name);
     void destroyTexture(const std::string& name);
-    void destroyFur(const std::string& name);
+    void destroyNoise(const std::string &name);
 
     void destroyAllShaders();
     void destroyAllMeshes();
@@ -114,7 +114,7 @@ public:
     void destroyAllFrameBuffers();
     void destroyAllParticlePools();
     void destroyAllTextures();
-    void destroyAllFurs();
+    void destroyAllNoise();
 
     void destroyEverything();
 };

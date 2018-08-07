@@ -44,7 +44,7 @@ set(SOURCE_FILES
 		FBOs/DepthTextureFrameBuffer.cpp
 		FBOs/DoubleColorMSFrameBuffer.cpp
         FBOs/GFrameBuffer.cpp
-		Textures/Fur.cpp)
+        Textures/Noise.cpp)
 set(HEADER_FILES
         headers/Cameras/Camera.h
         headers/CGJengine.h
@@ -74,7 +74,7 @@ set(HEADER_FILES
 		headers/FBOs/DepthTextureFrameBuffer.h
 		headers/FBOs/DoubleColorMSFrameBuffer.h
 		headers/FBOs/GFrameBuffer.h
-		headers/Textures/Fur.h)
+        headers/Textures/Noise.h)
 
 
 #add_library(jpeg_lib STATIC IMPORTED)

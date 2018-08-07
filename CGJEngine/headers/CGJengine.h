@@ -31,6 +31,6 @@
 #include "SceneGraph/ParticleEmitterNode.h"
 #include "Particles/Particle.h"
 #include "Textures/Texture.h"
-#include "Textures/Fur.h"
+#include "Textures/Noise.h"
 
 #endif //CGJM_CGJENGINE_H
