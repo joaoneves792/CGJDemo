@@ -9,7 +9,7 @@ uniform sampler2D frame;
 uniform sampler2D ambient;
 uniform sampler2D ambientOcclusion;
 uniform sampler2D depth;
-uniform sampler2D shadow;
+uniform sampler2DShadow shadow;
 
 uniform mat4 depthBiasMVP;
 uniform mat4 Projection;
@@ -42,13 +42,14 @@ void main() {
     float z = -(Projection[3][2]/(d+Projection[2][2]));
     vec3 position_viewspace = frustumRay*z;
     vec4 ShadowCoord = depthBiasMVP * vec4(position_viewspace, 1.0f);
+    ShadowCoord.xy = ShadowCoord.xy/ShadowCoord.w;
 
     vec3 color = texture(frame, uv).rgb;
     vec3 ambientColor = texture(ambient, uv).rgb;
     float occlusion = texture(ambientOcclusion, uv).r;
 
     float visibility = 1.0f;
-    float bias = 0.01;
+    float bias = 0.008;
     if ((ShadowCoord.x < 0.0f ||  ShadowCoord.x > 1.0f) && (ShadowCoord.y > 0.2f || ShadowCoord.y < 0.0f)){
         out_color.rgb = (color + ambientColor)*occlusion;
         out_color.a = 1.0f;
@@ -59,28 +60,11 @@ void main() {
         out_color.a = 1.0f;
         return;
     }
-    for (int i=0; i<4; i++){
-        //float contribution = 0.0625*(texture(shadow, ShadowCoord.xy + poissonDisk[i]/4000).r); //Grab color at point
-        float contribution = 0.25*(texture(shadow, ShadowCoord.xy + poissonDisk[i]/700).r); //Grab color at point
-        //Check depth
-        visibility -= contribution * step(texture(shadow, ShadowCoord.xy).r, ((ShadowCoord.z-bias)/ ShadowCoord.w));
+    for (int i=0; i<16; i++){
+   		visibility -= 0.0625*(texture(shadow, vec3(ShadowCoord.xy + poissonDisk[i]/700, (ShadowCoord.z-bias)/ ShadowCoord.w) ) );
     }
 
     out_color.rgb = (color*visibility + ambientColor)*occlusion;
-    //out_color.rgb = (color + ambientColor);
     out_color.a = 1.0f;
-
-
-    /*float visibility = 1.0f;
-	float bias = 0.001;
-	ShadowCoord.xy = clamp(ShadowCoord.xy, 0.01f, 0.99f);
-    for (int i=0; i<ITERATIONS; i++){
-        float qSample = texture(shadow, ShadowCoord.xy + poissonDisk[i]/1000.0f).r;
-  		float contribution = CONTRIBUTION;//*(1-abs(qInShadow-qSample));
-    	//Check depth
-        visibility -= contribution * step(qSample, qInShadow-bias); //Only contribute if qSample < qInShadow
-	}*/
-
-    //out_color.rgb = vec3(texture(shadow, uv).r);
 
 }
