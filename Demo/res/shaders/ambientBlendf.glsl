@@ -36,6 +36,13 @@ vec2 poissonDisk[16] = vec2[](
    vec2( 0.14383161, -0.14100790 )
 );
 
+
+
+vec3 toneMappedTexture(sampler2D tex, vec2 uv){
+    const float gamma = 2.2;
+    return pow(texture(tex, uv).rgb, vec3(gamma));
+}
+
 void main() {
     //Reconstruct the position from depth and view ray
     float d = texture(depth, uv).r * 2.0f - 1.0f;
@@ -45,11 +52,11 @@ void main() {
     ShadowCoord.xy = ShadowCoord.xy/ShadowCoord.w;
 
     vec3 color = texture(frame, uv).rgb;
-    vec3 ambientColor = texture(ambient, uv).rgb;
+    vec3 ambientColor = toneMappedTexture(ambient, uv);
     float occlusion = texture(ambientOcclusion, uv).r;
 
     float visibility = 1.0f;
-    float bias = 0.008;
+    float bias = 0.005;
     if ((ShadowCoord.x < 0.0f ||  ShadowCoord.x > 1.0f) && (ShadowCoord.y > 0.2f || ShadowCoord.y < 0.0f)){
         out_color.rgb = (color + ambientColor)*occlusion;
         out_color.a = 1.0f;
@@ -61,7 +68,7 @@ void main() {
         return;
     }
     for (int i=0; i<16; i++){
-   		visibility -= 0.0625*(texture(shadow, vec3(ShadowCoord.xy + poissonDisk[i]/700, (ShadowCoord.z-bias)/ ShadowCoord.w) ) );
+   		visibility -= 0.05*(texture(shadow, vec3(ShadowCoord.xy + poissonDisk[i]/700, (ShadowCoord.z-bias)/ ShadowCoord.w) ) );
     }
 
     out_color.rgb = (color*visibility + ambientColor)*occlusion;

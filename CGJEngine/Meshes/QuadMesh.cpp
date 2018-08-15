@@ -63,3 +63,7 @@ void QuadMesh::draw(){
     glDrawElements(GL_TRIANGLES, (GLsizei)6, GL_UNSIGNED_SHORT, 0);
     glBindVertexArray(0);
 }
+
+void QuadMesh::drawGroup(const std::string &name) {
+    draw();
+}

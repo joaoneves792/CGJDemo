@@ -24,6 +24,23 @@ uniform vec3 lightColor[MAX_LIGHTS];
 uniform vec4 lightCone_viewspace[MAX_LIGHTS]; //xyz->direction w->cutoffCos
 uniform vec4 lightAttenuation[MAX_LIGHTS]; //x->constant y->linear z->quadratic w->range
 
+vec3 toneMappedTexture(sampler2D tex, vec2 uv){
+    const float gamma = 2.2;
+    return pow(texture(tex, uv).rgb, vec3(gamma));
+}
+
+vec3 toneMapping(vec3 color){
+    //Tone mapping
+    //return color;
+
+    const float gamma = 2.2;
+    const float exposure = 1.1f;
+    // Exposure tone mapping
+    vec3 mapped = vec3(1.0) - exp(-color * exposure);
+    // Gamma correction
+    return pow(mapped.rgb, vec3(1.0 / gamma));
+
+}
 
 void main() {
     //Reconstruct the position from depth and view ray
@@ -31,7 +48,7 @@ void main() {
     float z = -(Projection[3][2]/(d+Projection[2][2]));
     vec3 position_viewspace = frustumRay*z;
 
-	vec3 matDiffuse = texture(diffuse, uv).rgb;
+	vec3 matDiffuse = toneMappedTexture(diffuse, uv);
 
 	vec3 color = vec3(0,0,0);//start with black;
 	vec3 N = normalize(texture(normals, uv).xyz);
@@ -72,8 +89,8 @@ void main() {
 	}
 
     //Check for NaN (caused by points infinitelly far away like the skybox)
-    if( color.r > 0){
-        out_color.rgb = color;
+    if( color.r >= 0){
+        out_color.rgb = toneMapping(color);
     }else{
         out_color.rgb = vec3(0.0f);
     }

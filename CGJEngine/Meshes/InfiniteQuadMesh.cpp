@@ -66,3 +66,7 @@ void InfiniteQuadMesh::draw(){
     glDrawElements(GL_TRIANGLES, (GLsizei)12, GL_UNSIGNED_SHORT, 0);
     glBindVertexArray(0);
 }
+
+void InfiniteQuadMesh::drawGroup(const std::string &name) {
+    draw();
+}

@@ -3,8 +3,7 @@
 //
 #include <cstdlib>
 #include <iostream>
-#include <libnet.h>
-#include <zmq.hpp>
+#include <math.h>
 #include "Textures/Noise.h"
 
 const float INV_RAND_MAX = 1.0f / (RAND_MAX);
@@ -14,6 +13,7 @@ inline float rnd(float min, float max) { return min + (max - min) * INV_RAND_MAX
 #define LAYER(layer) (_size*_size*(layer)*COLOR_BYTES)
 #define Y(y) (_size*COLOR_BYTES*(y))
 #define X(x) ((x)*COLOR_BYTES)
+#define DATA(layer, x, y, c) data[LAYER(layer) + Y(y) + X(x) + c]
 #define DATA_R(layer, x, y) data[LAYER(layer) + Y(y) + X(x) + 0]
 #define DATA_G(layer, x, y) data[LAYER(layer) + Y(y) + X(x) + 1]
 #define DATA_B(layer, x, y) data[LAYER(layer) + Y(y) + X(x) + 2]
@@ -48,8 +48,7 @@ Noise::Noise(int layers, int size) {
     _maxGreen = 0.0f;
     _minBlue = 0.0f;
     _maxBlue = 0.0f;
-
-
+    _mipmapLevel = 1000;
 }
 
 void Noise::setColor(float minRed, float minGreen, float minBlue, float maxRed, float maxGreen, float maxBlue) {
@@ -59,9 +58,68 @@ void Noise::setColor(float minRed, float minGreen, float minBlue, float maxRed, 
     _maxRed = maxRed;
     _maxGreen = maxGreen;
     _maxBlue = maxBlue;
+
 }
 
-void Noise::createTextures(const float *data) const {
+void Noise::setMaxMipmapLevel(int level) {
+    _mipmapLevel = level;
+}
+
+void Noise::createTextures(float *data) const {
+    //Mipmapping does not discard texels with alpha = 0.0f
+    //so if we leave those pixels black, the texture will darken when we move far away!
+    //Hand generated mipmaps
+#define MIPMAP(layer, mipmap, size, x, y, c) \
+    ((mipmap==-1)?\
+    (DATA(layer, x, y, c))\
+    :\
+    (mipmaps[layer][mipmap][(y)*(size)*COLOR_BYTES + (x)*COLOR_BYTES + (c)]))
+
+    int mipmapCount = 0;
+    int mipmapSize = _size;
+    while(mipmapSize > 1){ mipmapSize/=2; mipmapCount++;}
+    mipmapCount = (mipmapCount > _mipmapLevel)? _mipmapLevel:mipmapCount;
+
+    auto mipmaps = new float**[_layers];
+    //mipmaps[layer][level][xycolor]
+
+    for(int layer=0; layer<_layers;layer++){
+        mipmaps[layer] = new float*[mipmapCount];
+        mipmapSize = _size;
+        for(int level=0; level<mipmapCount; level++){
+            int prevSize = mipmapSize;
+            mipmapSize = mipmapSize/2;
+            mipmaps[layer][level] = new float[mipmapSize*mipmapSize*COLOR_BYTES];
+            //adapted box filter
+            for(int x=0;x<prevSize;x=x+2){
+                for(int y=0;y<prevSize;y=y+2){
+                    float alpha = MIPMAP(layer, level-1, prevSize, x, y, 3)+MIPMAP(layer, level-1, prevSize, x+1, y, 3)+
+                                       MIPMAP(layer, level-1, prevSize, x, y+1, 3)+MIPMAP(layer, level-1, prevSize, x+1, y+1, 3);
+                    MIPMAP(layer, level, mipmapSize, x/2, y/2, 3) = alpha/4.0f;
+                    /*float alpha = fmax(fmax(MIPMAP(layer, level-1, prevSize, x, y, 3),MIPMAP(layer, level-1, prevSize, x+1, y, 3)),
+                                       fmax(MIPMAP(layer, level-1, prevSize, x, y+1, 3),MIPMAP(layer, level-1, prevSize, x+1, y+1, 3)));
+                    MIPMAP(layer, level, mipmapSize, x/2, y/2, 3) = alpha;*/
+                    for(int c=0;c<3;c++){
+                        int count = 0;
+                        float color = 0.0f;
+                        //For each of the 4 texels, if alpha is 0 then skip (doesnt count for average)
+                        if(MIPMAP(layer,level-1, prevSize, x,y,3) != 0.0f){color+=MIPMAP(layer, level-1, prevSize, x, y, c);count++;}
+                        if(MIPMAP(layer,level-1, prevSize, x+1,y,3) != 0.0f){color+=MIPMAP(layer, level-1, prevSize, x+1, y, c);count++;}
+                        if(MIPMAP(layer,level-1, prevSize, x,y+1,3) != 0.0f){color+=MIPMAP(layer, level-1, prevSize, x, y+1, c);count++;}
+                        if(MIPMAP(layer,level-1, prevSize, x+1,y+1,3) != 0.0f){color+=MIPMAP(layer, level-1, prevSize, x+1, y+1, c);count++;}
+
+                        if(count > 0.0f)
+                            MIPMAP(layer, level, mipmapSize, x/2, y/2, c) = color/count;
+                        else
+                            MIPMAP(layer, level, mipmapSize, x/2, y/2, c) = 0.0f;
+                    }
+
+                }
+            }
+
+        }
+    }
+
     GLuint texID = 0;
     for(int i=0; i < _layers; i++) {
         glGenTextures(1, &texID);   /* create the texture */
@@ -72,8 +130,16 @@ void Noise::createTextures(const float *data) const {
             GLfloat largestAnisotropic;
             glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largestAnisotropic);
             glGenerateMipmap(GL_TEXTURE_2D);
+            mipmapSize = _size;
+            for(int level=1;level<=mipmapCount;level++) {
+                mipmapSize = mipmapSize/2;
+                glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, mipmapSize, mipmapSize, 0, GL_RGBA, GL_FLOAT, &MIPMAP(i, level-1, mipmapSize, 0, 0, 0));
+            }
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, largestAnisotropic);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, mipmapCount);
+            //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 2);
+            //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 1);
         }else{
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         }
@@ -84,15 +150,15 @@ void Noise::createTextures(const float *data) const {
 }
 
 float *Noise::createLayers() const {
-    auto *data = new float[_layers * _size * _size * COLOR_BYTES];
+    auto *data = new float[(_layers) * _size * _size * COLOR_BYTES];
 
     // Set all the pixels to the same colour, transparent black!
     for(int layer=0; layer < _layers; layer++)
         for (int x = 0; x < _size; x++)
             for (int y = 0; y < _size; y++) {
-                DATA_R(layer, x, y) = 0.0f;
-                DATA_G(layer, x, y) = 0.0f;
-                DATA_B(layer, x, y) = 0.0f;
+                DATA_R(layer, x, y) = 0.0f;//_backgroundRed;
+                DATA_G(layer, x, y) = 0.0f;//_backgroundGreen;
+                DATA_B(layer, x, y) = 0.0f;//_backgroundBlue;
                 DATA_A(layer, x, y) = 0.0f;
             }
     return data;
@@ -165,6 +231,7 @@ void Noise::generateSimpleNoise(int density, int seed){
                         DATA_B(layer, x, y) *= scale;
                     }
                 }
+
 
     createTextures(data);
     delete[] data;

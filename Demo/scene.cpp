@@ -100,6 +100,7 @@ void setupScene(){
     const float GRASS_LENGHT = 0.4;
     Noise* grass = new Noise(GRASS_LAYERS-1, 512);
     grass->setColor(0.0f, 0.7f, 0.0f, 0.0f, 0.7f, 0.0f);
+    grass->setMaxMipmapLevel(9);
     //grass->setColor(0.0f, 0.7f, 0.0f, 0.0f, 0.1f, 0.0f);
     grass->generateSimpleNoise(10000, 12345);
     //grass->generatePerlinNoise(2, 2.0f, 0.5f); // <- good for generating thick bushes!
@@ -324,21 +325,6 @@ void setupScene(){
 
 
 
-    /*Setup HUD*/
-    auto creditsCamera = ResourceManager::Factory::createHUDCamera(BOTTOM_RIGHT_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);
-    SceneNode* credits = ResourceManager::Factory::createScene(CREDITS_HUD, creditsCamera);
-    credits->setMesh(quad);
-    credits->setShader(rm->getShader(QUAD_SHADER));
-    auto creditsTexture = ResourceManager::Factory::createTexture("res/credits2.png");
-    credits->setPreDraw([=](){
-        glDisable(GL_CULL_FACE);
-        creditsTexture->bind();
-    });
-    credits->setPostDraw([=](){
-        glEnable(GL_CULL_FACE);
-    });
-    credits->scale(-100.0f, -50.0f, 1.0f);
-    credits->translate(100.0f, 50.0f, -0.1f);
 
 
     /*Shadows*/
@@ -355,14 +341,6 @@ void setupScene(){
         glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
     });
 
-
-    Mesh* box = new RectangleMesh(10.0f, 10.0f, 10.0f);
-    rm->addMesh("BOX", box);
-    auto volumetricShader = rm->getShader(VOLUMETRIC_SHADER);
-    auto boxNode = new SceneNode("BOX", box, volumetricShader);
-
-    carNode->addChild(boxNode);
-
     //Example infinite floor (not quite but extends to far plane)
     /*Mesh* floor = new InfiniteQuadMesh();
     rm->addMesh("FLOOR", floor);
@@ -370,6 +348,21 @@ void setupScene(){
     auto floorNode = new SceneNode("FLOOR", floor, floorShader);
     root->addChild(floorNode);*/
 
+    /*Setup HUD*/
+    auto creditsCamera = ResourceManager::Factory::createHUDCamera(BOTTOM_RIGHT_CAM, WIN_X, 0, WIN_Y, 0, 0, 1, false);
+    SceneNode* credits = ResourceManager::Factory::createScene(CREDITS_HUD, creditsCamera);
+    credits->setMesh(quad);
+    credits->setShader(rm->getShader(QUAD_SHADER));
+    auto creditsTexture = ResourceManager::Factory::createTexture("res/credits2.png");
+    credits->setPreDraw([=](){
+        glDisable(GL_CULL_FACE);
+        creditsTexture->bind();
+    });
+    credits->setPostDraw([=](){
+        glEnable(GL_CULL_FACE);
+    });
+    credits->scale(-100.0f, -50.0f, 1.0f);
+    credits->translate(100.0f, 50.0f, -0.1f);
 }
 
 void flames(int value){

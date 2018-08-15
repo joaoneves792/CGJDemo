@@ -9,7 +9,7 @@
 #include "SceneGraph/SceneNode.h"
 #include "glm_wrapper.h"
 
-SceneNode::SceneNode(const std::string& name) {
+SceneNode::SceneNode(std::string name) {
     _name = name;
     _mesh = nullptr;
     _shader = nullptr;
@@ -26,7 +26,7 @@ SceneNode::SceneNode(const std::string& name) {
     _layers = 1;
 }
 
-SceneNode::SceneNode(const std::string& name, Mesh *mesh) {
+SceneNode::SceneNode(std::string name, Mesh *mesh) {
     _name = name;
     _mesh = mesh;
     _shader = nullptr;
@@ -43,7 +43,7 @@ SceneNode::SceneNode(const std::string& name, Mesh *mesh) {
     _layers = 1;
 }
 
-SceneNode::SceneNode(const std::string& name, Mesh *mesh, Shader *shader) {
+SceneNode::SceneNode(std::string name, Mesh *mesh, Shader *shader) {
     _name = name;
     _mesh = mesh;
     _shader = shader;
@@ -213,6 +213,10 @@ void SceneNode::hidden(bool b) {
     _visible = !b;
 }
 
+void SceneNode::setGroupOnly(std::string name) {
+    _groupOnly = name;
+}
+
 SceneNode* SceneNode::findNode(const std::string &name) {
     auto it = _scene->_lookUpTable.find(name);
     if(it!=_scene->_lookUpTable.end())
@@ -280,7 +284,10 @@ void SceneNode::draw(int level, const Mat4 &parentTranslate, const Quat &parentO
             for(int i=0;i<_layers; i++) {
                 if(_layerCallback != nullptr)
                     _layerCallback(i);
-                _mesh->draw();
+                if(_groupOnly.empty())
+                    _mesh->draw();
+                else
+                    _mesh->drawGroup(_groupOnly);
             }
         }
         //Call post draw

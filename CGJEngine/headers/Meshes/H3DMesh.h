@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <unordered_map>
 
 #include "Meshes/Mesh.h"
 #include "glm_wrapper.h"
@@ -105,6 +106,7 @@ typedef struct
 	int 			shapeKeyCount;
 	h3d_shape_key*	shapeKeys;
 	float			sk_slotp[3];						//Percentage of shapekey slot influence
+	int             index;
 } h3d_group;
 
 typedef struct
@@ -155,6 +157,7 @@ private:
 	int _materialCount;
 	h3d_armature* _armatures;
 	int _armatureCount;
+	std::unordered_map<std::string, h3d_group*> _groupMap;
 
 	GLuint* _vao;
 	GLuint* _vbo;
@@ -183,6 +186,7 @@ public:
 	void prepare();
 	void unload();
 	void draw();
+	void drawGroup(const std::string& name);
 
 	void setCurrentFrame(int f, int animationSlot);
 	void setCurrentFrame(int f, int animationSlot, int start, int end);

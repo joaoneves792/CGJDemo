@@ -107,6 +107,7 @@
 #define SMOOTH_PARTICLES_LEVEL (-7)
 #define FXAA_LEVEL (-1)
 #define FXAA "fxaa"
+#define VOLUMETRIC_LEVEL (-8)
 
 /*Misc constants*/
 #define PI 3.14159f

@@ -24,6 +24,10 @@ uniform float transparency;
 
 uniform float movement; // get movement for the environment map
 
+vec3 fresnelSchlick(float cosTheta, vec3 F0){
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
 void main() {
 	//Material properties
 	vec3 matDiffuse = (texture(texture_sampler, texture_coord_from_vshader).rgb * diffuse.xyz);
@@ -37,7 +41,9 @@ void main() {
         vec3 E = normalize(eyeDirection_worldspace);
         vec3 R = reflect(E, N);
         R = R + vec3(0.0f, 0.0f, movement);
-        matDiffuse += texture(environment, R).rgb*(shininess/128.0f)*0.35f;//*(1/alpha);
+        float NdotV = max(dot(N, E), 0.0f);
+        vec3 fresnel = fresnelSchlick(NdotV, vec3(0.96f, 0.96f, 0.97f));
+        matDiffuse += (texture(environment, R).rgb*(shininess/128.0f)*0.35f)*fresnel;//*(1/alpha);
     }
 
     if(alpha == 0.0f){
@@ -46,7 +52,7 @@ void main() {
     G_output[DIFFUSE].rgb = matDiffuse;
     G_output[DIFFUSE].a = alpha;
 
-    G_output[AMBIENT].rgb = ambient*matDiffuse;
+    G_output[AMBIENT].rgb = ambient*3.5f*matDiffuse;
     G_output[AMBIENT].a = 1.0f;
 
     G_output[SPECULAR].xyz = specular.rgb;

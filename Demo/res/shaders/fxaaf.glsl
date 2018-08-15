@@ -22,18 +22,6 @@ float rgb2luma(vec3 rgb){
     return sqrt(dot(rgb, vec3(0.299, 0.587, 0.114)));
 }
 
-vec3 toneMapping(vec3 color){
-    //Tone mapping
-    return color;
-
-    const float gamma = 0.9;
-    const float exposure = 2.0f;
-    // Exposure tone mapping
-    vec3 mapped = vec3(1.0) - exp(-color * exposure);
-    // Gamma correction
-    return pow(mapped.rgb, vec3(1.0 / gamma));
-
-}
 
 void main() {
     vec2 screenSize = textureSize(frame, 0);
@@ -59,7 +47,7 @@ void main() {
 
     // If the luma variation is lower that a threshold (or if we are in a really dark area), we are not on an edge, don't perform any AA.
     if(lumaRange < max(EDGE_THRESHOLD_MIN,lumaMax*EDGE_THRESHOLD_MAX)){
-        color = vec4(toneMapping(colorCenter), 1.0f);
+        color = vec4(colorCenter, 1.0f);
         //color = vec4(colorCenter, 1.0f);
         return;
     }
@@ -220,6 +208,6 @@ void main() {
     }
 
     // Read the color at the new UV coordinates, and use it.
-    color = vec4(toneMapping(texture(frame,finalUv).rgb), 1.0f);
+    color = vec4(texture(frame,finalUv).rgb, 1.0f);
 
 }

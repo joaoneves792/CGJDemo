@@ -63,6 +63,7 @@ public:
     OBJMesh();
     OBJMesh(const std::string& filename);
     void loadFromFile(const std::string& filename);
+    void drawGroup(const std::string& name);
     void freeMeshData();
     void prepare();
     void unload();

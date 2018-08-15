@@ -23,6 +23,7 @@ protected:
     std::string _name;
     Mesh* _mesh;
     Shader* _shader;
+    std::string _groupOnly;
 
     bool _billboard;
     Vec3 _position;
@@ -43,9 +44,9 @@ protected:
     int _processingLevel = 0;
 
 public:
-    SceneNode(const std::string& name);
-    SceneNode(const std::string& name, Mesh* mesh);
-    SceneNode(const std::string& name, Mesh* mesh, Shader* shader);
+    SceneNode(std::string name);
+    SceneNode(std::string name, Mesh* mesh);
+    SceneNode(std::string name, Mesh* mesh, Shader* shader);
 
     virtual ~SceneNode() = default;
 
@@ -71,6 +72,8 @@ public:
     void setPostDraw(std::function<void()> callback);
     void setUpdateCallback(std::function<void(int dt)> callback);
     void setLayerCallback(std::function<void(int layer)> callback);
+
+    void setGroupOnly(std::string name);
 
     void addChild(SceneNode* child);
     void destroy();

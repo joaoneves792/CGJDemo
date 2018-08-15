@@ -295,23 +295,6 @@ void loadShaders(){
     ambientShader->setMVPFunction(UPLOAD_MVP);
 
 
-    /*Volumetric Shader*/
-    auto volumetricShader = ResourceManager::Factory::createShader(VOLUMETRIC_SHADER, "res/shaders/volv.glsl", "res/shaders/volf.glsl");
-    volumetricShader->setAttribLocation("inPositon", VERTICES__ATTR);
-    volumetricShader->setFragOutputLocation("G_output", 0);
-    volumetricShader->link();
-
-    MVPLocation = volumetricShader->getUniformLocation("MVP");
-    ModelLocation = volumetricShader->getUniformLocation("Model");
-    ViewLocation = volumetricShader->getUniformLocation("View");
-    ProjectionLocation = volumetricShader->getUniformLocation("Projection");
-    volumetricShader->setMVPFunction([=](const Mat4& M, const Mat4& V, const Mat4& P){
-        glUniformMatrix4fv(MVPLocation, 1, GL_FALSE, glm::value_ptr(P*V*M));
-        glUniformMatrix4fv(ModelLocation, 1, GL_FALSE, glm::value_ptr(M));
-        glUniformMatrix4fv(ViewLocation, 1, GL_FALSE, glm::value_ptr(V));
-        glUniformMatrix4fv(ProjectionLocation, 1, GL_FALSE, glm::value_ptr(P));
-    });
-
     /*Floor Shader*/
     auto floorShader = ResourceManager::Factory::createShader(FLOOR_SHADER, "res/shaders/floorv.glsl", "res/shaders/floorf.glsl");
     floorShader->setAttribLocation("inPositon", VERTICES__ATTR);

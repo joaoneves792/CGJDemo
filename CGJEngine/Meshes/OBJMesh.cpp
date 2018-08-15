@@ -288,7 +288,7 @@ void OBJMesh::unload() {
         unloadGroup(group);
 }
 
-void drawGroup(objGroup* group){
+void _drawGroup(objGroup* group){
     glBindVertexArray(group->vao);
     glDrawElements(GL_TRIANGLES, (GLsizei)group->faceCount*3, GL_UNSIGNED_SHORT, 0);
     glBindVertexArray(0);
@@ -296,5 +296,9 @@ void drawGroup(objGroup* group){
 
 void OBJMesh::draw(){
     for(objGroup* group : _groups)
-        drawGroup(group);
+        _drawGroup(group);
+}
+void OBJMesh::drawGroup(const std::string &name) {
+    std::cout << "Abort: method drawGroup of OBJMesh not implemented!" << std::endl;
+    exit(-1);
 }

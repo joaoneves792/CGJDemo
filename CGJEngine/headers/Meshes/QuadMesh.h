@@ -23,6 +23,7 @@ public:
     void prepare();
     void unload();
     void draw();
+    void drawGroup(const std::string& name);
 
 };
 

@@ -18,9 +18,11 @@ private:
     float _maxRed;
     float _maxGreen;
     float _maxBlue;
+    int _mipmapLevel;
 public:
     Noise(int layers, int size);
     void setColor(float minRed, float minGreen, float minBlue, float maxRed, float maxGreen, float maxBlue);
+    void setMaxMipmapLevel(int level);
     void generateSimpleNoise(int density, int seed);
     void generatePerlinNoise(int octaves, float persistence, float invisibleThreshold);
     void bindLayerTexture(int layer);
@@ -28,7 +30,7 @@ public:
 
 private:
     float *createLayers() const;
-    void createTextures(const float *data) const;
+    void createTextures(float *data) const;
 };
 
 

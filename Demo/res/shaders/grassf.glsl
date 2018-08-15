@@ -62,17 +62,17 @@ void main() {
     else
         matDiffuse = texture(grass, waved_uv); //*uvScale);
 
-    if(matDiffuse.a == 0.0f)
+    if(matDiffuse.a <= 0.0f)
         discard;
 
 
     G_output[DIFFUSE] = matDiffuse;
 
-    G_output[AMBIENT].rgb = matDiffuse.rgb*0.3f;
-    G_output[AMBIENT].a = 1.0f;
+    G_output[AMBIENT].rgba = matDiffuse.rgba*0.3f;
+    //G_output[AMBIENT].a = 1.0f;
 
     G_output[SPECULAR].xyz = vec3(0.0f);
     G_output[SPECULAR].w = 0.0f;
 
-    G_output[NORMAL] = vec4(normal_cameraspace, 1.0f);
+    G_output[NORMAL] = vec4(normalize(normal_cameraspace), 1.0f);
 }

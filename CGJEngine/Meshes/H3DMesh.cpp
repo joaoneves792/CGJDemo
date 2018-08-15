@@ -512,8 +512,6 @@ void H3DMesh::draw() {
         int materialIndex = _groups[i].materialIndex;
         if( materialIndex >= 0 )
             setMaterial(&_materials[materialIndex]);
-        else
-            glBindTexture(GL_TEXTURE_2D, 0);
         if(_shapeKeyPercentCallback){
             _shapeKeyPercentCallback(_groups[i].sk_slotp[0], 1);
             _shapeKeyPercentCallback(_groups[i].sk_slotp[1], 2);
@@ -521,9 +519,24 @@ void H3DMesh::draw() {
         }
         glBindVertexArray(_vao[i]);
         glDrawElements(GL_TRIANGLES, _groups[i].numTriangles*3, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
     }
 }
+
+void H3DMesh::drawGroup(const std::string &name) {
+    auto it = _groupMap.find(name);
+    if(it != _groupMap.end()) {
+        h3d_group* group = it->second;
+        int materialIndex = group->materialIndex;
+        if( materialIndex >= 0)
+            setMaterial(&_materials[materialIndex]);
+        glBindVertexArray(_vao[group->index]);
+        glDrawElements(GL_TRIANGLES, group->numTriangles*3, GL_UNSIGNED_INT, 0);
+
+
+    } else
+        std::cout << "No group by name: " << name << std::endl;
+}
+
 
 void H3DMesh::setMaterialUploadCallback(std::function<void(float ambient, float *diffuse, float *specular,
                                                            float *emissive, float shininess,
@@ -628,6 +641,8 @@ void H3DMesh::loadFromFile(const std::string& filename) {
         _groups[i].sk_slotp[0] = 0.0f;
         _groups[i].sk_slotp[1] = 0.0f;
         _groups[i].sk_slotp[2] = 0.0f;
+        _groups[i].index = i;
+        _groupMap[_groups[i].name] = &_groups[i];
 
     }
 
