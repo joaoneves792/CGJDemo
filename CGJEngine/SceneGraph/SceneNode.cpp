@@ -68,8 +68,16 @@ void SceneNode::setMesh(Mesh *mesh) {
     this->_mesh = mesh;
 }
 
+Mesh* SceneNode::getMesh() {
+    return _mesh;
+}
+
 void SceneNode::setShader(Shader *shader) {
     this->_shader = shader;
+}
+
+Shader* SceneNode::getShader() {
+    return _shader;
 }
 
 void SceneNode::setProcessingLevel(int level) {
@@ -95,6 +103,7 @@ void SceneNode::setOrientation(float x, float y, float z, float angle) {
 void SceneNode::setOrientation(Quat quat) {
     _orientation = quat;
 }
+
 
 void SceneNode::rotate(float x, float y, float z, float angle) {
     _orientation = glm::angleAxis(angle, Vec3(x, y, z)) * _orientation;

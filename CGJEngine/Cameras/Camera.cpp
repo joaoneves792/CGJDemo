@@ -101,9 +101,13 @@ void Camera::setPosition(float x, float y, float z) {
     _position[2] = z;
 }
 
-void Camera::setOrientation(float x, float y, float z, float w) {
-    _orientation[0] = x;
-    _orientation[1] = y;
-    _orientation[2] = z;
-    _orientation[3] = w;
+void Camera::setOrientation(float w, float x, float y, float z) {
+    _orientation[0] = w;
+    _orientation[1] = x;
+    _orientation[2] = y;
+    _orientation[3] = z;
+}
+
+Quat Camera::getOrientation() {
+    return _orientation;
 }

@@ -124,7 +124,10 @@ void setupScene(){
     auto road = new SceneNode(ROAD);
     root->addChild(road);
     int li = 0;
-    for(int i=0; i<ROAD_SEGMENTS; i++){
+    bool lastOne = false;
+    //for(int i=0; i<ROAD_SEGMENTS; i++){
+    for(int i=(-ROAD_SEGMENTS/2);!lastOne; i=((i>0)?(i-1):(i))*-1){
+        lastOne = (i==0);
         std::stringstream name, sceneryName, asphaltName, grassName;
         name << ROAD << i;
         sceneryName << ROAD << "scenery" << i;
@@ -145,19 +148,14 @@ void setupScene(){
 
         });
         asphalt->setPreDraw(bindSkyEnvironment);
-        roadPart->translate(0.0f, 0.0f, ROAD_LENGTH*(i-ROAD_SEGMENTS/2));
-        roadScenery->setPreDraw([=](){
-            glDisable(GL_CULL_FACE);
-        });
-        roadScenery->setPostDraw([=](){
-            glEnable(GL_CULL_FACE);
-        });
+        roadPart->translate(0.0f, 0.0f, ROAD_LENGTH*(i));//-ROAD_SEGMENTS/2.0f));
         road->addChild(roadPart);
         roadPart->addChild(roadScenery);
         roadPart->addChild(asphalt);
         roadPart->addChild(grass);
 
-        if(std::abs(i-ROAD_SEGMENTS/2) <= ACTIVE_LAMPS/2) {
+        //if(std::abs(i-ROAD_SEGMENTS/2) <= ACTIVE_LAMPS/2) {
+        if(std::abs(i) <= ACTIVE_LAMPS/2) {
             /*Create the lights*/
             std::stringstream lightName;
             lightName << LAMP_POST << li;

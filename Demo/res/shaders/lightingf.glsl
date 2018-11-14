@@ -29,18 +29,6 @@ vec3 toneMappedTexture(sampler2D tex, vec2 uv){
     return pow(texture(tex, uv).rgb, vec3(gamma));
 }
 
-vec3 toneMapping(vec3 color){
-    //Tone mapping
-    //return color;
-
-    const float gamma = 2.2;
-    const float exposure = 1.1f;
-    // Exposure tone mapping
-    vec3 mapped = vec3(1.0) - exp(-color * exposure);
-    // Gamma correction
-    return pow(mapped.rgb, vec3(1.0 / gamma));
-
-}
 
 void main() {
     //Reconstruct the position from depth and view ray
@@ -90,7 +78,7 @@ void main() {
 
     //Check for NaN (caused by points infinitelly far away like the skybox)
     if( color.r >= 0){
-        out_color.rgb = toneMapping(color);
+        out_color.rgb = color;
     }else{
         out_color.rgb = vec3(0.0f);
     }

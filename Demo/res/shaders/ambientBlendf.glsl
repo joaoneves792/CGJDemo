@@ -42,6 +42,15 @@ vec3 toneMappedTexture(sampler2D tex, vec2 uv){
     const float gamma = 2.2;
     return pow(texture(tex, uv).rgb, vec3(gamma));
 }
+vec3 toneMapping(vec3 color){
+    const float gamma = 2.2;
+    const float exposure = 1.1f;
+    // Exposure tone mapping
+    vec3 mapped = vec3(1.0) - exp(-color * exposure);
+    // Gamma correction
+    return pow(mapped.rgb, vec3(1.0 / gamma));
+
+}
 
 void main() {
     //Reconstruct the position from depth and view ray
@@ -58,12 +67,12 @@ void main() {
     float visibility = 1.0f;
     float bias = 0.005;
     if ((ShadowCoord.x < 0.0f ||  ShadowCoord.x > 1.0f) && (ShadowCoord.y > 0.2f || ShadowCoord.y < 0.0f)){
-        out_color.rgb = (color + ambientColor)*occlusion;
+        out_color.rgb = ((toneMapping(color) + ambientColor)*occlusion);
         out_color.a = 1.0f;
         return;
     }
     if(ShadowCoord.y < 0.0f || ShadowCoord.y > 1.0f){
-        out_color.rgb = (color + ambientColor)*occlusion;
+        out_color.rgb = ((toneMapping(color) + ambientColor)*occlusion);
         out_color.a = 1.0f;
         return;
     }
@@ -71,7 +80,8 @@ void main() {
    		visibility -= 0.05*(texture(shadow, vec3(ShadowCoord.xy + poissonDisk[i]/700, (ShadowCoord.z-bias)/ ShadowCoord.w) ) );
     }
 
-    out_color.rgb = (color*visibility + ambientColor)*occlusion;
+    //ToneMapping just "color" is for artistic purposes, for correctness we should toneMap the whole thing!
+    out_color.rgb = ((toneMapping(color*visibility) + ambientColor)*occlusion);
     //out_color.rgb = (ambientColor);
     out_color.a = 1.0f;
 

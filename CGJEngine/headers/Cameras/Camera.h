@@ -38,7 +38,8 @@ public:
     Mat4 getViewMatrix();
     Mat4 getReflectedViewMatrix();
     void setPosition(float x, float y, float z);
-    void setOrientation(float x, float y, float z, float w);
+    void setOrientation(float w, float x, float y, float z);
+    Quat getOrientation();
     virtual Mat4 getInverseViewMatrix()=0;
     virtual void move(float x, float y, float z)=0;
     virtual void changeOrientation(float yaw, float pitch, float roll)=0;

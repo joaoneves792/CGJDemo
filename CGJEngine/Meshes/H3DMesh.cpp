@@ -1,5 +1,6 @@
 #include <string.h>
 #include <iostream>
+#include <string.h>
 
 #include "glm_wrapper.h"
 
@@ -23,6 +24,7 @@ H3DMesh::H3DMesh() {
     _armatureCount = 0;
 
     _isAnimated = false;
+    _currentFrame = 0;
 
     _uploadMaterialCallback = nullptr;
     _boneUploadCallback = nullptr;
@@ -47,6 +49,7 @@ H3DMesh::H3DMesh(const std::string &filename) {
     _uploadMaterialCallback = nullptr;
     _boneUploadCallback = nullptr;
     _shapeKeyPercentCallback = nullptr;
+    _currentFrame = 0;
 
     loadFromFile(filename);
     prepare();
@@ -359,8 +362,13 @@ void H3DMesh::setShapeKeyPercent(const std::string &groupName, int slot, float p
 
 }
 
+void H3DMesh::setCurrentFrame(float f) {
+    _currentFrame = f;
+}
+
 void H3DMesh::setCurrentFrame(int f, int animationSlot) {
-    setCurrentFrame(f, animationSlot, -1, -1);
+    _currentFrame = f;
+    //setCurrentFrame(f, animationSlot, -1, -1);
 }
 
 void H3DMesh::setCurrentFrame(int f, int animationSlot, int start, int end) {
@@ -397,7 +405,7 @@ Mat4 H3DMesh::getBoneTransform(h3d_joint* joint, animationSlotInfo* animationInf
         }else{
             prevKeyframe = nextKeyframe;
         }
-        if(nextKeyframe->frame > animationInfo->currentFrame){
+        if(nextKeyframe->frame > _currentFrame){//animationInfo->currentFrame){
             break;
         }
     }
@@ -405,18 +413,21 @@ Mat4 H3DMesh::getBoneTransform(h3d_joint* joint, animationSlotInfo* animationInf
     if(nullptr == prevKeyframe || nullptr == nextKeyframe){
         return Mat4(1.0f);
     }
-    if( (prevKeyframe->frame < animationInfo->startFrame && animationInfo->startFrame >= 0) ||
+    /*if( (prevKeyframe->frame < animationInfo->startFrame && animationInfo->startFrame >= 0) ||
             (nextKeyframe->frame > animationInfo->endFrame && animationInfo->endFrame >= 0) ){
         return Mat4(1.0f);
-    }
+    }*/
 
     if(joint->numKeyframes > 0) {
         float lerpFactor;
         if (nextKeyframe->frame - prevKeyframe->frame == 0) {
             lerpFactor = 0;
         } else {
-            lerpFactor = ((float)(animationInfo->currentFrame - prevKeyframe->frame)) /
+            /*lerpFactor = ((float)(animationInfo->currentFrame - prevKeyframe->frame)) /
+                         ((float)(nextKeyframe->frame - prevKeyframe->frame));*/
+            lerpFactor = ((float)(_currentFrame - prevKeyframe->frame)) /
                          ((float)(nextKeyframe->frame - prevKeyframe->frame));
+
         }
         //std::cout << lerpFactor << std::endl;
         if (lerpFactor < 0)
@@ -425,7 +436,12 @@ Mat4 H3DMesh::getBoneTransform(h3d_joint* joint, animationSlotInfo* animationInf
             lerpFactor = 1;
 
 
-        return glm::interpolate(prevKeyframe->transform, nextKeyframe->transform, lerpFactor);
+        Vec3 interpolatedTranslation = glm::mix(prevKeyframe->translation, nextKeyframe->translation, lerpFactor);
+        Quat interpolatedOrientation = glm::slerp(prevKeyframe->orientation, nextKeyframe->orientation, lerpFactor);
+
+        //Mat4 interpolated = glm::interpolate(prevKeyframe->transform, nextKeyframe->transform, lerpFactor);
+        return glm::translate(Mat4(1.0f), interpolatedTranslation) * glm::toMat4(interpolatedOrientation);
+        //return nextKeyframe->transform;
 
     }
     return Mat4(1.0f);
@@ -473,9 +489,10 @@ void H3DMesh::handleAnimation(h3d_group* group) {
 
         glm::mat4 transform = Mat4(1.0f);
 
-        for(animationSlotInfo* info : _animationSlotInfo) {
+        /*for(animationSlotInfo* info : _animationSlotInfo) {
              transform *= getBoneTransform(&armature->joints[i], info);
-        }
+        }*/
+        transform = getBoneTransform(&armature->joints[i], nullptr);
         glm::mat4 bindPose = armature->joints[i].bindPose;
 
         glm::mat4 invBindPose = armature->joints[i].invBindPose;
@@ -735,7 +752,9 @@ void H3DMesh::loadFromFile(const std::string& filename) {
                 x = keyframe->position[0];
                 y = keyframe->position[1];
                 z = keyframe->position[2];
-                keyframe->transform = glm::translate(Mat4(1.0f), Vec3(x, y, z)) * glm::toMat4(glm::quat(euler));
+                keyframe->translation = Vec3(x, y, z);
+                keyframe->orientation = Quat(euler);
+                //keyframe->transform = glm::translate(Mat4(1.0f), Vec3(x, y, z)) * glm::toMat4(glm::quat(euler));
             }
 
         }

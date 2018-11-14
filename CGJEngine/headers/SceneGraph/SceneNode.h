@@ -53,7 +53,9 @@ public:
     std::string getName();
 
     void setMesh(Mesh* mesh);
+    Mesh* getMesh();
     void setShader(Shader* shader);
+    Shader* getShader();
 
     void setScene(SceneGraph* sceneGraph);
 
@@ -65,6 +67,7 @@ public:
 
     void setOrientation(float x, float y, float z, float angle);
     void setOrientation(Quat quat);
+    Quat getOrientation();
     void rotate(float x, float y, float z, float angle);
     void scale(float x, float y, float z);
 
@@ -96,7 +99,6 @@ public:
 protected:
     SceneGraph* getScene();
     Mat4 getTranslation();
-    Quat getOrientation();
     Mat4 getScale();
 };
 #endif //CGJDEMO_SCENENODE_H
