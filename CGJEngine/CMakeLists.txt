@@ -8,6 +8,7 @@ include_directories(
 	${JPEG_INCLUDE_DIR}
 	${PNG_INCLUDE_DIR}
     ${GLM_INCLUDE_DIRS}
+    ${OPENVR_INCLUDE_DIR}
 	)
 set(PNG_INCLUDE_FILES
     ${PNG_INCLUDE_DIR}/pngconf.h
@@ -29,6 +30,7 @@ set(SOURCE_FILES
 	    Cameras/FreeCamera.cpp
     	Cameras/HUDCamera.cpp
         Cameras/Camera.cpp
+		Cameras/VRCamera.cpp
     	SceneGraph/SceneGraph.cpp
 	    SceneGraph/SceneNode.cpp
     	SceneGraph/LightNode.cpp
@@ -69,6 +71,7 @@ set(HEADER_FILES
         headers/Shader.h
         headers/Shader.h
 		headers/Cameras/SphereCamera.h
+		headers/Cameras/VRCamera.h
         headers/Textures/Texture.h
 		headers/Particles/ParticlePool.h
 		headers/Particles/Particle.h
@@ -96,7 +99,7 @@ set(HEADER_FILES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
 #target_link_libraries(${PROJECT_NAME} jpeg_lib png_lib z_lib)
-target_link_libraries(${PROJECT_NAME} jpeg png)
+target_link_libraries(${PROJECT_NAME} jpeg png ${OPENVR_LIBRARIES})
 #add_dependencies(${PROJECT_NAME} libjpeg png zlib)
 
 set(${PROJECT_NAME}_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/headers ${PROJECT_SOURCE_DIR}/math/headers

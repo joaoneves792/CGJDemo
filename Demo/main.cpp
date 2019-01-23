@@ -17,6 +17,7 @@ int WinX = WIN_X;
 int WinY = WIN_Y;
 int WindowHandle = 0;
 unsigned int FrameCount = 0;
+bool inVR = false;
 
 /////////////////////////////////////////////////////////////////////// CALLBACKS
 void cleanup(){
@@ -26,8 +27,9 @@ void cleanup(){
 
 
 void display(){
-    ++FrameCount;
-	executePipeline();
+
+	++FrameCount;
+	executePipeline(nullptr);
 	checkOpenGLError("ERROR: Could not draw scene.");
 	glutSwapBuffers();
 }
@@ -41,6 +43,20 @@ void update(){
     int timeDelta = currentTime-lastTime;
     lastTime = currentTime;
 
+    if(inVR){
+        static VRCamera* cam = (VRCamera*)ResourceManager::getInstance()->getCamera(SPHERE_CAM);
+        static ColorTextureFrameBuffer* leftFBO =
+                (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(LEFT_FBO);
+        static ColorTextureFrameBuffer* rightFBO =
+                (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(RIGHT_FBO);
+
+		cam->updatePose();
+        cam->setCurrentEye(EYE_LEFT);
+        executePipeline(leftFBO);
+        cam->setCurrentEye(EYE_RIGHT);
+        executePipeline(rightFBO);
+        cam->submit(leftFBO, rightFBO);
+    }
 
 	scene->update(timeDelta);
 	particlePool->update(timeDelta);
@@ -54,15 +70,16 @@ void idle(){
 void reshape(int w, int h){
     WinX = w;
     WinY = h;
-	ResourceManager::getInstance()->getCamera(SPHERE_CAM)->resize(w, h);
-	ResourceManager::getInstance()->getCamera(BOTTOM_RIGHT_CAM)->resize(w, h);
+    if(!inVR) {
+		ResourceManager::getInstance()->getCamera(SPHERE_CAM)->resize(w, h);
+		ResourceManager::getInstance()->getCamera(BOTTOM_RIGHT_CAM)->resize(w, h);
 
-    ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
-    ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1)->resize(w, h);
-    ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2)->resize(w, h);
-    ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3)->resize(w, h);
-	ResourceManager::getInstance()->getFrameBuffer(SHADOW_FBO)->resize(w, h);
-
+		ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
+		ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1)->resize(w, h);
+		ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2)->resize(w, h);
+		ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3)->resize(w, h);
+		ResourceManager::getInstance()->getFrameBuffer(SHADOW_FBO)->resize(w, h);
+	}
 
 	glViewport(0, 0, w, h);
 }
@@ -183,7 +200,23 @@ void setupGLUT(int argc, char* argv[]){
 	glutWarpPointer(WIN_X/2, WIN_Y/2);
 }
 
+void setupVR(){
+	VRCamera* cam = (VRCamera*)ResourceManager::getInstance()->getCamera(SPHERE_CAM);
+
+	ResourceManager::Factory::createColorTextureFrameBuffer(LEFT_FBO,
+			cam->getRecommendedWidth(), cam->getRecommendedHeight());
+
+	ResourceManager::Factory::createColorTextureFrameBuffer(RIGHT_FBO,
+			cam->getRecommendedWidth(), cam->getRecommendedHeight());
+
+
+}
+
 void init(int argc, char* argv[]){
+    if(argc == 2 && argv[1][0] == '-' && argv[1][1] == '-' && argv[1][2] == 'v' && argv[1][3] == 'r') {
+        inVR = true;
+    }
+
 	setupGLUT(argc, argv);
 	setupGLEW();
 	setupOpenGL();
@@ -193,6 +226,10 @@ void init(int argc, char* argv[]){
     setupActions();
 
 	setupCallbacks();
+
+	if(inVR){
+		setupVR();
+	}
 }
 
 int main(int argc, char* argv[]){

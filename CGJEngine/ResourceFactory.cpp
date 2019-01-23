@@ -4,6 +4,7 @@
 #include <iostream>
 #include <Textures/Texture.h>
 #include <FBOs/MSFrameBuffer.h>
+#include <Cameras/VRCamera.h>
 #include "ResourceManager.h"
 #include "Meshes/Mesh.h"
 #include "Meshes/OBJMesh.h"
@@ -66,6 +67,12 @@ SphereCamera* ResourceManager::Factory::createSphereCamera(const std::string &na
 HUDCamera* ResourceManager::Factory::createHUDCamera(const std::string &name, float left, float right, float top,
                                                      float bottom, float near, float far, bool scale) {
     auto camera = new HUDCamera(left, right, top, bottom, near, far, scale);
+    ResourceManager::getInstance()->addCamera(name, camera);
+    return camera;
+}
+
+VRCamera* ResourceManager::Factory::createVRCamera(const std::string &name, Vec3 position, Quat orientation) {
+    auto camera = new VRCamera(position, orientation);
     ResourceManager::getInstance()->addCamera(name, camera);
     return camera;
 }

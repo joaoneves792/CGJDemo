@@ -14,6 +14,8 @@
 #include "constants.h"
 #include "SceneGraph/SceneNode.h"
 
+extern bool inVR;
+
 void setupScene(){
     auto rm = ResourceManager::getInstance();
     loadMeshes();
@@ -23,14 +25,24 @@ void setupScene(){
     Mesh* quad = new QuadMesh();
     rm->addMesh(QUAD, quad);
 
+    Camera* camera = nullptr;
 
-    auto camera = ResourceManager::Factory::createFreeCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
-    //auto camera = ResourceManager::Factory::createSphereCamera(SPHERE_CAM, 20.0f, Vec3(20.0f, GROUND_LEVEL, -20.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
-    /*auto camera = ResourceManager::Factory::createHUDCamera(SPHERE_CAM, -20.0f, 20.0f, 10.0f, -20.0f, 0.1f, 100.0f, true);
-    camera->changeOrientation(-PI/2.0f, 0.0f, 0.0f);
-    camera->changeOrientation(0.0f, PI/4.0f, 0.0f);
-    camera->setPosition(50.0f, 40.0f, -20.0f);*/
-    camera->perspective((float)PI/4.0f, 0, 1.0f, 1000.0f);
+    if(inVR){
+        auto VRCam= ResourceManager::Factory::createVRCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL+1.95f, 0.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
+        if(VRCam->isReady()) {
+            VRCam->perspective(1.0f, 1000.0f);
+            camera = VRCam;
+        }else{
+            std::cerr << "Unable to initialize VR" << std::endl;
+            exit(-1);
+        }
+    }else{
+        ResourceManager::getInstance()->destroyCamera(SPHERE_CAM);
+        auto freeCamera = ResourceManager::Factory::createFreeCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL, 0.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
+        freeCamera->perspective((float)PI/4.0f, 0, 1.0f, 1000.0f);
+        camera = freeCamera;
+    }
+
     SceneNode* root = ResourceManager::Factory::createScene(SCENE, camera);
     root->translate(0.0f, GROUND_LEVEL, 0.0f);
 

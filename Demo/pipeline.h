@@ -5,7 +5,10 @@
 #ifndef CGJDEMO_PIPELINE_H
 #define CGJDEMO_PIPELINE_H
 
+#include "CGJengine.h"
+
 void setupPipeline();
-void executePipeline();
+void executePipeline(FrameBuffer* targetFramebuffer);
+
 
 #endif //CGJDEMO_PIPELINE_H

@@ -5,6 +5,7 @@
 #ifndef CGJM_CAMERA_H
 #define CGJM_CAMERA_H
 
+#include <openvr.h>
 #include "glm_wrapper.h"
 
 const Vec3 up(0.0f, 1.0f, 0.0f);

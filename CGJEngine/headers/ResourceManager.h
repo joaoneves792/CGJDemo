@@ -19,6 +19,7 @@
 #include "Cameras/FreeCamera.h"
 #include "Cameras/SphereCamera.h"
 #include "Cameras/HUDCamera.h"
+#include "Cameras/VRCamera.h"
 #include "FBOs/FrameBuffer.h"
 #include "FBOs/ColorTextureFrameBuffer.h"
 #include "FBOs/MSFrameBuffer.h"
@@ -56,6 +57,7 @@ public:
         static SphereCamera* createSphereCamera(const std::string& name, float distance, Vec3 center, Quat orientation);
         static HUDCamera* createHUDCamera(const std::string& name,
                                           float left, float right, float top, float bottom, float near, float far, bool scale);
+        static VRCamera* createVRCamera(const std::string& name, Vec3 position, Quat orientation);
         static ParticlePool* createParticlePool(const std::string& name, int particleCount, SceneGraph* scene);
         static ParticleEmitterNode* createParticleEmmiter(const std::string& name, ParticlePool* pool,
                                                           Shader* shader, Texture* texture, Vec3 acceleration,

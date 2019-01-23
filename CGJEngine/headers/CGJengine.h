@@ -12,6 +12,7 @@
 #include "Cameras/SphereCamera.h"
 #include "Cameras/FreeCamera.h"
 #include "Cameras/HUDCamera.h"
+#include "Cameras/VRCamera.h"
 #include "Meshes/Mesh.h"
 #include "Meshes/OBJMesh.h"
 #include "Meshes/H3DMesh.h"

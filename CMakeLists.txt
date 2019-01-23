@@ -17,13 +17,36 @@ find_package(JPEG REQUIRED)
 find_package(PNG REQUIRED)
 
 if(glm_FOUND)
-    message(STATUS "Using system GLM")
-    message(STATUS "GLM : " ${GLM_INCLUDE_DIRS})
+	message(STATUS "Using system GLM")
+	message(STATUS "GLM : " ${GLM_INCLUDE_DIRS})
 else(glm_FOUND)
-    message(STATUS "Using bundled GLM")
-    set(GLM_INCLUDE_DIRS "${CGJDemo_SOURCE_DIR}/dependencies/glm-0.9.8.5/")
-    message(STATUS "GLM : " ${GLM_INCLUDE_DIRS})
+	message(STATUS "Using bundled GLM")
+	set(GLM_INCLUDE_DIRS "${CGJDemo_SOURCE_DIR}/dependencies/glm-0.9.8.5/")
+	message(STATUS "GLM : " ${GLM_INCLUDE_DIRS})
 endif(glm_FOUND)
+
+## OpenVR API path
+set(WINDOWS_PATH_SUFFIXES win${PLATFORM} Win${PLATFORM} x${PLATFORM})
+find_library(OPENVR_LIBRARIES
+		NAMES
+			openvr_api
+		PATHS
+			${CMAKE_CURRENT_SOURCE_DIR}/dependencies/openvr/bin
+			${CMAKE_CURRENT_SOURCE_DIR}/dependencies/openvr/lib
+		PATH_SUFFIXES
+			osx32
+			linux64
+			${WINDOWS_PATH_SUFFIXES}
+		NO_DEFAULT_PATH
+		NO_CMAKE_FIND_ROOT_PATH
+		)
+set(OPENVR_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/openvr)
+
+if(OPENVR_LIBRARIES-NOTFOUND)
+	message(STATUS "Not using openvr")
+else(OPENVR_LIBRARIES-NOTFOUND)
+	message(STATUS "Using OpenVR")
+endif(OPENVR_LIBRARIES-NOTFOUND)
 
 if( MSVC )
 	if(CMAKE_SIZEOF_VOID_P EQUAL 4) #HACK TO FIGURE OUT WETHER BUILDING x86 or x64

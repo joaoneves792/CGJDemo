@@ -125,7 +125,7 @@ void setupPipeline(){
     renderPipeline->addChild(fxaa);
 }
 
-void executePipeline(){
+void executePipeline(FrameBuffer* targetFramebuffer){
     static SceneGraph* scene = ResourceManager::getInstance()->getScene(SCENE);
     static SceneGraph* pipeline = ResourceManager::getInstance()->getScene(PIPELINE);
     static SceneGraph* creditsHUD = ResourceManager::getInstance()->getScene(CREDITS_HUD);
@@ -243,7 +243,11 @@ void executePipeline(){
     /**/
 
     /*Apply FXAA and render to screen*/
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    if(!targetFramebuffer)
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    else
+        targetFramebuffer->bind();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
 
