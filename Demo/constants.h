@@ -64,8 +64,10 @@
 #define SIDE_FBO2 "sidefbo2"
 #define SIDE_FBO3 "sidefbo3"
 #define SHADOW_FBO "shadowfbo"
-#define LEFT_FBO "lefteyefbo"
-#define RIGHT_FBO "righteyefbo"
+#define LEFT_FBO_RENDER "lefteyefboR"
+#define RIGHT_FBO_RENDER "righteyefboR"
+#define LEFT_FBO_DISPLAY "lefteyefboD"
+#define RIGHT_FBO_DISPLAY "righteyefboD"
 
 /*Particles*/
 #define MAX_PARTICLES 1024

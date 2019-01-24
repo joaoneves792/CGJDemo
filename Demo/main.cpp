@@ -27,11 +27,35 @@ void cleanup(){
 
 
 void display(){
-
 	++FrameCount;
+
+	if(inVR){
+		static VRCamera* cam = (VRCamera*)ResourceManager::getInstance()->getCamera(SPHERE_CAM);
+		static ColorTextureFrameBuffer* leftFBO =
+				(ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(LEFT_FBO_RENDER);
+		static ColorTextureFrameBuffer* rightFBO =
+				(ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(RIGHT_FBO_RENDER);
+
+		cam->updatePose();
+		cam->setCurrentEye(EYE_LEFT);
+        executePipeline(leftFBO);
+		cam->setCurrentEye(EYE_RIGHT);
+		executePipeline(rightFBO);
+
+		checkOpenGLError("ERROR: Could not draw scene.");
+
+		cam->submit(leftFBO, rightFBO);
+
+	}
 	executePipeline(nullptr);
 	checkOpenGLError("ERROR: Could not draw scene.");
 	glutSwapBuffers();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClearColor( 0, 0, 0, 1 );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glFlush();
+    glFinish();
 }
 
 void update(){
@@ -43,23 +67,10 @@ void update(){
     int timeDelta = currentTime-lastTime;
     lastTime = currentTime;
 
-    if(inVR){
-        static VRCamera* cam = (VRCamera*)ResourceManager::getInstance()->getCamera(SPHERE_CAM);
-        static ColorTextureFrameBuffer* leftFBO =
-                (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(LEFT_FBO);
-        static ColorTextureFrameBuffer* rightFBO =
-                (ColorTextureFrameBuffer*)ResourceManager::getInstance()->getFrameBuffer(RIGHT_FBO);
-
-		cam->updatePose();
-        cam->setCurrentEye(EYE_LEFT);
-        executePipeline(leftFBO);
-        cam->setCurrentEye(EYE_RIGHT);
-        executePipeline(rightFBO);
-        cam->submit(leftFBO, rightFBO);
-    }
-
 	scene->update(timeDelta);
 	particlePool->update(timeDelta);
+
+
 }
 
 void idle(){
@@ -67,22 +78,25 @@ void idle(){
 	glutPostRedisplay();
 }
 
+void resizeFBOs(int w, int h){
+    ResourceManager::getInstance()->getCamera(SPHERE_CAM)->resize(w, h);
+    ResourceManager::getInstance()->getCamera(BOTTOM_RIGHT_CAM)->resize(w, h);
+
+    ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3)->resize(w, h);
+    ResourceManager::getInstance()->getFrameBuffer(SHADOW_FBO)->resize(w, h);
+}
 void reshape(int w, int h){
     WinX = w;
     WinY = h;
     if(!inVR) {
-		ResourceManager::getInstance()->getCamera(SPHERE_CAM)->resize(w, h);
-		ResourceManager::getInstance()->getCamera(BOTTOM_RIGHT_CAM)->resize(w, h);
-
-		ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
-		ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1)->resize(w, h);
-		ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2)->resize(w, h);
-		ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3)->resize(w, h);
-		ResourceManager::getInstance()->getFrameBuffer(SHADOW_FBO)->resize(w, h);
+        resizeFBOs(w, h);
 	}
-
 	glViewport(0, 0, w, h);
 }
+
 
 void timer(int value){
 	std::ostringstream oss;
@@ -203,12 +217,13 @@ void setupGLUT(int argc, char* argv[]){
 void setupVR(){
 	VRCamera* cam = (VRCamera*)ResourceManager::getInstance()->getCamera(SPHERE_CAM);
 
-	ResourceManager::Factory::createColorTextureFrameBuffer(LEFT_FBO,
+	ResourceManager::Factory::createColorTextureFrameBuffer(LEFT_FBO_RENDER,
 			cam->getRecommendedWidth(), cam->getRecommendedHeight());
 
-	ResourceManager::Factory::createColorTextureFrameBuffer(RIGHT_FBO,
+	ResourceManager::Factory::createColorTextureFrameBuffer(RIGHT_FBO_RENDER,
 			cam->getRecommendedWidth(), cam->getRecommendedHeight());
 
+	resizeFBOs(cam->getRecommendedWidth(), cam->getRecommendedHeight());
 
 }
 
