@@ -11,6 +11,7 @@
 #include "SceneGraph/SceneNode.h"
 
 #define ESCAPE 27
+#define SPACE 0x20
 
 void setupActions() {
     SceneGraph *scene = ResourceManager::getInstance()->getScene(SCENE);
@@ -75,6 +76,11 @@ void setupActions() {
             scene->findNode(ROAD)->setUpdateCallback(Movement::deccelerate);
         }
     });
+    im->addKeyActionOnce('l', [=](){
+        VRCamera* cam = (VRCamera*)ResourceManager::getInstance()->getCamera(SPHERE_CAM);
+        cam->recenter();
+    });
+
     im->addKeyActionOnce('n', [=](){
         static bool night = false;
         night = !night;

@@ -42,12 +42,13 @@ void display(){
 		cam->setCurrentEye(EYE_RIGHT);
 		executePipeline(rightFBO);
 
-		checkOpenGLError("ERROR: Could not draw scene.");
 
 		cam->submit(leftFBO, rightFBO);
+        executePipeline(nullptr);
 
-	}
-	executePipeline(nullptr);
+	}else {
+        executePipeline(nullptr);
+    }
 	checkOpenGLError("ERROR: Could not draw scene.");
 	glutSwapBuffers();
 

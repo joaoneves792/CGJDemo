@@ -22,7 +22,7 @@ private:
     Mat4 _eyeProjection[2];
     Mat4 _eyeInverseProjection[2];
     Mat4 _eyeTransform[2];
-    Mat4 _eyeView[2];
+    Quat _correction;
     vr::IVRSystem* _hmd;
     vr::TrackedDevicePose_t _trackedDevicePose[ vr::k_unMaxTrackedDeviceCount ];
     Mat4 _devicePose[ vr::k_unMaxTrackedDeviceCount ];
@@ -45,6 +45,7 @@ public:
     void setCurrentEye(vr::EVREye eye);
     int getRecommendedWidth();
     int getRecommendedHeight();
+    void recenter();
     void submit(ColorTextureFrameBuffer* leftFBO, ColorTextureFrameBuffer* rightFBO);
 
     virtual ~VRCamera();

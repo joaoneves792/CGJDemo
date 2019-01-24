@@ -39,7 +39,8 @@ VRCamera::VRCamera(Vec3 originalPosition, Quat originalOrientation) {
 
     _hmd->GetRecommendedRenderTargetSize( &_recommendedWidth, &_recommendedHeight);
 
-    vr::VRCompositor()->CompositorBringToFront();
+    //vr::VRCompositor()->CompositorBringToFront();
+    _correction = Quat(1.0f, 0.0f, 0.0f, 0.0f);
 
 }
 
@@ -105,7 +106,7 @@ void VRCamera::updatePose() {
 
     if (_trackedDevicePose[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid )
     {
-        _orientation = glm::toQuat(glm::inverse(_devicePose[vr::k_unTrackedDeviceIndex_Hmd]));
+        _orientation = glm::toQuat(glm::inverse(_devicePose[vr::k_unTrackedDeviceIndex_Hmd])) * _correction;
     }
 }
 
@@ -157,6 +158,10 @@ void VRCamera::changeOrientation(float yaw, float pitch, float roll){
 
 
     calculateBillboard();
+}
+
+void VRCamera::recenter() {
+    _correction = glm::inverse(_orientation);
 }
 
 void VRCamera::resize(int x, int y) {
