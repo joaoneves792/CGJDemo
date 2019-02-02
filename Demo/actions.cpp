@@ -76,6 +76,9 @@ void setupActions() {
             scene->findNode(ROAD)->setUpdateCallback(Movement::deccelerate);
         }
     });
+    im->addSpecialKeyActionOnce(GLUT_KEY_F11, [=](){
+       glutFullScreenToggle();
+    });
     im->addKeyActionOnce(' ', [=](){
         VRCamera* cam = (VRCamera*)ResourceManager::getInstance()->getCamera(SPHERE_CAM);
         cam->recenter();

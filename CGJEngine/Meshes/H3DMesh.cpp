@@ -119,7 +119,6 @@ void H3DMesh::unload() {
     for(int i=0; i< _materialCount; i++){
         for(unsigned int j=0; j<_materials[i].textureCount; j++) {
             std::string name = std::string(_materials[i].texture[j]->getName());
-            std::cout << "Freeing " << name << std::endl;
             _materials[i].texture[j].reset();
             ResourceManager::getInstance()->destroyTexture(name);
         }
