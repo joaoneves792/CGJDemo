@@ -76,9 +76,18 @@ void setupActions() {
             scene->findNode(ROAD)->setUpdateCallback(Movement::deccelerate);
         }
     });
-    im->addKeyActionOnce('l', [=](){
+    im->addKeyActionOnce(' ', [=](){
         VRCamera* cam = (VRCamera*)ResourceManager::getInstance()->getCamera(SPHERE_CAM);
         cam->recenter();
+    });
+    im->addKeyActionOnce('r',[=](){
+        int w = 256;
+        int h = 256;
+        ResourceManager::getInstance()->getFrameBuffer(MAIN_FBO)->resize(w, h);
+        //ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO1)->resize(w, h);
+        //ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO2)->resize(w, h);
+        ResourceManager::getInstance()->getFrameBuffer(SIDE_FBO3)->resize(w, h);
+        //ResourceManager::getInstance()->getFrameBuffer(SHADOW_FBO)->resize(w, h);
     });
 
     im->addKeyActionOnce('n', [=](){

@@ -7,6 +7,6 @@ uniform mat4 MVP;
 
 void main()
 {
-    TexCoords = aPos;
+    TexCoords = vec3(aPos.x, -aPos.y, aPos.z);
     gl_Position = (MVP * vec4(aPos, 1.0f)).xyww;
 }

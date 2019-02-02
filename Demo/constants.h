@@ -40,6 +40,7 @@
 #define GRASS_SHADER "grassShader"
 #define VOLUMETRIC_SHADER "volumetricShader"
 #define FLOOR_SHADER "floorShader"
+#define VRFXAP_SHADER "vrfxapshader"
 
 /*Scenes*/
 #define SCENE "main"
@@ -111,6 +112,8 @@
 #define SMOOTH_PARTICLES_LEVEL (-7)
 #define FXAA_LEVEL (-1)
 #define FXAA "fxaa"
+#define VRFXAP_LEVEL (-9)
+#define VRFXAP "vrfxap"
 #define VOLUMETRIC_LEVEL (-8)
 
 /*Misc constants*/

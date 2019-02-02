@@ -344,7 +344,7 @@ void Noise::generatePerlinNoise(int octaves, float persistence, float invisibleT
 Noise::~Noise() {
     if(_textures) {
         glDeleteTextures(_layers, _textures);
-        delete _textures;
+        delete[] _textures;
     }
 }
 

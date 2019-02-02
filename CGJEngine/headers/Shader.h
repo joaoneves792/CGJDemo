@@ -16,9 +16,11 @@ private:
     std::function<void(const Mat4&, const Mat4&, const Mat4&)> _uploadMVPCallback;
 
 public:
-	Shader(const char* path_vert_shader, const char* path_frag_shader);
+	Shader();
 	virtual ~Shader();
-	
+
+	void loadFromFiles(const char* path_vert_shader, const char* path_frag_shader);
+	void loadFromString(const char* vert_shader, const char* frag_shader);
 	void link();
 	void use();
 	void clean();
@@ -27,11 +29,11 @@ public:
 	GLint getUniformLocation(const char* name);
 	void setAttribLocation(const char* name, GLuint position);
 	void setFragOutputLocation(const char* name, GLuint position);
-	void create_program(const char *path_vert_shader, const char *path_frag_shader);
     void setMVPFunction(std::function<void(const Mat4&, const Mat4&, const Mat4&)> callback);
     void uploadMVP(const Mat4& M, const Mat4& V, const Mat4& P);
 private:
-	GLuint load_and_compile_shader(const char *fname, GLenum shaderType);
+	GLuint load_shader_from_file(const char *fname, GLenum shaderType);
+	GLuint compile_shader(const char* glsl, GLenum shaderType);
 	void read_shader_src(const char *fname, std::vector<char> &buffer);
 };
 

@@ -8,20 +8,36 @@
 #ifndef TEXTURES_H_
 #define TEXTURES_H_
 
+#include <string>
 #include <GL/glew.h>
 
+extern "C" {
+#ifdef FREEIMG
+#include <FreeImage.h>
+#endif
+}
+
 typedef struct {
+#ifdef FREEIMG
+    FIBITMAP* fibitmap;
+#endif
     int width;
     int height;
-    bool alpha;
+    GLint internalFormat;
+    GLenum format;
+    GLenum type;
     bool compressed;
     GLsizei data_lenght;
     unsigned char *data;
+    GLuint GLtexture;
 }textureImage;
 
 class Texture{
 private:
     GLuint _texture;
+    int _width;
+    int _height;
+    const std::string _name;
 public:
     Texture(std::string filename);
     Texture(const std::string& right, const std::string& left, const std::string& top,
@@ -35,8 +51,11 @@ public:
     void bind();
     void bindCubeMap();
     void generateRandom(int width);
+    const std::string& getName();
+    int getWidth();
+    int getHeight();
 
-    static GLuint LoadGLTexture(const char *filename);
+    static textureImage* LoadGLTexture(const char *filename);
 private:
     static textureImage* LoadFromFile(const char* name);
 

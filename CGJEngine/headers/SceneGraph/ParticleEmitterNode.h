@@ -6,11 +6,13 @@
 #define CGJDEMO_PARTICLEEMITTERNODE_H
 
 #include <list>
+#include <memory>
 
 #include "Shader.h"
 #include "SceneGraph/SceneNode.h"
 #include "Particles/Particle.h"
 #include "Textures/Texture.h"
+
 
 class ParticlePool;
 
@@ -19,7 +21,7 @@ private:
     Vec3 _acceleration;
     Vec3 _velocity;
     Vec3 _randomAcceleration;
-    Texture* _texture;
+    std::shared_ptr<Texture> _texture;
 
     float _rate;
     float _rateDecay;
@@ -31,7 +33,7 @@ private:
     std::list<Particle*> _particles;
 
 public:
-    ParticleEmitterNode(std::string name, ParticlePool* pool, Shader* shader, Texture* texture);
+    ParticleEmitterNode(std::string name, ParticlePool* pool, Shader* shader, std::shared_ptr<Texture> texture);
     virtual ~ParticleEmitterNode();
     void setAcceleration(const Vec3& a);
     void setVelocity(const Vec3& v);

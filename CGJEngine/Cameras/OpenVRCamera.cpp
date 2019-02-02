@@ -3,11 +3,13 @@
 //
 
 #include <iostream>
-#include "Cameras/VRCamera.h"
+#include "Cameras/OpenVRCamera.h"
 #include <openvr.h>
 #include "glm_wrapper.h"
 
-VRCamera::VRCamera(Vec3 originalPosition, Quat originalOrientation) {
+#ifdef OPENVR
+
+OpenVRCamera::OpenVRCamera(Vec3 originalPosition, Quat originalOrientation) {
     _position = originalPosition;
     _orientation = originalOrientation;
     calculateBillboard();
@@ -34,7 +36,7 @@ VRCamera::VRCamera(Vec3 originalPosition, Quat originalOrientation) {
         return;
     }
     _VRReady = true;
-    _currentEye = EYE_LEFT;
+    _currentEye = vr::Eye_Left;
     _currentEyeIndex = LEFT_INDEX;
 
     _hmd->GetRecommendedRenderTargetSize( &_recommendedWidth, &_recommendedHeight);
@@ -44,8 +46,8 @@ VRCamera::VRCamera(Vec3 originalPosition, Quat originalOrientation) {
 
 }
 
-void VRCamera::perspective(float near, float far) {
-    vr::HmdMatrix44_t mat = _hmd->GetProjectionMatrix(EYE_LEFT , near, far);
+void OpenVRCamera::perspective(float near, float far) {
+    vr::HmdMatrix44_t mat = _hmd->GetProjectionMatrix(vr::Eye_Left , near, far);
     _eyeProjection[LEFT_INDEX] = Mat4
             (
                 mat.m[0][0], mat.m[1][0], mat.m[2][0], mat.m[3][0],
@@ -55,7 +57,7 @@ void VRCamera::perspective(float near, float far) {
             );
     _eyeInverseProjection[LEFT_INDEX] = glm::inverse(_eyeProjection[LEFT_INDEX]);
 
-    mat = _hmd->GetProjectionMatrix(EYE_RIGHT , near, far);
+    mat = _hmd->GetProjectionMatrix(vr::Eye_Right , near, far);
     _eyeProjection[RIGHT_INDEX] = Mat4
             (
                 mat.m[0][0], mat.m[1][0], mat.m[2][0], mat.m[3][0],
@@ -66,7 +68,7 @@ void VRCamera::perspective(float near, float far) {
     _eyeInverseProjection[RIGHT_INDEX] = glm::inverse(_eyeProjection[RIGHT_INDEX]);
 
 
-    vr::HmdMatrix34_t matEye = _hmd->GetEyeToHeadTransform( EYE_LEFT );
+    vr::HmdMatrix34_t matEye = _hmd->GetEyeToHeadTransform( vr::Eye_Left );
     _eyeTransform[LEFT_INDEX] = glm::inverse(Mat4
             (
                 matEye.m[0][0], matEye.m[1][0], matEye.m[2][0], 0.0,
@@ -74,7 +76,7 @@ void VRCamera::perspective(float near, float far) {
                 matEye.m[0][2], matEye.m[1][2], matEye.m[2][2], 0.0,
                 matEye.m[0][3], matEye.m[1][3], matEye.m[2][3], 1.0f
             ));
-    matEye = _hmd->GetEyeToHeadTransform( EYE_RIGHT );
+    matEye = _hmd->GetEyeToHeadTransform( vr::Eye_Right );
     _eyeTransform[RIGHT_INDEX] = glm::inverse(Mat4
             (
                 matEye.m[0][0], matEye.m[1][0], matEye.m[2][0], 0.0,
@@ -86,7 +88,7 @@ void VRCamera::perspective(float near, float far) {
 
 }
 
-void VRCamera::updatePose() {
+void OpenVRCamera::updatePose() {
     vr::VRCompositor()->WaitGetPoses(_trackedDevicePose, vr::k_unMaxTrackedDeviceCount, nullptr, 0 );
 
     for(uint32_t nDevice = 0; nDevice < vr::k_unMaxTrackedDeviceCount; ++nDevice ){
@@ -106,11 +108,16 @@ void VRCamera::updatePose() {
 
     if (_trackedDevicePose[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid )
     {
-        _orientation = glm::toQuat(glm::inverse(_devicePose[vr::k_unTrackedDeviceIndex_Hmd])) * _correction;
+        _rawOrientation = glm::toQuat(glm::inverse(_devicePose[vr::k_unTrackedDeviceIndex_Hmd]));
+        _orientation = _correction * _rawOrientation;
     }
 }
 
-void VRCamera::submit(ColorTextureFrameBuffer *leftFBO, ColorTextureFrameBuffer *rightFBO) {
+void OpenVRCamera::recenter() {
+    _correction = glm::inverse(_rawOrientation);
+}
+
+void OpenVRCamera::submit(ColorTextureFrameBuffer *leftFBO, ColorTextureFrameBuffer *rightFBO) {
     GLuint textureId = leftFBO->getTexture()->getTexture();
     vr::Texture_t leftEyeTexture = {(void*)(uintptr_t)textureId, vr::TextureType_OpenGL, vr::ColorSpace_Linear};
     vr::VRCompositor()->Submit(vr::Eye_Left, &leftEyeTexture );
@@ -121,32 +128,32 @@ void VRCamera::submit(ColorTextureFrameBuffer *leftFBO, ColorTextureFrameBuffer 
 }
 
 
-int VRCamera::getRecommendedHeight() {
+int OpenVRCamera::getRecommendedHeight() {
     return (int)_recommendedHeight;
 }
 
-int VRCamera::getRecommendedWidth() {
+int OpenVRCamera::getRecommendedWidth() {
     return (int)_recommendedWidth;
 }
 
-Mat4 VRCamera::getMatrix() {
+Mat4 OpenVRCamera::getMatrix() {
     return _projection * produceViewMatrix();
 }
 
-Mat4 VRCamera::produceViewMatrix() {
+Mat4 OpenVRCamera::produceViewMatrix() {
     return _eyeTransform[_currentEyeIndex] * glm::toMat4(_orientation) * glm::translate(Mat4(1.0f), Vec3(-_position[0], -_position[1], -_position[2]));
 }
 
-Mat4 VRCamera::getInverseViewMatrix() {
+Mat4 OpenVRCamera::getInverseViewMatrix() {
     return glm::inverse(getViewMatrix());
     /*return glm::translate(Mat4(1.0f), Vec3(_position[0], _position[1], _position[2]))*
             glm::toMat4(glm::inverse(_orientation));*/
 }
 
-void VRCamera::move(float x, float y, float z){
+void OpenVRCamera::move(float x, float y, float z){
     _position += Vec3(x, y, z) * _orientation;
 }
-void VRCamera::changeOrientation(float yaw, float pitch, float roll){
+void OpenVRCamera::changeOrientation(float yaw, float pitch, float roll){
     glm::quat q = glm::quat(glm::vec3(pitch, yaw, roll));
     _orientation = q * _orientation;
     glm::normalize(_orientation);
@@ -160,20 +167,19 @@ void VRCamera::changeOrientation(float yaw, float pitch, float roll){
     calculateBillboard();
 }
 
-void VRCamera::recenter() {
-    _correction = glm::inverse(_orientation);
+
+void OpenVRCamera::resize(int x, int y) {
+    //do nothing
+    return;
+    //Camera::resize(x, y);
 }
 
-void VRCamera::resize(int x, int y) {
-    Camera::resize(x, y);
-}
-
-bool VRCamera::isReady() {
+bool OpenVRCamera::isReady() {
     return _VRReady;
 }
 
-void VRCamera::setCurrentEye(vr::EVREye eye) {
-    _currentEye = eye;
+void OpenVRCamera::setCurrentEye(int eye) {
+    _currentEye = (eye == EYE_LEFT)?vr::Eye_Left:vr::Eye_Right;
     if(eye == EYE_LEFT)
         _currentEyeIndex = LEFT_INDEX;
     else
@@ -183,8 +189,10 @@ void VRCamera::setCurrentEye(vr::EVREye eye) {
     _inverseProjection = _eyeInverseProjection[_currentEyeIndex];
 }
 
-VRCamera::~VRCamera(){
+OpenVRCamera::~OpenVRCamera(){
     if(_VRReady){
         vr::VR_Shutdown();
     }
 }
+
+#endif //OPENVR

@@ -50,9 +50,10 @@ void ResourceManager::__destroyParticlePool(ParticlePool *pool) {
     delete pool;
 }
 
-void ResourceManager::__destroyTexture(Texture* texture) {
-    texture->destroyTexture();
-    delete texture;
+void ResourceManager::__destroyTexture(std::shared_ptr<Texture>& texture) {
+    if(texture.unique())
+        texture->destroyTexture();
+    texture.reset();
 }
 
 void ResourceManager::__destroyNoise(Noise *fur) {
@@ -83,7 +84,7 @@ void ResourceManager::addParticlePool(const std::string &name, ParticlePool *poo
     _pools[name] = pool;
 }
 
-void ResourceManager::addTexture(const std::string &name, Texture* texture) {
+void ResourceManager::addTexture(const std::string &name, std::shared_ptr<Texture> texture) {
     _textures[name] = texture;
 }
 
@@ -139,7 +140,7 @@ ParticlePool* ResourceManager::getParticlePool(const std::string &name) {
     return it->second;
 }
 
-Texture* ResourceManager::getTexture(const std::string &name) {
+std::shared_ptr<Texture> ResourceManager::getTexture(const std::string &name) {
     auto it = _textures.find(name);
     if(it == _textures.end()){
         return nullptr;
@@ -280,12 +281,12 @@ void ResourceManager::destroyAllNoise() {
 
 void ResourceManager::destroyEverything() {
     destroyAllMeshes();
+    destroyAllTextures(); //Meshes can have textures, so destroy Textures only after meshes
+    destroyAllNoise();
     destroyAllShaders();
     destroyAllScenes();
     destroyAllCameras();
     destroyAllFrameBuffers();
     destroyAllParticlePools();
-    destroyAllTextures();
-    destroyAllNoise();
 }
 

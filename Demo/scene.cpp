@@ -28,7 +28,7 @@ void setupScene(){
     Camera* camera = nullptr;
 
     if(inVR){
-        auto VRCam= ResourceManager::Factory::createVRCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL+1.95f, 0.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
+        auto VRCam = ResourceManager::Factory::createOpenHMDCamera(SPHERE_CAM, Vec3(20.0f, GROUND_LEVEL+1.95f, 0.0f), Quat(1.0f, 0.0f, 0.0f, 0.0f));
         if(VRCam->isReady()) {
             VRCam->perspective(1.0f, 1000.0f);
             camera = VRCam;
@@ -72,7 +72,7 @@ void setupScene(){
     /*Create environment map*/
     auto environment = ResourceManager::Factory::createCubeMap(ENVIRONMENT,
                                                                "res/environment/right.jpg", "res/environment/left.jpg",
-                                                               "res/environment/top.jpg", "res/environment/bottom.jpg",
+                                                               "res/environment/bottom.jpg", "res/environment/top.jpg",
                                                                "res/environment/back.jpg", "res/environment/front.jpg");
     auto bindEnvironment = [=](){
         glActiveTexture(GL_TEXTURE0+ENVIRONMENT_SLOT);
@@ -83,7 +83,7 @@ void setupScene(){
     /*Place the sky*/
     auto skyCubeMap = ResourceManager::Factory::createCubeMap(SKY_CUBE_MAP,
                                                               "res/skybox/posx.jpg", "res/skybox/negx.jpg",
-                                                              "res/skybox/posy.jpg", "res/skybox/negy.jpg",
+                                                              "res/skybox/negy.jpg", "res/skybox/posy.jpg",
                                                               "res/skybox/posz.jpg", "res/skybox/negz.jpg");
     auto skyShader = rm->getShader(SKY_SHADER);
     skyShader->use();
@@ -110,7 +110,7 @@ void setupScene(){
     Shader* grassShader = rm->getShader(GRASS_SHADER);
     const int GRASS_LAYERS = 40;
     const float GRASS_LENGHT = 0.4;
-    Noise* grass = new Noise(GRASS_LAYERS-1, 512);
+    Noise* grass = new Noise(GRASS_LAYERS, 512);
     grass->setColor(0.0f, 0.7f, 0.0f, 0.0f, 0.7f, 0.0f);
     grass->setMaxMipmapLevel(9);
     //grass->setColor(0.0f, 0.7f, 0.0f, 0.0f, 0.1f, 0.0f);
@@ -128,7 +128,7 @@ void setupScene(){
             //glUniform1f(uvScaleLocation, 1.0f + 1.0f * ((float)layer/(float)GRASS_LAYERS));
             glUniform1f(uvScaleLocation, 1.2f);
             glActiveTexture(GL_TEXTURE1);
-            grass->bindLayerTexture(layer-1);
+            grass->bindLayerTexture(layer);
             //grassNoiseTexture->bind();
         }
     };
@@ -365,13 +365,9 @@ void setupScene(){
     credits->setShader(rm->getShader(QUAD_SHADER));
     auto creditsTexture = ResourceManager::Factory::createTexture("res/credits2.png");
     credits->setPreDraw([=](){
-        glDisable(GL_CULL_FACE);
         creditsTexture->bind();
     });
-    credits->setPostDraw([=](){
-        glEnable(GL_CULL_FACE);
-    });
-    credits->scale(-100.0f, -50.0f, 1.0f);
+    credits->scale(-100.0f, 50.0f, 1.0f);
     credits->translate(100.0f, 50.0f, -0.1f);
 }
 

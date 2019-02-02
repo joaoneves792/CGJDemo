@@ -5,10 +5,11 @@
 #include <climits>
 #include <iostream>
 #include <random>
+#include <memory>
 #include "SceneGraph/ParticleEmitterNode.h"
 #include "Particles/ParticlePool.h"
 
-ParticleEmitterNode::ParticleEmitterNode(std::string name, ParticlePool* pool, Shader *shader, Texture* texture) :SceneNode(name){
+ParticleEmitterNode::ParticleEmitterNode(std::string name, ParticlePool* pool, Shader *shader, std::shared_ptr<Texture> texture) :SceneNode(name){
     _shader = shader;
     _texture = texture;
     _pool = pool;
@@ -164,4 +165,5 @@ ParticleEmitterNode::~ParticleEmitterNode() {
         p->life = 0.0f;
     }
     _particles.clear();
+    _texture.reset();
 }

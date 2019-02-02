@@ -240,7 +240,6 @@ void loadShaders(){
     fxaaShader->setMVPFunction(UPLOAD_MVP);
 
 
-
     /*Lighting Shader*/
     auto lightingShader = ResourceManager::Factory::createShader(LIGHTING_SHADER, "res/shaders/quadViewRayv.glsl", "res/shaders/lightingf.glsl");
     lightingShader->setAttribLocation("inPosition", VERTICES__ATTR);

@@ -7,14 +7,23 @@ if( MSVC )
 		${CGJDemo_SOURCE_DIR}/dependencies/freeglut/ )
 endif (MSVC)
 
+list(APPEND CMAKE_MODULE_PATH
+	${CGJDemo_SOURCE_DIR}/CGJEngine/cmake/ ) 
+
 set(OpenGL_GL_PREFERENCE GLVND)
 
 find_package(GLEW REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(glm QUIET)
-find_package(JPEG REQUIRED)
-find_package(PNG REQUIRED)
+
+find_package(FreeImage)
+if (FreeImage_FOUND)
+	add_definitions(-DFREEIMG)
+else(FreeImage_FOUND)
+	find_package(JPEG REQUIRED)
+	find_package(PNG REQUIRED)
+endif (FreeImage_FOUND)
 
 if(glm_FOUND)
 	message(STATUS "Using system GLM")
@@ -46,7 +55,18 @@ if(OPENVR_LIBRARIES-NOTFOUND)
 	message(STATUS "Not using openvr")
 else(OPENVR_LIBRARIES-NOTFOUND)
 	message(STATUS "Using OpenVR")
+    add_definitions(-DOPENVR)
 endif(OPENVR_LIBRARIES-NOTFOUND)
+
+find_library(OPENHMD_LIBRARIES NAMES openhmd)
+set(OPENHMD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/openhmd/include)
+if(OPENHMD_LIBRARIES-NOTFOUND)
+    message(STATUS "Not using openhmd")
+else(OPENHMD_LIBRARIES-NOTFOUND)
+    message(STATUS "Using openhmd")
+    add_definitions(-DOPENHMD)
+endif(OPENHMD_LIBRARIES-NOTFOUND)
+
 
 if( MSVC )
 	if(CMAKE_SIZEOF_VOID_P EQUAL 4) #HACK TO FIGURE OUT WETHER BUILDING x86 or x64
@@ -59,7 +79,7 @@ if( MSVC )
 endif (MSVC)
 
 if (UNIX)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wno-unused-parameter -pedantic")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wno-unused-parameter -pedantic")
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 endif (UNIX)

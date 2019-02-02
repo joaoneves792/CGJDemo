@@ -23,6 +23,8 @@
  *  -> Draw HUD
  */
 
+extern bool inVR;
+
 void setupPipeline(){
     ResourceManager* rm = ResourceManager::getInstance();
     QuadMesh* quad = (QuadMesh*)rm->getMesh(QUAD);
@@ -50,7 +52,7 @@ void setupPipeline(){
     /*SSAO Stage*/
     auto ssaoShader = rm->getShader(SSAO_SHADER);
     auto ssao = new SceneNode(SSAO, quad, ssaoShader);
-    auto ssaoNoise = new Texture();
+    auto ssaoNoise = std::shared_ptr<Texture>(new Texture());
     ssaoNoise->generateRandom(4);
     rm->addTexture("ssaoNoise", ssaoNoise);
     GLint PLoc = ssaoShader->getUniformLocation("P");
@@ -234,7 +236,6 @@ void executePipeline(FrameBuffer* targetFramebuffer){
     /*Draw post-FX particles*/
     /**/
     mainFBO->bind();
-    //glClear(GL_COLOR_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);
     sideBuffer3->bindTexture();
     scene->draw(HEAT_HAZE_LEVEL);
@@ -243,16 +244,15 @@ void executePipeline(FrameBuffer* targetFramebuffer){
     /**/
 
     /*Apply FXAA and render to screen*/
+
+
+    glActiveTexture(GL_TEXTURE0);
+    mainFBO->bindParticles();
     if(!targetFramebuffer)
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     else
         targetFramebuffer->bind();
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glActiveTexture(GL_TEXTURE0);
-
-    mainFBO->bindParticles();
-    //sideBuffer2->bindTexture();
     pipeline->draw(FXAA_LEVEL);
 
     creditsHUD->draw();

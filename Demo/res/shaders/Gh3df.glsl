@@ -43,7 +43,7 @@ void main() {
         R = R + vec3(0.0f, 0.0f, movement);
         float NdotV = max(dot(N, E), 0.0f);
         vec3 fresnel = fresnelSchlick(NdotV, vec3(0.96f, 0.96f, 0.97f));
-        matDiffuse += (texture(environment, R).rgb*(shininess/128.0f)*0.35f)*fresnel;//*(1/alpha);
+        matDiffuse += (texture(environment, vec3(R.x, -R.y, R.z)).rgb*(shininess/128.0f)*0.35f)*fresnel;//*(1/alpha);
     }
 
     if(alpha == 0.0f){

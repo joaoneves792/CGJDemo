@@ -11,8 +11,10 @@
 #include <vector>
 #include <functional>
 #include <unordered_map>
+#include <memory>
 
 #include "Meshes/Mesh.h"
+#include "Textures/Texture.h"
 #include "glm_wrapper.h"
 
 #ifndef RC_INVOKED
@@ -122,7 +124,7 @@ typedef struct
     float           transparency;                       // 0.0f - 1.0f
     unsigned int    textureCount;
 	char**          textureImage;
-	GLint* 			textureId;
+	std::shared_ptr<Texture>*    	texture;
 } h3d_material;
 
 

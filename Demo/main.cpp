@@ -42,9 +42,9 @@ void display(){
 		cam->setCurrentEye(EYE_RIGHT);
 		executePipeline(rightFBO);
 
-
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		cam->submit(leftFBO, rightFBO);
-        executePipeline(nullptr);
+        //executePipeline(nullptr);
 
 	}else {
         executePipeline(nullptr);

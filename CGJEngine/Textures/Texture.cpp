@@ -16,74 +16,17 @@
 
 extern "C" {
 #include <stdlib.h>
+#ifdef FREEIMG
+#include <FreeImage.h>
+#else
 #include <jpeglib.h>
 #include <png.h>
+#endif
 }
 
 #include "Textures/Texture.h"
 
-/*****************************************/
-/*  Load Bitmaps, Jpegs, Pngs And Convert To Textures */
-/*  Also supports ETC1 when compiled with GLES */
-
-unsigned short bigE2littleE(unsigned short bigEndianShort){
-    return (bigEndianShort << 8) + (bigEndianShort >> 8);
-}
-
-int loadETC1(const char* fileName, textureImage* texture){
-    texture->compressed = true;
-    texture->alpha = false;
-
-#ifndef GLES
-    return 0; //We only support this for android
-#endif
-
-    char headerBuffer[16];
-
-    FILE *fp = fopen(fileName, "rb");
-    if (fp == 0){
-        perror(fileName);
-        return 0;
-    }
-    // read the header
-    fread(headerBuffer, sizeof(char), 6, fp);
-    if(strncmp("PKM 10", headerBuffer, 6)){
-        fprintf(stderr, "error: %s is not an ETC1 file.\n", fileName);
-        fclose(fp);
-        return 0;
-    }
-
-
-    fread((headerBuffer + 6), sizeof(char), 2, fp ); //Format (ignore it (mips))
-
-    fread((headerBuffer + 8), sizeof(char), 8, fp); //read dimensions;
-
-    unsigned short textWidth = bigE2littleE(*((unsigned short*)(headerBuffer+8)));
-    unsigned short textHeight = bigE2littleE(*((unsigned short*)(headerBuffer+10)));
-    unsigned short origWidth = bigE2littleE(*((unsigned short*)(headerBuffer+12)));
-    unsigned short origHeight = bigE2littleE(*((unsigned short*)(headerBuffer+14)));
-
-    if(textHeight != origHeight || textWidth != origWidth){
-        fprintf(stderr, "error: %s dimensions must be in multiples of 4.\n", fileName);
-        fclose(fp);
-        return 0;
-    }
-
-    texture->width = (int)textWidth;
-    texture->height = (int)textHeight;
-
-
-    //size_t bytesToRead = textWidth* textHeight / 2 * sizeof(char);
-    size_t bytesToRead = ((textWidth >> 2) * (textHeight >> 2)) << 3;
-    texture->data_lenght = (GLsizei)bytesToRead;
-    texture->data = (unsigned char *)malloc(bytesToRead);
-
-    fread(texture->data, sizeof(char), bytesToRead, fp);
-
-    fclose(fp);
-    return 1;
-}
-
+#ifndef FREEIMG
 int loadPNG(const char* file_name, textureImage* texture){
     // This function was originally written by David Grayson for
     // https://github.com/DavidEGrayson/ahrs-visualizer
@@ -91,6 +34,7 @@ int loadPNG(const char* file_name, textureImage* texture){
     //on 12-8-2015
 
     texture->compressed = false;
+    texture->type = GL_UNSIGNED_BYTE;
 
     png_byte header[8];
 
@@ -167,12 +111,13 @@ int loadPNG(const char* file_name, textureImage* texture){
 
     switch(color_type){
 	case PNG_COLOR_TYPE_RGB:
-        	//format = GL_RGB;
-       		texture->alpha = false;
+       		texture->format = GL_RGB;
+       		texture->internalFormat = GL_RGB8;
 		break;
     	case PNG_COLOR_TYPE_RGB_ALPHA:
         	//format = GL_RGBA;
-		texture->alpha = true;
+       		texture->format = GL_RGBA;
+       		texture->internalFormat = GL_RGBA8;
         	break;
     	default:
         	fprintf(stderr, "%s: Unknown libpng color type %d.\n", file_name, color_type);
@@ -229,14 +174,14 @@ int loadPNG(const char* file_name, textureImage* texture){
 
 int loadJPEG(const char* filename, textureImage* texture){
 	FILE* infile;
-	struct jpeg_decompress_struct cinfo;
-	struct jpeg_error_mgr jerr;
-	int row_stride;     /* physical row width in output buffer */
-	long counter = 0;
-	int buffer_height = 1;
+	struct jpeg_decompress_struct cinfo = {};
+	struct jpeg_error_mgr jerr = {};
+	JDIMENSION row_stride;     /* physical row width in output buffer */
 
-	texture->alpha = false;
+	texture->format = GL_RGB;
+    texture->internalFormat = GL_RGB8;
     texture->compressed = false;
+    texture->type = GL_UNSIGNED_BYTE;
 
 	cinfo.err = jpeg_std_error(&jerr);
 	jpeg_create_decompress(&cinfo);
@@ -251,27 +196,27 @@ int loadJPEG(const char* filename, textureImage* texture){
 	
 	texture->width = cinfo.output_width;
 	texture->height = cinfo.output_height;
-	texture->data = new unsigned char[cinfo.output_width*cinfo.output_height*cinfo.output_components];
+	texture->data = (unsigned char*)malloc
+	        (sizeof(unsigned char)*(cinfo.output_width*cinfo.output_height*cinfo.output_components));
 
 	row_stride = cinfo.output_width * cinfo.output_components;
     	
 
-	JSAMPARRAY buffer = (JSAMPARRAY)malloc(sizeof(JSAMPROW)*buffer_height);
-
-
 	/* Make a one-row-high sample array that will go away when done with image */
-    	buffer = (*cinfo.mem->alloc_sarray) ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
+	JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray) ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 	buffer[0] = (JSAMPROW)malloc(sizeof(JSAMPLE) * row_stride);
 
+    long counter = 0;
 	while (cinfo.output_scanline < cinfo.output_height) {
 		jpeg_read_scanlines(&cinfo, buffer, 1);
-		memcpy(texture->data+counter, buffer[0], row_stride);
-		counter += row_stride;
+        memcpy(texture->data+counter, buffer[0], row_stride);
+        counter += row_stride;
 	}
 
-	jpeg_finish_decompress (&cinfo);
+	free(buffer[0]);
+    jpeg_finish_decompress (&cinfo);
 	jpeg_destroy_decompress (&cinfo);
-	fclose(infile);	
+	fclose(infile);
 	return 1;
 }
 
@@ -288,7 +233,9 @@ int loadBMP(const char *filename, textureImage *texture)
     int i;
     unsigned char temp;
 
-	texture->alpha = false;
+	texture->format = GL_RGB;
+    texture->internalFormat = GL_RGB8;
+    texture->type = GL_UNSIGNED_BYTE;
     texture->compressed = false;
 
     /* make sure the file is there and open it read-only (binary) */
@@ -365,23 +312,82 @@ int loadBMP(const char *filename, textureImage *texture)
     }
     return 1;
 }
+#endif
 
-GLuint generateGLTexture(unsigned char* data, int height, int width, bool alpha, bool compressed, GLsizei length){
+#ifdef FREEIMG
+int loadFreeImage(const char* filename, textureImage *texture){
+    texture->compressed = false;
+
+    FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename,0);
+    FIBITMAP* image = FreeImage_Load(format, filename);
+    FIBITMAP* tmp;
+
+    int bpp = FreeImage_GetBPP(image);
+    switch (bpp){
+        case 8:
+            tmp = FreeImage_ConvertTo24Bits(image);
+            FreeImage_Unload(image);
+            image = tmp;
+            //Fall through
+        case 24:
+            //IsTransparent does not work as expected, so we assume 24 bit as no alpha and 32bit as alpha
+            texture->format = GL_BGR;
+            texture->internalFormat = GL_RGB8;
+            texture->type = GL_UNSIGNED_BYTE;
+            break;
+        case 32:
+            texture->format = GL_BGRA;
+            texture->internalFormat = GL_RGBA8;
+            texture->type = GL_UNSIGNED_BYTE;
+            break;
+        case 48:
+            if(FreeImage_GetColorType(image) == FIC_RGB){
+                texture->format = GL_RGB;
+                texture->internalFormat = GL_RGB8;
+            }else {
+                texture->format = GL_RGBA;
+                texture->internalFormat = GL_RGBA8;
+            }
+            texture->type = GL_UNSIGNED_SHORT;
+            break;
+        case 64:
+            if(FreeImage_GetColorType(image) == FIC_RGB){
+                texture->format = GL_RGB;
+                texture->internalFormat = GL_RGB8;
+            }else {
+                texture->format = GL_RGBA;
+                texture->internalFormat = GL_RGBA8;
+            }
+            texture->type = GL_UNSIGNED_SHORT;
+            break;
+
+        default:
+            std::cout << "Bad pixel depth " << bpp << " in " << filename << std::endl;
+            FreeImage_Unload(image);
+            return 0;
+    }
+
+    //std::cout << bpp << FreeImage_GetColorType(image) << FIC_RGB << FIC_CMYK << FIC_PALETTE << FIC_RGBALPHA << std::endl;
+
+    texture->width = FreeImage_GetWidth(image);
+    texture->height = FreeImage_GetHeight(image);
+
+    texture->data = FreeImage_GetBits(image);
+    texture->fibitmap = image;
+
+    return 1;
+}
+#endif
+
+GLuint generateGLTexture(textureImage* texti){
 	GLuint texID = 0;
-     	if(data){
+     	if(texti->data){
         	glGenTextures(1, &texID);   /* create the texture */
         	glBindTexture(GL_TEXTURE_2D, texID);
         	/* actually generate the texture */
-            if(!compressed) {
-                glTexImage2D(GL_TEXTURE_2D, 0, (alpha) ? GL_RGBA : GL_RGB, width, height, 0,
-                             (alpha) ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
-            }else{
-#ifdef GLES
-                glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, width, height, 0, length, data);
-#endif
-            }
+            glTexImage2D(GL_TEXTURE_2D, 0, texti->internalFormat, texti->width, texti->height, 0,
+                             texti->format, texti->type, texti->data);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-#ifndef GLES
             if(GLEW_EXT_texture_filter_anisotropic){
                 GLfloat largestAnisotropic;
                 glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largestAnisotropic);
@@ -391,28 +397,44 @@ GLuint generateGLTexture(unsigned char* data, int height, int width, bool alpha,
             }else{
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             }
-#endif
-#ifdef GLES
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-#endif
     	}
 	return texID;
 }
 
-Texture::Texture() {
+Texture::Texture() : _name("anonymous"){
     _texture = 0;
+    _width = -1;
+    _height = -1;
 }
 
-Texture::Texture(GLuint texture) {
+Texture::Texture(GLuint texture): _name("anonymous_copy") {
     _texture = texture;
+    _width = -2;
+    _height = -2;
 }
 
-Texture::Texture(std::string filename) {
-    _texture = LoadGLTexture(filename.c_str());
+Texture::Texture(std::string filename) : _name(filename) {
+    textureImage* ti = LoadGLTexture(filename.c_str());
+    _texture = ti->GLtexture;
+    _width = ti->width;
+    _height = ti->height;
+    free(ti);
+}
+
+const std::string& Texture::getName() {
+    return _name;
 }
 
 GLuint Texture::getTexture() {
     return _texture;
+}
+
+int Texture::getWidth() {
+    return _width;
+}
+
+int Texture::getHeight() {
+    return _height;
 }
 
 void Texture::destroyTexture() {
@@ -432,43 +454,51 @@ textureImage* Texture::LoadFromFile(const char* name) {
     std::string fn(name);
 
     texti = (textureImage *) malloc(sizeof(textureImage));
-
+#ifndef FREEIMG
     if (fn.substr(fn.find_last_of('.') + 1) == "bmp")
         loadBMP(name, texti);
     else if (fn.substr(fn.find_last_of('.') + 1) == "jpg" || fn.substr(fn.find_last_of('.') + 1) == "jpeg")
         loadJPEG(name, texti);
     else if (fn.substr(fn.find_last_of('.') + 1) == "png")
         loadPNG(name, texti);
-    else if (fn.substr(fn.find_last_of('.') + 1) == "etc1")
-        loadETC1(name, texti);
     else
+        free(texti);
         return nullptr;
+#else
+    if(!loadFreeImage(name, texti)) {
+        free(texti);
+        return nullptr;
+    }
+#endif
     return texti;
 }
 
-GLuint Texture::LoadGLTexture(const char* name){
+textureImage* Texture::LoadGLTexture(const char* name){
     textureImage* texti = LoadFromFile(name);
     GLuint textureID = 0;
 
 	if(texti) {
-        textureID = generateGLTexture(texti->data, texti->height, texti->width, texti->alpha, texti->compressed,
-                                      texti->data_lenght);
-
+        textureID = generateGLTexture(texti);
         /* free the ram we used in our texture generation process */
+#ifdef FREEIMG
+        FreeImage_Unload(texti->fibitmap);
+#else
         if (texti->data)
-            free(texti->data);
-        free(texti);
+           free(texti->data);
+#endif
     }
-
-	return textureID;
+    texti->GLtexture = textureID;
+	return texti;
 }
 
 Texture::Texture(const std::string &right, const std::string &left, const std::string &top, const std::string &bottom,
-                 const std::string &back, const std::string &front) {
+                 const std::string &back, const std::string &front) : _name("cube") {
     textureImage* texti;
     GLuint textureID = 0;
     std::vector<std::string> faces = {right, left, top, bottom, back, front};
 
+    _width = -8;
+    _height = -8;
 
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
@@ -478,11 +508,15 @@ Texture::Texture(const std::string &right, const std::string &left, const std::s
         texti = LoadFromFile(faces[i].c_str());
         if (texti){
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                         0, (texti->alpha)? GL_RGBA : GL_RGB,
+                         0, texti->internalFormat,
                          texti->width, texti->height, 0,
-                         (texti->alpha)? GL_RGBA: GL_RGB,
-                         GL_UNSIGNED_BYTE, texti->data);
+                         texti->format,
+                         texti->type, texti->data);
+#ifdef FREEIMG
+            FreeImage_Unload(texti->fibitmap);
+#else
             free(texti->data);
+#endif
             free(texti);
         }else{
             std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
@@ -525,6 +559,8 @@ void Texture::generateRandom(int width) {
 
     delete[] texture;
 
+    _width = width;
+    _height = height;
 }
 
 void Texture::bindCubeMap() {

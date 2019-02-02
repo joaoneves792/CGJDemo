@@ -8,17 +8,50 @@
 #include "glerrors.h"
 #include "glm_wrapper.h"
 
-Shader::Shader(const char* path_vert_shader, const char* path_frag_shader){
-	create_program(path_vert_shader, path_frag_shader);
+Shader::Shader(){
     _uploadMVPCallback = nullptr;
 }
 
+void Shader::loadFromFiles(const char *path_vert_shader, const char *path_frag_shader){
+    // Load and compile the vertex and fragment shaders
+    _vertexShader = load_shader_from_file(path_vert_shader, GL_VERTEX_SHADER);
+    _fragmentShader = load_shader_from_file(path_frag_shader, GL_FRAGMENT_SHADER);
+
+    // Attach the above shader to a program
+    GLuint shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, _vertexShader);
+    glAttachShader(shaderProgram, _fragmentShader);
+
+    // Flag the shaders for deletion
+    glDeleteShader(_vertexShader);
+    glDeleteShader(_fragmentShader);
+
+    checkOpenGLError("Failed to load shaders");
+
+    _shaderProgram = shaderProgram;
+}
+
+void Shader::loadFromString(const char *vert_shader, const char *frag_shader) {
+    _vertexShader = compile_shader(vert_shader, GL_VERTEX_SHADER);
+    _fragmentShader = compile_shader(frag_shader, GL_FRAGMENT_SHADER);
+
+    // Attach the above shader to a program
+    GLuint shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, _vertexShader);
+    glAttachShader(shaderProgram, _fragmentShader);
+
+    // Flag the shaders for deletion
+    glDeleteShader(_vertexShader);
+    glDeleteShader(_fragmentShader);
+
+    checkOpenGLError("Failed to load shaders");
+
+    _shaderProgram = shaderProgram;
+}
 
 void Shader::clean(){
 	glDetachShader(_shaderProgram, _vertexShader);
 	glDetachShader(_shaderProgram, _fragmentShader);
-	//glDeleteShader(_fragmentShader);
-	//glDeleteShader(_vertexShader);
 	glDeleteProgram(_shaderProgram);
 }
 
@@ -58,22 +91,24 @@ void Shader::read_shader_src(const char *fname, std::vector<char> &buffer) {
 }
 
 
-// Compile a shader
-GLuint Shader::load_and_compile_shader(const char *fname, GLenum shaderType) {
-        // Load a shader from an external file
-        std::vector<char> buffer;
-        read_shader_src(fname, buffer);
-        const char *src = &buffer[0];
+GLuint Shader::load_shader_from_file(const char *fname, GLenum shaderType) {
+    // Load a shader from an external file
+    std::vector<char> buffer;
+    read_shader_src(fname, buffer);
+    const char *src = &buffer[0];
 
+    return compile_shader(src, shaderType);
+}
+
+GLuint Shader::compile_shader(const char *glsl, GLenum shaderType) {
         // Compile the shader
         GLuint shader = glCreateShader(shaderType);
-        glShaderSource(shader, 1, &src, NULL);
+        glShaderSource(shader, 1, &glsl, NULL);
         glCompileShader(shader);
         // Check the result of the compilation
         GLint test;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &test);
         if(!test) {
-                std::cerr << fname << std::endl;
                 std::cerr << "Shader compilation failed with this message:" << std::endl;
                 std::vector<char> compilation_log(512);
                 glGetShaderInfoLog(shader, compilation_log.size(), NULL, &compilation_log[0]);
@@ -81,37 +116,6 @@ GLuint Shader::load_and_compile_shader(const char *fname, GLenum shaderType) {
                 return 0;
         }
         return shader;
-}
-
-// Create a program from two shaders
-void Shader::create_program(const char *path_vert_shader, const char *path_frag_shader) {
-        // Load and compile the vertex and fragment shaders
-        _vertexShader = load_and_compile_shader(path_vert_shader, GL_VERTEX_SHADER);
-        _fragmentShader = load_and_compile_shader(path_frag_shader, GL_FRAGMENT_SHADER);
-
-        // Attach the above shader to a program
-        GLuint shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, _vertexShader);
-        glAttachShader(shaderProgram, _fragmentShader);
-
-
-        // Flag the shaders for deletion
-        glDeleteShader(_vertexShader);
-        glDeleteShader(_fragmentShader);
-
-
-        /*glBindAttribLocation(shaderProgram, 0, "position");
-        glBindAttribLocation(shaderProgram, 1, "texture_coord");
-        glBindAttribLocation(shaderProgram, 2, "normal");
-        glBindAttribLocation(shaderProgram, 3, "jointIndex");
-        glBindAttribLocation(shaderProgram, 4, "jointWeight");*/
-        // Link and use the program
-        //glLinkProgram(shaderProgram);
-
-	checkOpenGLError("Failed to load shaders");
-
-        _shaderProgram = shaderProgram;
-	
 }
 
 void Shader::link(){

@@ -5,6 +5,8 @@
 #include <Textures/Texture.h>
 #include <FBOs/MSFrameBuffer.h>
 #include <Cameras/VRCamera.h>
+#include <Cameras/OpenVRCamera.h>
+#include <Cameras/OpenHMDCamera.h>
 #include "ResourceManager.h"
 #include "Meshes/Mesh.h"
 #include "Meshes/OBJMesh.h"
@@ -34,7 +36,8 @@ Mesh* ResourceManager::Factory::createMesh(const std::string &name, const std::s
 
 Shader* ResourceManager::Factory::createShader(const std::string &name, const std::string &vertexShader,
                                       const std::string& fragmentShader) {
-    auto shader = new Shader(vertexShader.c_str(), fragmentShader.c_str());
+    auto shader = new Shader();
+    shader->loadFromFiles(vertexShader.c_str(), fragmentShader.c_str());
     ResourceManager::getInstance()->addShader(name, shader);
     return shader;
 }
@@ -72,8 +75,26 @@ HUDCamera* ResourceManager::Factory::createHUDCamera(const std::string &name, fl
 }
 
 VRCamera* ResourceManager::Factory::createVRCamera(const std::string &name, Vec3 position, Quat orientation) {
-    auto camera = new VRCamera(position, orientation);
+#ifdef OPENVR //For backwards compatibility createVRCamera produces an OpenVRCamera
+    auto camera = new OpenVRCamera(position, orientation);
     ResourceManager::getInstance()->addCamera(name, camera);
+#else
+    VRCamera* camera = nullptr;
+#endif
+    return camera;
+}
+
+VRCamera* ResourceManager::Factory::createOpenVRCamera(const std::string &name, Vec3 position, Quat orientation) {
+    return createVRCamera(name, position, orientation);
+}
+
+VRCamera* ResourceManager::Factory::createOpenHMDCamera(const std::string &name, Vec3 position, Quat orientation) {
+#ifdef OPENHMD
+    auto camera = new OpenHMDCamera(position, orientation);
+    ResourceManager::getInstance()->addCamera(name, camera);
+#else
+    VRCamera* camera = nullptr;
+#endif
     return camera;
 }
 
@@ -123,7 +144,7 @@ ParticlePool* ResourceManager::Factory::createParticlePool(const std::string &na
 }
 
 ParticleEmitterNode* ResourceManager::Factory::createParticleEmmiter(const std::string &name, ParticlePool *pool,
-                                                                     Shader *shader, Texture* texture, Vec3 acceleration,
+                                                                     Shader *shader, std::shared_ptr<Texture> texture, Vec3 acceleration,
                                                                      Vec3 velocity, Vec3 position, float rate,
                                                                      float rateDecay) {
     auto emitter = new ParticleEmitterNode(name, pool, shader, texture);
@@ -135,22 +156,21 @@ ParticleEmitterNode* ResourceManager::Factory::createParticleEmmiter(const std::
     return emitter;
 }
 
-Texture* ResourceManager::Factory::createTexture(const std::string &fileName) {
-    Texture* texture = ResourceManager::getInstance()->getTexture(fileName);
+std::shared_ptr<Texture> ResourceManager::Factory::createTexture(const std::string &fileName) {
+    std::shared_ptr<Texture> texture = ResourceManager::getInstance()->getTexture(fileName);
     if(texture){
         return texture;
     }
-
-    texture = new Texture(fileName);
+    texture = std::shared_ptr<Texture>(new Texture(fileName));
     ResourceManager::getInstance()->addTexture(fileName, texture);
     return texture;
 }
 
-Texture* ResourceManager::Factory::createCubeMap(const std::string &name, const std::string &right,
+std::shared_ptr<Texture> ResourceManager::Factory::createCubeMap(const std::string &name, const std::string &right,
                                                  const std::string &left, const std::string &top,
                                                  const std::string &bottom, const std::string &back,
                                                  const std::string &front) {
-    Texture* texture = new Texture(right, left, top, bottom, back, front);
+    std::shared_ptr<Texture> texture = std::shared_ptr<Texture>(new Texture(right, left, top, bottom, back, front));
     ResourceManager::getInstance()->addTexture(name, texture);
     return texture;
 }

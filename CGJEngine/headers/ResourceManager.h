@@ -10,6 +10,7 @@
 #include <string>
 #include <FBOs/GFrameBuffer.h>
 #include <Textures/Noise.h>
+#include <memory>
 #include "SceneGraph/SceneGraph.h"
 #include "Shader.h"
 #include "Meshes/Mesh.h"
@@ -37,7 +38,7 @@ private:
     std::unordered_map<std::string, Camera*> _cameras;
     std::unordered_map<std::string, FrameBuffer*> _fbos;
     std::unordered_map<std::string, ParticlePool*> _pools;
-    std::unordered_map<std::string, Texture*> _textures;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> _textures;
     std::unordered_map<std::string, Noise*> _noise;
 public:
     class Factory{
@@ -58,12 +59,14 @@ public:
         static HUDCamera* createHUDCamera(const std::string& name,
                                           float left, float right, float top, float bottom, float near, float far, bool scale);
         static VRCamera* createVRCamera(const std::string& name, Vec3 position, Quat orientation);
+        static VRCamera* createOpenVRCamera(const std::string& name, Vec3 position, Quat orientation);
+        static VRCamera* createOpenHMDCamera(const std::string& name, Vec3 position, Quat orientation);
         static ParticlePool* createParticlePool(const std::string& name, int particleCount, SceneGraph* scene);
         static ParticleEmitterNode* createParticleEmmiter(const std::string& name, ParticlePool* pool,
-                                                          Shader* shader, Texture* texture, Vec3 acceleration,
+                                                          Shader* shader, std::shared_ptr<Texture> texture, Vec3 acceleration,
                                                           Vec3 velocity, Vec3 position, float rate, float rateDecay);
-        static Texture* createTexture(const std::string& fileName);
-        static Texture* createCubeMap(const std::string& name, const std::string &right, const std::string &left,
+        static std::shared_ptr<Texture> createTexture(const std::string& fileName);
+        static std::shared_ptr<Texture> createCubeMap(const std::string& name, const std::string &right, const std::string &left,
                                       const std::string &top, const std::string &bottom,
                                       const std::string &back, const std::string &front);
     };
@@ -77,7 +80,7 @@ private:
     void __destroyCamera(Camera* camera);
     void __destroyFrameBuffer(FrameBuffer* fbo);
     void __destroyParticlePool(ParticlePool* pool);
-    void __destroyTexture(Texture* texture);
+    void __destroyTexture(std::shared_ptr<Texture>& texture);
     void __destroyNoise(Noise *fur);
 public:
     static ResourceManager* getInstance();
@@ -88,7 +91,7 @@ public:
     void addCamera(const std::string& name, Camera* camera);
     void addFrameBuffer(const std::string& name, FrameBuffer* fbo);
     void addParticlePool(const std::string& name, ParticlePool* pool);
-    void addTexture(const std::string& name, Texture* texture);
+    void addTexture(const std::string& name, std::shared_ptr<Texture> texture);
     void addNoise(const std::string &name, Noise *fur);
 
     Shader* getShader(const std::string& name);
@@ -97,7 +100,7 @@ public:
     Camera* getCamera(const std::string& name);
     FrameBuffer* getFrameBuffer(const std::string& name);
     ParticlePool* getParticlePool(const std::string& name);
-    Texture* getTexture(const std::string& name);
+    std::shared_ptr<Texture> getTexture(const std::string& name);
     Noise* getNoise(const std::string &name);
 
     void destroyShader(const std::string& name);

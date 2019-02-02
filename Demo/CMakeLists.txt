@@ -7,6 +7,7 @@ include_directories(
 	${GLUT_INCLUDE_DIR}
 	${GLM_INCLUDE_DIRS}
 	${OPENVR_INCLUDE_DIR}
+	${OPENHMD_INCLUDE_DIR}
    	${CGJEngine_INCLUDE_DIRS})
 
 
@@ -25,7 +26,8 @@ set(SOURCE_FILES
         movement.h pipeline.cpp pipeline.h)
 
 add_executable(demo ${SOURCE_FILES})
-target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${OPENVR_LIBRARIES} CGJEngine)
+target_link_libraries(demo ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES}
+                           ${OPENVR_LIBRARIES} ${OPENHMD_LIBRARIES} CGJEngine)
 add_dependencies(demo InstallFreeGLUT CGJEngine)
 
 add_custom_command(TARGET demo POST_BUILD
