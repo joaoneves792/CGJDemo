@@ -44,6 +44,7 @@ public:
             const std::string& bottom, const std::string& back, const std::string& front);
     Texture();
     Texture(GLuint texture);
+    ~Texture();
 
     GLuint getTexture();
     void changeTexture(GLuint texture);

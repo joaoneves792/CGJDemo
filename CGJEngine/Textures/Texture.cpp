@@ -439,6 +439,7 @@ int Texture::getHeight() {
 
 void Texture::destroyTexture() {
     glDeleteTextures(1, &_texture);
+    _texture = 0;
 }
 
 void Texture::bind() {
@@ -565,4 +566,11 @@ void Texture::generateRandom(int width) {
 
 void Texture::bindCubeMap() {
     glBindTexture(GL_TEXTURE_CUBE_MAP, _texture);
+}
+
+Texture::~Texture() {
+    if(_texture > 0){
+        destroyTexture();
+        _texture = 0;
+    }
 }
