@@ -67,7 +67,6 @@ void update(){
     int currentTime = glutGet(GLUT_ELAPSED_TIME);
     int timeDelta = currentTime-lastTime;
     lastTime = currentTime;
-
 	scene->update(timeDelta);
 	particlePool->update(timeDelta);
 
@@ -130,6 +129,10 @@ void mouse(int x, int y) {
     InputManager::getInstance()->mouseMovement(x, y);
 }
 
+void m(int v){
+    InputManager::update();
+    glutTimerFunc(10, m, 0);
+}
 /////////////////////////////////////////////////////////////////////// SETUP
 
 void setupCallbacks(){
@@ -144,6 +147,7 @@ void setupCallbacks(){
     glutSpecialFunc(specialKeyboard);
     glutSpecialUpFunc(specialKeyboardUp);
 	glutTimerFunc(5000, flames, 0);
+	glutTimerFunc(0, m, 0);
 }
 
 void checkOpenGLInfo(){
@@ -186,24 +190,24 @@ void setupOpenGL(){
 
 void setupGLEW() {
 	glewExperimental = GL_TRUE;
-	GLenum result = glewInit() ; 
-	if (result != GLEW_OK) { 
+	GLenum result = glewInit() ;
+	if (result != GLEW_OK) {
 		std::cerr << "ERROR glewInit: " << glewGetString(result) << std::endl;
 		exit(EXIT_FAILURE);
-	} 
+	}
 	//GLenum err_code = glGetError();
 }
 
 void setupGLUT(int argc, char* argv[]){
 	glutInit(&argc, argv);
-	
+
 	glutInitContextVersion(3, 3);
 	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
-	
+
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-	
+
 	glutInitWindowSize(WIN_X, WIN_Y);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	WindowHandle = glutCreateWindow(CAPTION);

@@ -13,6 +13,7 @@
 #include "meshes.h"
 #include "constants.h"
 #include "SceneGraph/SceneNode.h"
+#include <GL/freeglut.h>
 
 extern bool inVR;
 

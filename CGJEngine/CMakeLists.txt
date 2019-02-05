@@ -4,7 +4,6 @@ project(CGJEngine CXX)
 include_directories(
 	headers
 	${GLEW_INCLUDE_DIR}
-	${GLUT_INCLUDE_DIR}
 	${JPEG_INCLUDE_DIR}
 	${PNG_INCLUDE_DIR}
     ${GLM_INCLUDE_DIRS}

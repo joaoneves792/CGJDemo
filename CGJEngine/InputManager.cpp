@@ -5,32 +5,35 @@
 #include <functional>
 #include <unordered_map>
 #include <map>
-#include <GL/freeglut.h>
+#include <chrono>
+#include <iostream>
 #include "InputManager.h"
+
+
 
 InputManager* InputManager::_ourInstance = nullptr;
 
 InputManager* InputManager::getInstance() {
     if(_ourInstance == nullptr){
         _ourInstance = new InputManager();
+        _ourInstance->_lastUpdateTime = getTime();
+        _ourInstance->_updateInterval = 0;
     }
     return _ourInstance;
 }
 
 void InputManager::setActionInterval(unsigned int milliseconds) {
     this->_updateInterval = milliseconds;
-    ++_updateCallbackCounter;
-    glutTimerFunc(milliseconds, InputManager::update, _updateCallbackCounter);
 }
 
-void InputManager::update(int value) {
-    auto im = InputManager::getInstance();
+void InputManager::update() {
+    static auto im = InputManager::getInstance();
 
-    int currentTime = glutGet(GLUT_ELAPSED_TIME);
+    long currentTime = getTime();
     int timeDelta = (int)(currentTime-(im->_lastUpdateTime));
     im->_lastUpdateTime = currentTime;
 
-    if(value != im->_updateCallbackCounter)
+    if(timeDelta < (int)im->_updateInterval)
         return;
 
     //Call the callbacks
@@ -46,8 +49,6 @@ void InputManager::update(int value) {
     for(auto it=im->_pendingSpecialKeyCallbacks.begin(); it!=im->_pendingSpecialKeyCallbacks.end(); it++){
         it->second(timeDelta);
     }
-
-    glutTimerFunc(im->_updateInterval, InputManager::update, im->_updateCallbackCounter);
 }
 
 
@@ -111,3 +112,6 @@ void InputManager::grabMouse(bool grab) {
     _grabMouse = grab;
 }
 
+long InputManager::getTime() {
+    return std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
+}

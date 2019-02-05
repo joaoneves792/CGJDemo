@@ -10,6 +10,8 @@
 #include "movement.h"
 #include "SceneGraph/SceneNode.h"
 
+#include <GL/freeglut.h>
+
 #define ESCAPE 27
 #define SPACE 0x20
 
@@ -21,17 +23,17 @@ void setupActions() {
     static ParticleEmitterNode* smokeRR = (ParticleEmitterNode*)
             ResourceManager::getInstance()->getScene(SCENE)->findNode(SMOKE_EMITTER_RR);
 
-    im->setActionInterval(10); //Update every 10ms
+    //im->setActionInterval(10); //Update every 10ms
 
     /*Update camera movement*/
     const float movementRate = 0.005f; //magic number
-    const float cameraRate = (float)-1.0f*(3.1415f / (WinX * 2));
+    const float cameraRate = (float)-0.1f*(3.1415f / (WinX * 2));
 
     im->setMouseAction([=](int x, int y, int timeDelta){
         int deltaX = (WinX / 2) - x;
         int deltaY = (WinY / 2) - y;
         glutWarpPointer(WinX / 2, WinY / 2);
-        scene->getCamera()->changeOrientation(deltaX*cameraRate, deltaY*cameraRate, 0.0f);
+        scene->getCamera()->changeOrientation(deltaX*cameraRate*timeDelta, deltaY*cameraRate*timeDelta, 0.0f);
     });
 
     im->addKeyActionOnce('g', [=](){

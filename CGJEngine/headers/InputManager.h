@@ -9,7 +9,6 @@
 #include <functional>
 #include <unordered_map>
 #include <map>
-#include <GL/freeglut.h>
 
 #define SPECIAL_KEYS_COUNT 4
 
@@ -18,7 +17,6 @@ private:
     static InputManager* _ourInstance;
 
     unsigned int _updateInterval = 10;
-    int _updateCallbackCounter = 0;
 
     long _lastUpdateTime = 0;
 
@@ -41,6 +39,7 @@ private:
 
 public:
     static InputManager* getInstance();
+    static long getTime();
 
     /*Interval at wich registered callbacks will be called if events occured*/
     void setActionInterval(unsigned int milliseconds);
@@ -62,7 +61,7 @@ public:
     void mouseMovement(int x, int y);
     void grabMouse(bool grab);
 
-    static void update(int value);
+    static void update();
 };
 
 

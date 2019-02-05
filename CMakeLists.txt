@@ -3,12 +3,12 @@ project(CGJDemo C CXX)
 
 if( MSVC )
 	list(APPEND CMAKE_PREFIX_PATH
-		${CGJDemo_SOURCE_DIR}/dependencies/glew-2.1.0/ 
+		${CGJDemo_SOURCE_DIR}/dependencies/glew-2.1.0/
 		${CGJDemo_SOURCE_DIR}/dependencies/freeglut/ )
 endif (MSVC)
 
 list(APPEND CMAKE_MODULE_PATH
-	${CGJDemo_SOURCE_DIR}/CGJEngine/cmake/ ) 
+	${CGJDemo_SOURCE_DIR}/CGJEngine/cmake/ )
 
 set(OpenGL_GL_PREFERENCE GLVND)
 
